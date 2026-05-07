@@ -88,10 +88,13 @@
     };
 
     services = {
-      caddy.enable = true;
       prometheusNode.enable = true;
       promtail.enable = true;
-      tailscale.enable = true;
+
+      tailscale = {
+        enable = true;
+        enableCaddy = false;
+      };
     };
   };
 
