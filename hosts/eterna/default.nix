@@ -74,6 +74,14 @@
     hostName = "eterna";
   };
 
+  services.k3s = {
+    enable = true;
+    role = "agent";
+    serverAddr = "https://solaceon:6443";
+    tokenFile = config.age.secrets.k3s.path;
+    extraFlags = ["--flannel-iface=tailscale0"];
+  };
+
   powerManagement.powertop.enable = true;
 
   services = {

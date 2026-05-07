@@ -40,6 +40,7 @@
     extraFlags = [
       "--write-kubeconfig-mode=644"
       "--service-node-port-range=8000-32767"
+      "--flannel-iface=tailscale0"
     ];
 
     autoDeployCharts.aly-codes = {
