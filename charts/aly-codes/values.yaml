@@ -1,0 +1,26 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/alyraffauf/aly.codes
+  tag: latest
+  pullPolicy: Always
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30080
+
+ingress:
+  enabled: false
+  className: nginx
+  host: aly.codes
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"

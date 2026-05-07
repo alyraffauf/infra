@@ -29,8 +29,19 @@
   };
 
   networking = {
-    firewall.allowedTCPPorts = [2222];
+    firewall.allowedTCPPorts = [2222 30080];
     hostName = "solaceon";
+  };
+
+  services.k3s = {
+    enable = true;
+    role = "server";
+    extraFlags = ["--write-kubeconfig-mode=644"];
+
+    autoDeployCharts.aly-codes = {
+      package = ../../charts/aly-codes;
+      targetNamespace = "default";
+    };
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
@@ -61,11 +72,6 @@
     };
 
     services = {
-      alycodes = {
-        enable = true;
-        inherit (config.mySnippets.cute-haus.networkMap.aly-codes) port;
-      };
-
       caddy.enable = true;
 
       forgejo = {

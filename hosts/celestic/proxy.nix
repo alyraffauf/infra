@@ -35,25 +35,11 @@
         "aly.codes" = {
           extraConfig = ''
             encode gzip zstd
-            reverse_proxy ${config.mySnippets.cute-haus.networkMap.aly-codes.hostName}:${toString config.mySnippets.cute-haus.networkMap.aly-codes.port}
+            reverse_proxy ${config.mySnippets.cute-haus.networkMap.aly-codes.hostName}:30080
           '';
 
           serverAliases = ["www.aly.codes"];
         };
-
-        "bsky.aly.codes" = {
-          extraConfig = ''
-            encode gzip zstd
-            reverse_proxy ${config.mySnippets.cute-haus.networkMap.aly-codes.hostName}:5739
-          '';
-        };
-
-        # "vibes.aly.codes" = {
-        #   extraConfig = ''
-        #     encode gzip zstd
-        #     reverse_proxy ${config.mySnippets.cute-haus.networkMap.aly-codes.hostName}:5738
-        #   '';
-        # };
 
         "aly.social" = {
           extraConfig = ''
