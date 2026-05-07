@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: caddy-svc
+  labels:
+    app: caddy
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  selector:
+    app: caddy
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 80
+      protocol: TCP
+      name: http
+      {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}

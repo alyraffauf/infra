@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: caddy
+  tag: "2"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 8480
+
+caddyfile: |
+  {
+    admin off
+    auto_https off
+  }
+
+  http://cute.haus, http://www.cute.haus {
+    encode zstd gzip
+    reverse_proxy http://watsup-svc.default.svc.cluster.local:80
+  }

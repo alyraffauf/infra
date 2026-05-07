@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: caddy-config
+  labels:
+    app: caddy
+data:
+  Caddyfile: |
+{{ .Values.caddyfile | indent 4 }}
