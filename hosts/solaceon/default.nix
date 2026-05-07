@@ -117,6 +117,7 @@
     k3s-aly-codes-tls = mkTlsSync "aly-codes";
     k3s-aly-social-tls = mkTlsSync "aly-social";
     k3s-cute-haus-tls = mkTlsSync "cute-haus";
+    k3s-morsels-blue-tls = mkTlsSync "morsels-blue";
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
