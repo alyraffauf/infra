@@ -1107,11 +1107,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1778179008,
-        "narHash": "sha256-Q74q6WnJNkrMgi2V9od0pZiTwYZrSGqbo26Wuf0c/SA=",
+        "lastModified": 1778183664,
+        "narHash": "sha256-cs/ZRAxD/UhlqdnPY9kavHfCIj8/1Mysx5bzrzMqBAc=",
         "owner": "alyraffauf",
         "repo": "secrets",
-        "rev": "709f5795f93f31670d8a1887619b79d35791549d",
+        "rev": "81d12c293dfe402148f56f4279c56c0586b16c85",
         "type": "github"
       },
       "original": {
