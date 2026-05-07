@@ -35,6 +35,17 @@
     hostName = "celestic";
   };
 
+  services.k3s = {
+    enable = true;
+    role = "server";
+    serverAddr = "https://solaceon:6443";
+    tokenFile = config.age.secrets.k3s.path;
+    extraFlags = [
+      "--flannel-iface=tailscale0"
+      "--tls-san=solaceon"
+    ];
+  };
+
   nixpkgs.hostPlatform = "x86_64-linux";
   programs.ssh.knownHosts = config.mySnippets.ssh.knownHosts;
   system.stateVersion = "25.11";
@@ -75,16 +86,10 @@
     };
 
     services = {
-      alycodes = {
-        enable = true;
-        inherit (config.mySnippets.cute-haus.networkMap.aly-codes) port;
-      };
-
       caddy.enable = true;
       prometheusNode.enable = true;
       promtail.enable = true;
       tailscale.enable = true;
-      watsup.enable = true;
     };
   };
 

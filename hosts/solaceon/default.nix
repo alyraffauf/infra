@@ -37,10 +37,15 @@
   services.k3s = {
     enable = true;
     role = "server";
+    clusterInit = true;
+    tokenFile = config.age.secrets.k3s.path;
     extraFlags = [
       "--write-kubeconfig-mode=644"
       "--service-node-port-range=8000-32767"
       "--flannel-iface=tailscale0"
+      "--tls-san=celestic"
+      "--disable=traefik"
+      "--disable=servicelb"
     ];
 
     autoDeployCharts.aly-codes = {
