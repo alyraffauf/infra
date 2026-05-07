@@ -7,7 +7,6 @@
 }: {
   imports = [
     # ./anubis.nix
-    ./proxy.nix
     ./secrets.nix
     "${modulesPath}/profiles/qemu-guest.nix"
     self.diskoConfigurations.lvm-ext4
