@@ -1,6 +1,7 @@
 {
   config,
   modulesPath,
+  pkgs,
   self,
   ...
 }: {
@@ -42,7 +43,12 @@
     ];
 
     autoDeployCharts.aly-codes = {
-      package = ../../charts/aly-codes;
+      package = pkgs.runCommand "aly-codes-chart.tgz" {nativeBuildInputs = [pkgs.kubernetes-helm];} ''
+        cp -r ${../../charts/aly-codes} ./chart
+        chmod -R +w ./chart
+        helm package ./chart --destination .
+        mv ./*.tgz $out
+      '';
       targetNamespace = "default";
     };
   };
