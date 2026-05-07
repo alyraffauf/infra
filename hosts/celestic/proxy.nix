@@ -35,7 +35,7 @@
         "aly.codes" = {
           extraConfig = ''
             encode gzip zstd
-            reverse_proxy ${config.mySnippets.cute-haus.networkMap.aly-codes.hostName}:30080
+            reverse_proxy ${config.mySnippets.cute-haus.networkMap.aly-codes.hostName}:${toString config.mySnippets.cute-haus.networkMap.aly-codes.port}
           '';
 
           serverAliases = ["www.aly.codes"];

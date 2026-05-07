@@ -16,7 +16,7 @@ resources:
 service:
   type: NodePort
   port: 80
-  nodePort: 30080
+  nodePort: 8282
 
 ingress:
   enabled: false

@@ -29,14 +29,17 @@
   };
 
   networking = {
-    firewall.allowedTCPPorts = [2222 30080];
+    firewall.allowedTCPPorts = [2222 8282];
     hostName = "solaceon";
   };
 
   services.k3s = {
     enable = true;
     role = "server";
-    extraFlags = ["--write-kubeconfig-mode=644"];
+    extraFlags = [
+      "--write-kubeconfig-mode=644"
+      "--service-node-port-range=8000-32767"
+    ];
 
     autoDeployCharts.aly-codes = {
       package = ../../charts/aly-codes;
