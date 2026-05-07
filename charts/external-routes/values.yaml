@@ -52,3 +52,8 @@ routes:
     host: status.aly.social
     target: { ip: 100.95.27.71, port: 3001 } # snowpoint (uptime-kuma)
     tls: { secretName: aly-social-tls }
+
+  - name: forgejo
+    host: git.aly.codes
+    target: { ip: 100.114.196.107, port: 3001 } # solaceon
+    tls: { secretName: aly-codes-tls }

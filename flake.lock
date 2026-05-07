@@ -1031,7 +1031,6 @@
         "nynx": "nynx",
         "safari": "safari",
         "secrets": "secrets",
-        "self2025": "self2025",
         "snippets": "snippets",
         "treefmt-nix": "treefmt-nix_4"
       }
@@ -1117,26 +1116,6 @@
       "original": {
         "owner": "alyraffauf",
         "repo": "secrets",
-        "type": "github"
-      }
-    },
-    "self2025": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1749926797,
-        "narHash": "sha256-6azD+7EgAEsXflJInJG1BPP7c7sMLXqVDm/xFjf1CgY=",
-        "owner": "alyraffauf",
-        "repo": "self2025",
-        "rev": "33aac37dd81bfa27630e6955f31952f51b85a91e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "alyraffauf",
-        "repo": "self2025",
         "type": "github"
       }
     },

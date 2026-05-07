@@ -51,11 +51,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    self2025 = {
-      url = "github:alyraffauf/self2025";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     snippets = {
       url = "github:alyraffauf/snippets";
       inputs.nixpkgs.follows = "nixpkgs";
