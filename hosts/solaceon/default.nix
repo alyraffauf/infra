@@ -66,7 +66,7 @@
         name = "traefik";
         repo = "https://traefik.github.io/charts";
         version = "32.1.1";
-        hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        hash = "sha256-mDveuQR2AIqaNn1lU+JkxpLWj+kWIpTH582s4qkix30=";
         targetNamespace = "traefik";
         createNamespace = true;
         values = {
