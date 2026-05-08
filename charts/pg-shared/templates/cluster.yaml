@@ -17,6 +17,19 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: {{ .Values.cluster.topologyKey }}
+    {{- with .Values.failover }}
+    {{- if .fastTolerationSeconds }}
+    tolerations:
+      - key: node.kubernetes.io/not-ready
+        operator: Exists
+        effect: NoExecute
+        tolerationSeconds: {{ .fastTolerationSeconds }}
+      - key: node.kubernetes.io/unreachable
+        operator: Exists
+        effect: NoExecute
+        tolerationSeconds: {{ .fastTolerationSeconds }}
+    {{- end }}
+    {{- end }}
 
   topologySpreadConstraints:
     - maxSkew: 1
