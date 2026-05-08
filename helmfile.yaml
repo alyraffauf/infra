@@ -67,6 +67,10 @@ releases:
     namespace: default
     chart: ./charts/uptime-kuma
 
+  - name: vaultwarden
+    namespace: default
+    chart: ./charts/vaultwarden
+
   - name: external-routes
     namespace: default
     chart: ./charts/external-routes

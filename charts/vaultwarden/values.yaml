@@ -1,0 +1,39 @@
+image:
+  repository: vaultwarden/server
+  tag: latest
+  pullPolicy: Always
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8222
+
+persistence:
+  storageClassName: longhorn
+  size: 1Gi
+
+env:
+  DOMAIN: https://vault.cute.haus
+  ROCKET_ADDRESS: 0.0.0.0
+  ROCKET_PORT: "8222"
+  ROCKET_LOG: critical
+  SIGNUPS_ALLOWED: "false"
+
+# Secret with ADMIN_TOKEN, SMTP_HOST, SMTP_PORT, SMTP_FROM, SMTP_PASSWORD.
+# Created out-of-band: kubectl create secret generic vaultwarden-env --from-env-file=...
+envFromSecret: vaultwarden-env
+
+ingress:
+  enabled: true
+  className: traefik
+  routes:
+    - host: vault.cute.haus
+      tlsSecret: cute-haus-tls

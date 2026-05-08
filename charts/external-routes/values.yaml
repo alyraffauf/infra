@@ -28,11 +28,6 @@ routes:
     target: { ip: 100.81.61.31, port: 32400 } # jubilife
     tls: { secretName: cute-haus-tls }
 
-  - name: vaultwarden
-    host: vault.cute.haus
-    target: { ip: 100.95.27.71, port: 8222 } # snowpoint
-    tls: { secretName: cute-haus-tls }
-
   - name: aly-social
     host: aly.social
     target: { ip: 100.114.196.107, port: 3000 } # solaceon

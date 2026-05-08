@@ -141,20 +141,6 @@
         UIWelcomeMessage = "Welcome to Navidrome @ ${config.networking.hostName}";
       };
     };
-
-    vaultwarden = {
-      enable = true;
-
-      config = {
-        DOMAIN = "https://${config.mySnippets.cute-haus.networkMap.vaultwarden.vHost}";
-        ROCKET_ADDRESS = "0.0.0.0";
-        ROCKET_LOG = "critical";
-        ROCKET_PORT = config.mySnippets.cute-haus.networkMap.vaultwarden.port;
-        SIGNUPS_ALLOWED = false;
-      };
-
-      environmentFile = config.age.secrets.vaultwarden.path;
-    };
   };
 
   # Make navidrome wait for /mnt/Media + restart if necessary.
