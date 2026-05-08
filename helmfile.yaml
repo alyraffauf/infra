@@ -98,32 +98,48 @@ releases:
   - name: aly-codes
     namespace: default
     chart: ./charts/aly-codes
+    needs:
+      - default/cluster-tls
 
   - name: watsup
     namespace: default
     chart: ./charts/watsup
+    needs:
+      - default/cluster-tls
 
   - name: morsels
     namespace: default
     chart: ./charts/morsels
+    needs:
+      - default/cluster-tls
 
   - name: uptime-kuma
     namespace: default
     chart: ./charts/uptime-kuma
+    needs:
+      - default/cluster-tls
 
   - name: vaultwarden
     namespace: default
     chart: ./charts/vaultwarden
+    needs:
+      - default/cluster-tls
     values:
       - values/secrets/vaultwarden.yaml
 
+  # Uses pg-shared for postgres (db config is in app.ini on the PVC, not env).
   - name: forgejo
     namespace: default
     chart: ./charts/forgejo
+    needs:
+      - default/cluster-tls
+      - cnpg-system/pg-shared
 
   - name: bluesky-pds
     namespace: default
     chart: ./charts/bluesky-pds
+    needs:
+      - default/cluster-tls
     values:
       - values/secrets/bluesky-pds.yaml
 
@@ -133,3 +149,6 @@ releases:
   - name: external-routes
     namespace: default
     chart: ./charts/external-routes
+    needs:
+      - default/cluster-tls
+      - tailscale/tailscale-operator

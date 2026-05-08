@@ -239,4 +239,5 @@ new-app NAME:
     for kind in deployment service ingress; do
         echo '{{{{- include "common.'"$kind"'" . }}}}' > "$DIR/templates/$kind.yaml"
     done
+    helm dependency update "$DIR" >/dev/null
     echo "scaffolded $DIR. next: edit values.yaml and add a release to helmfile.yaml."
