@@ -6,6 +6,7 @@
     ./btrfs
     ./data-share
     ./iso
+    ./k3s
     ./media-share
     ./performance
     ./swap

@@ -26,6 +26,7 @@
     # };
 
     bazarrApiKey.file = "${self.inputs.secrets}/arr/bazarrApiKey.age";
+    k3s.file = "${self.inputs.secrets}/k3s.age";
     lidarrApiKey.file = "${self.inputs.secrets}/arr/lidarrApiKey.age";
     photoprismAdminPass.file = "${self.inputs.secrets}/photoprism.age";
     prowlarrApiKey.file = "${self.inputs.secrets}/arr/prowlarrApiKey.age";

@@ -92,6 +92,12 @@ in {
       vps.enable = true;
       swap.enable = true;
       zram.enable = true;
+
+      k3s = {
+        enable = true;
+        role = "agent";
+        serverAddr = "https://solaceon:6443";
+      };
     };
 
     programs = {
