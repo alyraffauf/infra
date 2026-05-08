@@ -1,6 +1,8 @@
 repositories:
   - name: traefik
     url: https://traefik.github.io/charts
+  - name: longhorn
+    url: https://charts.longhorn.io
 
 releases:
   - name: traefik
@@ -30,6 +32,24 @@ releases:
           kubernetesIngress:
             publishedService:
               enabled: true
+
+  - name: longhorn
+    namespace: longhorn-system
+    createNamespace: true
+    chart: longhorn/longhorn
+    version: 1.11.2
+    values:
+      - defaultSettings:
+          defaultDataPath: /var/lib/longhorn
+          defaultReplicaCount: 3
+          replicaSoftAntiAffinity: false
+          allowRecurringJobWhileVolumeDetached: true
+        persistence:
+          defaultClass: false
+          defaultClassReplicaCount: 3
+          defaultDataLocality: best-effort
+        ingress:
+          enabled: false
 
   - name: aly-codes
     namespace: default

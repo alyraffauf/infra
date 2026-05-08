@@ -78,36 +78,30 @@
   environment.systemPackages = with pkgs; [
     helmfile
     kubernetes-helm
+    nfs-utils
   ];
 
-  systemd.services.k3s = {
-    after = ["tailscaled.service"];
-    wants = ["tailscaled.service"];
-    serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
-      until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
-        ${pkgs.coreutils}/bin/sleep 1
-      done
-    '';
-  };
-
-  services.k3s = {
-    enable = true;
-    role = "server";
-    serverAddr = "https://solaceon:6443";
-    tokenFile = config.age.secrets.k3s.path;
-    extraFlags = [
-      "--flannel-iface=tailscale0"
-      "--tls-san=solaceon"
-      "--tls-san=celestic"
-      "--service-node-port-range=8000-32767"
-      "--disable=traefik"
-      "--disable=servicelb"
-    ];
-  };
-
-  powerManagement.powertop.enable = true;
-
   services = {
+    openiscsi = {
+      enable = true;
+      name = "iqn.2026-05.haus.cute:${config.networking.hostName}";
+    };
+
+    k3s = {
+      enable = true;
+      role = "server";
+      serverAddr = "https://solaceon:6443";
+      tokenFile = config.age.secrets.k3s.path;
+      extraFlags = [
+        "--flannel-iface=tailscale0"
+        "--tls-san=solaceon"
+        "--tls-san=celestic"
+        "--service-node-port-range=8000-32767"
+        "--disable=traefik"
+        "--disable=servicelb"
+      ];
+    };
+
     nfs.server = {
       enable = true;
 
@@ -116,6 +110,24 @@
       '';
     };
   };
+
+  systemd = {
+    tmpfiles.rules = [
+      "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+    ];
+
+    services.k3s = {
+      after = ["tailscaled.service"];
+      wants = ["tailscaled.service"];
+      serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
+        until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
+          ${pkgs.coreutils}/bin/sleep 1
+        done
+      '';
+    };
+  };
+
+  powerManagement.powertop.enable = true;
 
   system.stateVersion = "25.11";
   time.timeZone = "America/New_York";
