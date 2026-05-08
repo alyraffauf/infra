@@ -9,33 +9,11 @@ resource "cloudflare_dns_record" "cute_haus_apex_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "cute_haus_apex_a_celestic" {
-  zone_id  = local.zones.cute_haus
-  name     = "cute.haus"
-  type     = "A"
-  content  = local.hosts.celestic
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "cute_haus_audiobookshelf_a_solaceon" {
   zone_id  = local.zones.cute_haus
   name     = "audiobookshelf.cute.haus"
   type     = "A"
   content  = local.hosts.solaceon
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "cute_haus_audiobookshelf_a_celestic" {
-  zone_id  = local.zones.cute_haus
-  name     = "audiobookshelf.cute.haus"
-  type     = "A"
-  content  = local.hosts.celestic
   proxied  = true
   ttl      = 1
   tags     = []
@@ -64,17 +42,6 @@ resource "cloudflare_dns_record" "cute_haus_immich_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "cute_haus_immich_a_celestic" {
-  zone_id  = local.zones.cute_haus
-  name     = "immich.cute.haus"
-  type     = "A"
-  content  = local.hosts.celestic
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "cute_haus_navidrome_a" {
   zone_id  = local.zones.cute_haus
   name     = "navidrome.cute.haus"
@@ -97,33 +64,11 @@ resource "cloudflare_dns_record" "cute_haus_ombi_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "cute_haus_ombi_a_celestic" {
-  zone_id  = local.zones.cute_haus
-  name     = "ombi.cute.haus"
-  type     = "A"
-  content  = local.hosts.celestic
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "cute_haus_plex_a_solaceon" {
   zone_id  = local.zones.cute_haus
   name     = "plex.cute.haus"
   type     = "A"
   content  = local.hosts.solaceon
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "cute_haus_plex_a_celestic" {
-  zone_id  = local.zones.cute_haus
-  name     = "plex.cute.haus"
-  type     = "A"
-  content  = local.hosts.celestic
   proxied  = true
   ttl      = 1
   tags     = []
@@ -141,33 +86,11 @@ resource "cloudflare_dns_record" "cute_haus_status_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "cute_haus_status_a_celestic" {
-  zone_id  = local.zones.cute_haus
-  name     = "status.cute.haus"
-  type     = "A"
-  content  = local.hosts.celestic
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "cute_haus_vault_a_solaceon" {
   zone_id  = local.zones.cute_haus
   name     = "vault.cute.haus"
   type     = "A"
   content  = local.hosts.solaceon
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "cute_haus_vault_a_celestic" {
-  zone_id  = local.zones.cute_haus
-  name     = "vault.cute.haus"
-  type     = "A"
-  content  = local.hosts.celestic
   proxied  = true
   ttl      = 1
   tags     = []

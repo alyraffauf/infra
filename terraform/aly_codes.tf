@@ -9,33 +9,11 @@ resource "cloudflare_dns_record" "aly_codes_apex_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "aly_codes_apex_a_celestic" {
-  zone_id  = local.zones.aly_codes
-  name     = "aly.codes"
-  type     = "A"
-  content  = local.hosts.celestic
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "aly_codes_git_a_solaceon" {
   zone_id  = local.zones.aly_codes
   name     = "git.aly.codes"
   type     = "A"
   content  = local.hosts.solaceon
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "aly_codes_git_a_celestic" {
-  zone_id  = local.zones.aly_codes
-  name     = "git.aly.codes"
-  type     = "A"
-  content  = local.hosts.celestic
   proxied  = true
   ttl      = 1
   tags     = []
@@ -64,33 +42,11 @@ resource "cloudflare_dns_record" "aly_codes_status_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "aly_codes_status_a_celestic" {
-  zone_id  = local.zones.aly_codes
-  name     = "status.aly.codes"
-  type     = "A"
-  content  = local.hosts.celestic
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "aly_codes_vibes_a_solaceon" {
   zone_id  = local.zones.aly_codes
   name     = "vibes.aly.codes"
   type     = "A"
   content  = local.hosts.solaceon
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "aly_codes_vibes_a_celestic" {
-  zone_id  = local.zones.aly_codes
-  name     = "vibes.aly.codes"
-  type     = "A"
-  content  = local.hosts.celestic
   proxied  = true
   ttl      = 1
   tags     = []

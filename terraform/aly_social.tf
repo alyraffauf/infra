@@ -20,33 +20,11 @@ resource "cloudflare_dns_record" "aly_social_apex_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "aly_social_apex_a_celestic" {
-  zone_id  = local.zones.aly_social
-  name     = "aly.social"
-  type     = "A"
-  content  = local.hosts.celestic
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "aly_social_status_a_solaceon" {
   zone_id  = local.zones.aly_social
   name     = "status.aly.social"
   type     = "A"
   content  = local.hosts.solaceon
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "aly_social_status_a_celestic" {
-  zone_id  = local.zones.aly_social
-  name     = "status.aly.social"
-  type     = "A"
-  content  = local.hosts.celestic
   proxied  = true
   ttl      = 1
   tags     = []
