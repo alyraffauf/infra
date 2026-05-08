@@ -1,0 +1,38 @@
+image:
+  repository: codeberg.org/forgejo/forgejo
+  tag: "15"
+  pullPolicy: Always
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: "2"
+    memory: 1Gi
+
+service:
+  type: ClusterIP
+  httpPort: 80
+  httpTargetPort: 3001
+  sshPort: 2222
+  sshTargetPort: 2222
+
+persistence:
+  # 2-replica longhorn class (defined by pg-shared chart). Forgejo doesn't
+  # need 3-replica since b2 is the offsite safety net.
+  storageClassName: longhorn-pg
+  size: 10Gi
+
+env:
+  USER_UID: "1000"
+  USER_GID: "1000"
+  FORGEJO_WORK_DIR: /var/lib/forgejo
+  FORGEJO_CUSTOM: /var/lib/forgejo/custom
+
+ingress:
+  enabled: true
+  className: traefik
+  routes:
+    - host: git.aly.codes
+      tlsSecret: aly-codes-tls

@@ -1,0 +1,26 @@
+cluster:
+  name: pg-shared
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
+  postgresVersion: 17
+
+  # 2 longhorn replicas per instance — masks disk-level faults transparently
+  # without forcing CNPG to re-init the instance from a primary.
+  storage:
+    storageClass: longhorn-pg
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+  # Spread instances across control-plane nodes
+  topologyKey: kubernetes.io/hostname
+
+# Backups to b2 are added later — needs S3-compatible B2 application keys
+backup:
+  enabled: false

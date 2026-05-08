@@ -32,8 +32,3 @@ routes:
     host: aly.social
     target: { ip: 100.114.196.107, port: 3000 } # solaceon
     tls: { secretName: aly-social-tls }
-
-  - name: forgejo
-    host: git.aly.codes
-    target: { ip: 100.114.196.107, port: 3001 } # solaceon
-    tls: { secretName: aly-codes-tls }

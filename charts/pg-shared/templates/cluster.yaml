@@ -1,0 +1,38 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Values.cluster.name }}
+spec:
+  instances: {{ .Values.cluster.instances }}
+  imageName: {{ .Values.cluster.imageName }}
+
+  storage:
+    storageClass: {{ .Values.cluster.storage.storageClass }}
+    size: {{ .Values.cluster.storage.size }}
+
+  resources:
+    {{- toYaml .Values.cluster.resources | nindent 4 }}
+
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
+    topologyKey: {{ .Values.cluster.topologyKey }}
+
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          cnpg.io/cluster: {{ .Values.cluster.name }}
+
+  postgresql:
+    parameters:
+      max_connections: "200"
+      shared_buffers: 256MB
+      effective_cache_size: 768MB
+      work_mem: 8MB
+      maintenance_work_mem: 64MB
+
+  monitoring:
+    enablePodMonitor: false

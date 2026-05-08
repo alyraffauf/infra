@@ -104,11 +104,6 @@
     };
 
     services = {
-      forgejo = {
-        enable = true;
-        db = "postgresql";
-      };
-
       prometheusNode.enable = true;
       promtail.enable = true;
 

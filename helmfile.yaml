@@ -3,6 +3,8 @@ repositories:
     url: https://traefik.github.io/charts
   - name: longhorn
     url: https://charts.longhorn.io
+  - name: cnpg
+    url: https://cloudnative-pg.github.io/charts
 
 releases:
   - name: traefik
@@ -41,15 +43,29 @@ releases:
     values:
       - defaultSettings:
           defaultDataPath: /var/lib/longhorn
-          defaultReplicaCount: 3
+          # 2 replicas per volume, hard zone anti-affinity → 1 cloud + 1 home
+          defaultReplicaCount: 2
           replicaSoftAntiAffinity: false
+          replicaZoneSoftAntiAffinity: false
           allowRecurringJobWhileVolumeDetached: true
         persistence:
           defaultClass: false
-          defaultClassReplicaCount: 3
+          defaultClassReplicaCount: 2
           defaultDataLocality: best-effort
         ingress:
           enabled: false
+
+  - name: cnpg
+    namespace: cnpg-system
+    createNamespace: true
+    chart: cnpg/cloudnative-pg
+    version: 0.28.0
+
+  - name: pg-shared
+    namespace: cnpg-system
+    chart: ./charts/pg-shared
+    needs:
+      - cnpg-system/cnpg
 
   - name: aly-codes
     namespace: default
@@ -70,6 +86,12 @@ releases:
   - name: vaultwarden
     namespace: default
     chart: ./charts/vaultwarden
+    values:
+      - values/vaultwarden.yaml
+
+  - name: forgejo
+    namespace: default
+    chart: ./charts/forgejo
 
   - name: external-routes
     namespace: default

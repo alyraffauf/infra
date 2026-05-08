@@ -8,6 +8,4 @@
       settings.PDS_HOSTNAME = config.mySnippets.cute-haus.networkMap.aly-social.vHost;
     };
   };
-
-  systemd.services.forgejo.serviceConfig.MemoryMax = "512M";
 }

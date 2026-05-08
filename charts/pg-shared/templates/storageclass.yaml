@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-pg
+provisioner: driver.longhorn.io
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+  fsType: ext4
+  dataLocality: best-effort
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowVolumeExpansion: true
