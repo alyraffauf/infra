@@ -49,6 +49,7 @@
       "--service-node-port-range=8000-32767"
       "--flannel-iface=tailscale0"
       "--tls-san=celestic"
+      "--tls-san=eterna"
       "--disable=servicelb"
       "--disable=traefik"
     ];

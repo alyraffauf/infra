@@ -47,6 +47,7 @@
     extraFlags = [
       "--flannel-iface=tailscale0"
       "--tls-san=solaceon"
+      "--tls-san=eterna"
       "--service-node-port-range=8000-32767"
       "--disable=traefik"
       "--disable=servicelb"

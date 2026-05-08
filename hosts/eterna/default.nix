@@ -82,10 +82,17 @@
 
   services.k3s = {
     enable = true;
-    role = "agent";
+    role = "server";
     serverAddr = "https://solaceon:6443";
     tokenFile = config.age.secrets.k3s.path;
-    extraFlags = ["--flannel-iface=tailscale0"];
+    extraFlags = [
+      "--flannel-iface=tailscale0"
+      "--tls-san=solaceon"
+      "--tls-san=celestic"
+      "--service-node-port-range=8000-32767"
+      "--disable=traefik"
+      "--disable=servicelb"
+    ];
   };
 
   powerManagement.powertop.enable = true;
@@ -136,7 +143,10 @@
         user = "aly";
       };
 
-      tailscale.enable = true;
+      tailscale = {
+        enable = true;
+        enableCaddy = false;
+      };
     };
   };
 
