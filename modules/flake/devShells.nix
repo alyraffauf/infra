@@ -11,10 +11,13 @@ _: {
       packages =
         (with pkgs; [
           (lib.hiPrio uutils-coreutils-noprefix)
+          age
           ansible
           git
           just
           nh
+          sops
+          ssh-to-age
         ])
         # ++ lib.attrValues config.treefmt.build.programs
         ++ [

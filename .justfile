@@ -129,3 +129,43 @@ ping:
 deploy-offline:
     nynx --operation boot
     just reboot
+
+############################################################################
+#
+#  Secrets (sops + age)
+#
+############################################################################
+
+# Derive this machine's age private key from its ssh ed25519 key, install
+# at ~/.config/sops/age/keys.txt. Run once per machine. The corresponding
+# public key (age1...) must already be a recipient in .sops.yaml.
+[group('secrets')]
+sops-bootstrap:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [[ -f ~/.config/sops/age/keys.txt ]]; then
+        echo "~/.config/sops/age/keys.txt already exists; skipping."
+        exit 0
+    fi
+    mkdir -p ~/.config/sops/age
+    ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
+    chmod 600 ~/.config/sops/age/keys.txt
+    echo "wrote ~/.config/sops/age/keys.txt"
+    echo "this machine's age recipient (must be in .sops.yaml):"
+    ssh-to-age -i ~/.ssh/id_ed25519.pub
+
+# Re-encrypt every secrets/*.yaml with the current .sops.yaml recipient list.
+# Run after editing .sops.yaml to add or remove a machine.
+[group('secrets')]
+sops-rekey:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    for f in secrets/*.yaml; do
+        echo "rekeying $f"
+        sops updatekeys -y "$f"
+    done
+
+# Edit a sops-encrypted secrets file. Usage: just sops-edit vaultwarden.yaml
+[group('secrets')]
+sops-edit FILE:
+    sops secrets/{{FILE}}
