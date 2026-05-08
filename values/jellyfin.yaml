@@ -135,8 +135,9 @@ extraContainers:
     securityContext:
       privileged: true
     # `mountpoint -q` returns true on the k8s emptyDir bind, so we'd never
-    # try the NFS mount on top. Use findmnt -t nfs to check for an NFS
-    # mount specifically.
+    # try the NFS mount on top. `findmnt` would work but isn't in
+    # nfs-utils — checking /proc/mounts directly is more reliable and
+    # avoids stacking mounts when the check binary is missing.
     command:
       - sh
       - -c
@@ -144,7 +145,7 @@ extraContainers:
         set -u
         apk add -q nfs-utils
         while true; do
-          if ! findmnt -t nfs /media/local >/dev/null 2>&1; then
+          if ! grep -q " /media/local nfs " /proc/mounts; then
             echo "mounting jubilife:/mnt/Media on /media/local"
             mount -t nfs -o vers=3,ro,nolock,soft,timeo=50,retrans=3 jubilife:/mnt/Media /media/local \
               || echo "mount failed (rc=$?), retrying in 60s"
