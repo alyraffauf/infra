@@ -40,6 +40,18 @@ in {
       example = ["solaceon" "celestic" "eterna"];
       description = "Hostnames to include as TLS SANs on this node's certs.";
     };
+
+    zone = lib.mkOption {
+      type = lib.types.nullOr (lib.types.enum ["cloud" "home"]);
+      default = null;
+      example = "cloud";
+      description = ''
+        Failure domain for this node. Emitted as the standard k8s
+        topology.kubernetes.io/zone label so Longhorn replica scheduling and
+        topologySpreadConstraints can spread workloads across cloud + home
+        machines. Cloud = datacenter VPS; home = on-prem.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -61,6 +73,9 @@ in {
           )
           ++ lib.optionals cfg.clusterInit [
             "--write-kubeconfig-mode=644"
+          ]
+          ++ lib.optionals (cfg.zone != null) [
+            "--node-label=topology.kubernetes.io/zone=${cfg.zone}"
           ];
       };
 

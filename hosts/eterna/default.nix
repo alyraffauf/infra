@@ -102,6 +102,7 @@
         role = "server";
         serverAddr = "https://solaceon:6443";
         tlsSans = ["solaceon" "celestic"];
+        zone = "home";
       };
 
       media-share.enable = true;

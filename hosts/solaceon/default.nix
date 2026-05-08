@@ -85,6 +85,7 @@
         role = "server";
         clusterInit = true;
         tlsSans = ["celestic" "eterna"];
+        zone = "cloud";
       };
 
       vps.enable = true;

@@ -64,6 +64,7 @@
         role = "server";
         serverAddr = "https://solaceon:6443";
         tlsSans = ["solaceon" "eterna"];
+        zone = "cloud";
       };
 
       vps.enable = true;

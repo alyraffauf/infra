@@ -97,6 +97,7 @@ in {
         enable = true;
         role = "agent";
         serverAddr = "https://solaceon:6443";
+        zone = "home";
       };
     };
 
