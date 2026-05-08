@@ -6,7 +6,6 @@
 
   myNixOS.services = {
     atbbs.enable = true;
-    morsels.enable = true;
   };
 
   services = {

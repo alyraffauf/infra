@@ -6,7 +6,6 @@
     ./fail2ban
     ./forgejo
     ./forgejo-runner
-    ./morsels
     ./plex
     ./prometheusNode
     ./promtail

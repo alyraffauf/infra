@@ -59,6 +59,10 @@ releases:
     namespace: default
     chart: ./charts/watsup
 
+  - name: morsels
+    namespace: default
+    chart: ./charts/morsels
+
   - name: external-routes
     namespace: default
     chart: ./charts/external-routes
