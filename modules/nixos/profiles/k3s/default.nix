@@ -42,14 +42,15 @@ in {
     };
 
     zone = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum ["cloud" "home"]);
+      type = lib.types.nullOr lib.types.str;
       default = null;
-      example = "cloud";
+      example = "cloud-hetzner";
       description = ''
         Failure domain for this node. Emitted as the standard k8s
         topology.kubernetes.io/zone label so Longhorn replica scheduling and
-        topologySpreadConstraints can spread workloads across cloud + home
-        machines. Cloud = datacenter VPS; home = on-prem.
+        topologySpreadConstraints can spread workloads across providers and
+        on-prem machines. Current values in use: home, cloud-hetzner,
+        cloud-netcup.
       '';
     };
   };

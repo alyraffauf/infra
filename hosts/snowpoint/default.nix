@@ -124,6 +124,13 @@
       media-share.enable = true;
       vps.enable = true;
       swap.enable = true;
+
+      k3s = {
+        enable = true;
+        role = "agent";
+        serverAddr = "https://solaceon:6443";
+        zone = "cloud-netcup";
+      };
     };
 
     programs.nix.enable = true;

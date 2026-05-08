@@ -50,7 +50,7 @@
         role = "server";
         clusterInit = true;
         tlsSans = ["celestic" "eterna"];
-        zone = "cloud";
+        zone = "cloud-hetzner";
       };
 
       vps.enable = true;
