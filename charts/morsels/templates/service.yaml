@@ -1,14 +1,1 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: morsels
-  labels:
-    app: morsels
-spec:
-  type: {{ .Values.service.type | default "ClusterIP" }}
-  selector:
-    app: morsels
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: TCP
+{{- include "common.service" . }}

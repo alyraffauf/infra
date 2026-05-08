@@ -1,3 +1,6 @@
+replicaCount: 1
+strategy: Recreate
+
 image:
   repository: louislam/uptime-kuma
   tag: "2"
@@ -11,19 +14,39 @@ resources:
     cpu: "1"
     memory: 1Gi
 
+ports:
+  - name: http
+    containerPort: 3001
+
 service:
   type: ClusterIP
-  port: 80
-  targetPort: 3001
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3001
 
 persistence:
+  enabled: true
   storageClassName: longhorn
   size: 1Gi
+  mountPath: /app/data
+
+# Embedded MariaDB bootstrap closes the setup HTTP server then takes several
+# minutes before the main server binds; using `/` as a probe path satisfies
+# startup early and then liveness kills the container mid-bootstrap. Drop
+# liveness; rely on container exit + readiness.
+probes:
+  startup:
+    httpGet: { path: /, port: http }
+    periodSeconds: 10
+    failureThreshold: 180
+  readiness:
+    httpGet: { path: /, port: http }
+    periodSeconds: 10
 
 ingress:
   enabled: true
   className: traefik
-  # one entry per public hostname — each uses its own TLS secret
   routes:
     - host: kuma.cute.haus
       tlsSecret: cute-haus-tls

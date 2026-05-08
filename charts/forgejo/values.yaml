@@ -1,3 +1,6 @@
+replicaCount: 1
+strategy: Recreate
+
 image:
   repository: codeberg.org/forgejo/forgejo
   tag: "15"
@@ -11,24 +14,50 @@ resources:
     cpu: "2"
     memory: 1Gi
 
+podSecurityContext:
+  fsGroup: 1000
+
+ports:
+  - name: http
+    containerPort: 3001
+  - name: ssh
+    containerPort: 2222
+
 service:
   type: ClusterIP
-  httpPort: 80
-  httpTargetPort: 3001
-  sshPort: 2222
-  sshTargetPort: 2222
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: ssh
+      port: 2222
+      targetPort: ssh
 
 persistence:
   # 2-replica longhorn class (defined by pg-shared chart). Forgejo doesn't
   # need 3-replica since b2 is the offsite safety net.
+  enabled: true
   storageClassName: longhorn-pg
   size: 10Gi
+  mountPath: /var/lib/forgejo
 
 env:
   USER_UID: "1000"
   USER_GID: "1000"
   FORGEJO_WORK_DIR: /var/lib/forgejo
   FORGEJO_CUSTOM: /var/lib/forgejo/custom
+
+probes:
+  startup:
+    httpGet: { path: /api/healthz, port: http }
+    periodSeconds: 10
+    failureThreshold: 30
+  liveness:
+    httpGet: { path: /api/healthz, port: http }
+    periodSeconds: 30
+  readiness:
+    httpGet: { path: /api/healthz, port: http }
+    periodSeconds: 10
 
 ingress:
   enabled: true

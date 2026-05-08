@@ -1,3 +1,6 @@
+replicaCount: 1
+strategy: Recreate
+
 image:
   repository: ghcr.io/bluesky-social/pds
   tag: latest
@@ -11,14 +14,22 @@ resources:
     cpu: "1"
     memory: 1Gi
 
+ports:
+  - name: http
+    containerPort: 3000
+
 service:
   type: ClusterIP
-  port: 80
-  targetPort: 3000
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
 
 persistence:
+  enabled: true
   storageClassName: longhorn-pg
   size: 10Gi
+  mountPath: /pds
 
 env:
   PDS_DATA_DIRECTORY: /pds
@@ -35,9 +46,21 @@ env:
   PDS_REPORT_SERVICE_URL: https://mod.bsky.app
   LOG_ENABLED: "true"
 
+# Templated by common.secret from .Values.secret (vals + sops).
 secret: {}
-
 envFromSecret: bluesky-pds-env
+
+probes:
+  startup:
+    httpGet: { path: /xrpc/_health, port: http }
+    periodSeconds: 5
+    failureThreshold: 60
+  liveness:
+    httpGet: { path: /xrpc/_health, port: http }
+    periodSeconds: 30
+  readiness:
+    httpGet: { path: /xrpc/_health, port: http }
+    periodSeconds: 10
 
 ingress:
   enabled: true

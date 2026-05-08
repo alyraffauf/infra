@@ -1,9 +1,11 @@
+replicaCount: 1
+strategy: Recreate
+dnsPolicy: Default
+
 image:
   repository: ghcr.io/alyraffauf/morsels
   tag: latest
   pullPolicy: Always
-
-dnsPolicy: Default
 
 resources:
   requests:
@@ -13,23 +15,37 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+ports:
+  - name: http
+    containerPort: 8000
+
 service:
   type: ClusterIP
-  port: 80
-  targetPort: 8000
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
 
 persistence:
+  enabled: true
   storageClassName: longhorn
   size: 256Mi
+  mountPath: /data
+
+probes:
+  liveness:
+    httpGet: { path: /, port: http }
+    initialDelaySeconds: 30
+    periodSeconds: 15
+  readiness:
+    httpGet: { path: /, port: http }
+    initialDelaySeconds: 10
+    periodSeconds: 5
 
 ingress:
   enabled: true
   className: traefik
-  hosts:
-    - morsels.blue
-    - www.morsels.blue
-  tls:
-    - hosts:
-        - morsels.blue
-        - www.morsels.blue
-      secretName: morsels-blue-tls
+  routes:
+    - host: morsels.blue
+      aliases: [www.morsels.blue]
+      tlsSecret: morsels-blue-tls

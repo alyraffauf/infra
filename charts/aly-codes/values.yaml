@@ -1,4 +1,5 @@
 replicaCount: 2
+spread: true
 
 image:
   repository: ghcr.io/alyraffauf/aly.codes
@@ -13,19 +14,31 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+ports:
+  - name: http
+    containerPort: 80
+
 service:
   type: NodePort
-  port: 80
-  nodePort: 8282
+  ports:
+    - name: http
+      port: 80
+      nodePort: 8282
+
+probes:
+  liveness:
+    httpGet: { path: /, port: http }
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  readiness:
+    httpGet: { path: /, port: http }
+    initialDelaySeconds: 2
+    periodSeconds: 5
 
 ingress:
   enabled: true
   className: traefik
-  hosts:
-    - aly.codes
-    - www.aly.codes
-  tls:
-    - hosts:
-        - aly.codes
-        - www.aly.codes
-      secretName: aly-codes-tls
+  routes:
+    - host: aly.codes
+      aliases: [www.aly.codes]
+      tlsSecret: aly-codes-tls

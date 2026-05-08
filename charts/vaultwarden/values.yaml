@@ -1,3 +1,6 @@
+replicaCount: 1
+strategy: Recreate
+
 image:
   repository: vaultwarden/server
   tag: latest
@@ -11,14 +14,22 @@ resources:
     cpu: 500m
     memory: 256Mi
 
+ports:
+  - name: http
+    containerPort: 8222
+
 service:
   type: ClusterIP
-  port: 80
-  targetPort: 8222
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8222
 
 persistence:
+  enabled: true
   storageClassName: longhorn
   size: 1Gi
+  mountPath: /data
 
 env:
   DOMAIN: https://vault.cute.haus
@@ -27,8 +38,20 @@ env:
   ROCKET_LOG: critical
   SIGNUPS_ALLOWED: "false"
 
-# Templated by templates/secret.yaml from .Values.secret (vals + sops).
+# Templated by common.secret from .Values.secret (vals + sops).
 envFromSecret: vaultwarden-env
+
+probes:
+  startup:
+    httpGet: { path: /alive, port: http }
+    periodSeconds: 5
+    failureThreshold: 30
+  liveness:
+    httpGet: { path: /alive, port: http }
+    periodSeconds: 30
+  readiness:
+    httpGet: { path: /alive, port: http }
+    periodSeconds: 10
 
 ingress:
   enabled: true
