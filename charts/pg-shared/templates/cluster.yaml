@@ -36,3 +36,18 @@ spec:
 
   monitoring:
     enablePodMonitor: false
+
+  {{- if .Values.backup.enabled }}
+  backup:
+    barmanObjectStore:
+      destinationPath: {{ .Values.backup.destinationPath }}
+      endpointURL: {{ .Values.backup.endpointURL }}
+      s3Credentials:
+        accessKeyId:
+          name: {{ .Values.cluster.name }}-b2
+          key: KEY_ID
+        secretAccessKey:
+          name: {{ .Values.cluster.name }}-b2
+          key: APP_KEY
+    retentionPolicy: {{ .Values.backup.retentionPolicy | quote }}
+  {{- end }}

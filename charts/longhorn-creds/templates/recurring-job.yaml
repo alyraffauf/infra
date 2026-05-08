@@ -1,0 +1,13 @@
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: {{ .Values.recurringJob.name }}
+  labels:
+    app: longhorn-creds
+spec:
+  cron: {{ .Values.recurringJob.cron | quote }}
+  task: backup
+  groups:
+    - default
+  retain: {{ .Values.recurringJob.retain }}
+  concurrency: {{ .Values.recurringJob.concurrency }}

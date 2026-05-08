@@ -21,6 +21,17 @@ cluster:
   # Spread instances across control-plane nodes
   topologyKey: kubernetes.io/hostname
 
-# Backups to b2 are added later — needs S3-compatible B2 application keys
+# B2 (S3-compatible) backup of the cnpg cluster. WAL archiving is continuous;
+# base backup runs on the schedule below. WAL retention is implicit — CNPG
+# keeps enough WAL to PITR from the oldest base backup within retentionPolicy.
+# Filled by values/secrets/pg-shared.yaml.
 backup:
   enabled: false
+  destinationPath: s3://aly-backups/cute.haus/cnpg
+  endpointURL: https://s3.us-east-005.backblazeb2.com
+  # Quartz cron (6 fields: sec min hour dom mon dow). Daily at 04:00 UTC.
+  schedule: "0 0 4 * * *"
+  retentionPolicy: "30d"
+  b2:
+    keyId: ""
+    appKey: ""

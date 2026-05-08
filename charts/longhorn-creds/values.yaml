@@ -1,0 +1,17 @@
+# Filled by values/secrets/longhorn-creds.yaml via vals + sops.
+# Longhorn's helm release references the rendered Secret via
+# defaultBackupStore.backupTargetCredentialSecret = longhorn-b2.
+secret:
+  name: longhorn-b2
+  endpoint: https://s3.us-east-005.backblazeb2.com
+  virtualHostedStyle: "true"
+  keyId: ""
+  appKey: ""
+
+# Daily backup of every volume in the implicit `default` group (i.e. all of
+# them). retain is per-volume; concurrency caps parallel jobs cluster-wide.
+recurringJob:
+  name: daily-backup
+  cron: "0 5 * * *" # 5am UTC, after CNPG's base backup at 4am
+  retain: 14
+  concurrency: 2

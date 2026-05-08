@@ -33,7 +33,8 @@ This repository contains NixOS and home-manager configurations, along with whate
 ├── overlays/                # Custom Nixpkgs overlays
 ├── charts/                  # In-tree helm charts (see charts/README.md)
 ├── values/                  # Per-chart vals refs into secrets/ (see values/README.md)
-└── secrets/                 # SOPS-encrypted yaml (multi-recipient age)
+├── secrets/                 # SOPS-encrypted yaml (multi-recipient age)
+└── BACKUPS.md               # B2 backup + restore runbook (CNPG + Longhorn)
 ```
 
 ---

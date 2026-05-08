@@ -1,0 +1,12 @@
+{{- if .Values.backup.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.cluster.name }}-b2
+  labels:
+    app: {{ .Values.cluster.name }}
+type: Opaque
+stringData:
+  KEY_ID: {{ .Values.backup.b2.keyId | quote }}
+  APP_KEY: {{ .Values.backup.b2.appKey | quote }}
+{{- end }}

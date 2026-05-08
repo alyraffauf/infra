@@ -41,11 +41,22 @@ releases:
             publishedService:
               enabled: true
 
+  # B2 credentials Secret for longhorn's S3 backup target. Must exist before
+  # longhorn references it via defaultSettings.backupTargetCredentialSecret.
+  - name: longhorn-creds
+    namespace: longhorn-system
+    createNamespace: true
+    chart: ./charts/longhorn-creds
+    values:
+      - values/secrets/longhorn-creds.yaml
+
   - name: longhorn
     namespace: longhorn-system
     createNamespace: true
     chart: longhorn/longhorn
     version: 1.11.2
+    needs:
+      - longhorn-system/longhorn-creds
     values:
       - defaultSettings:
           defaultDataPath: /var/lib/longhorn
@@ -54,6 +65,12 @@ releases:
           replicaSoftAntiAffinity: false
           replicaZoneSoftAntiAffinity: false
           allowRecurringJobWhileVolumeDetached: true
+        # S3-compatible backup target (B2). bucket@region is the longhorn
+        # convention; AWS_ENDPOINTS in the longhorn-b2 Secret overrides region.
+        defaultBackupStore:
+          backupTarget: s3://aly-backups@us-east-005/cute.haus/longhorn
+          backupTargetCredentialSecret: longhorn-b2
+          pollInterval: 300
         persistence:
           defaultClass: false
           defaultClassReplicaCount: 2
@@ -79,11 +96,14 @@ releases:
 
   # CNPG Cluster (3-instance HA postgres) + longhorn-pg StorageClass.
   # Apps that need a database get a role + db here; see charts/pg-shared.
+  # Backup config (B2) lives in values/secrets/pg-shared.yaml.
   - name: pg-shared
     namespace: cnpg-system
     chart: ./charts/pg-shared
     needs:
       - cnpg-system/cnpg
+    values:
+      - values/secrets/pg-shared.yaml
 
   # Cloudflare Origin TLS Secrets per domain (aly-codes, aly-social,
   # cute-haus, morsels-blue). Apps reference these by name in ingress.routes.
