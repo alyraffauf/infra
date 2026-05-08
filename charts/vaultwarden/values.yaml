@@ -41,6 +41,9 @@ env:
 # Templated by common.secret from .Values.secret (vals + sops).
 envFromSecret: vaultwarden-env
 
+failover:
+  fastTolerationSeconds: 60
+
 probes:
   startup:
     httpGet: { path: /alive, port: http }

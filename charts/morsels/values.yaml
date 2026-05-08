@@ -32,6 +32,9 @@ persistence:
   size: 256Mi
   mountPath: /data
 
+failover:
+  fastTolerationSeconds: 60
+
 probes:
   liveness:
     httpGet: { path: /, port: http }

@@ -57,6 +57,9 @@ persistence:
   size: 1Gi
   mountPath: /data
 
+failover: # shorten the per-pod toleration for not-ready/unreachable taints
+  fastTolerationSeconds: 60 # default toleration is 300 (5min); set this to evict sooner
+
 probes: # any/all of startup, liveness, readiness
   startup:
     {

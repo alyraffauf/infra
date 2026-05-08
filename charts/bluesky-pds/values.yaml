@@ -50,6 +50,9 @@ env:
 secret: {}
 envFromSecret: bluesky-pds-env
 
+failover:
+  fastTolerationSeconds: 60
+
 probes:
   startup:
     httpGet: { path: /xrpc/_health, port: http }

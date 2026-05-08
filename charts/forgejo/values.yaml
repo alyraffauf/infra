@@ -52,6 +52,9 @@ env:
   FORGEJO_WORK_DIR: /var/lib/forgejo
   FORGEJO_CUSTOM: /var/lib/forgejo/custom
 
+failover:
+  fastTolerationSeconds: 60
+
 probes:
   startup:
     httpGet: { path: /api/healthz, port: http }

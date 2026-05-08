@@ -31,6 +31,9 @@ persistence:
   size: 1Gi
   mountPath: /app/data
 
+failover:
+  fastTolerationSeconds: 60
+
 # Embedded MariaDB bootstrap closes the setup HTTP server then takes several
 # minutes before the main server binds; using `/` as a probe path satisfies
 # startup early and then liveness kills the container mid-bootstrap. Drop

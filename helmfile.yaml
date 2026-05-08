@@ -68,6 +68,10 @@ releases:
           # Gradually move replicas around to satisfy zone constraints +
           # equalize disk pressure when nodes join/leave.
           replicaAutoBalance: best-effort
+          # When a node goes NotReady, allow Longhorn to force-delete the
+          # stuck pod so the volume can detach + reattach to the rescheduled
+          # pod on a healthy node. Cuts failover from ~5min to ~2min.
+          nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
           allowRecurringJobWhileVolumeDetached: true
         # S3-compatible backup target (B2). bucket@region is the longhorn
         # convention; AWS_ENDPOINTS in the longhorn-b2 Secret overrides region.

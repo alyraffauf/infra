@@ -35,6 +35,17 @@ spec:
             matchLabels:
               app: {{ .Chart.Name }}
       {{- end }}
+      {{- if and .Values.failover .Values.failover.fastTolerationSeconds }}
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: {{ .Values.failover.fastTolerationSeconds }}
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: {{ .Values.failover.fastTolerationSeconds }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
