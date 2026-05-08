@@ -21,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: vaultwarden-svc
+                name: vaultwarden
                 port:
                   number: {{ $.Values.service.port }}
     {{- end }}

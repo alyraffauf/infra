@@ -4,6 +4,8 @@ metadata:
   name: forgejo-data
   labels:
     app: forgejo
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce

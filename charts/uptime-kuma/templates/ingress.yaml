@@ -21,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: uptime-kuma-svc
+                name: uptime-kuma
                 port:
                   number: {{ $.Values.service.port }}
     {{- end }}

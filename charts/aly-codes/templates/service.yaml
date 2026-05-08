@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: aly-codes-svc
+  name: aly-codes
   labels:
     app: aly-codes
 spec:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: uptime-kuma-svc
+  name: uptime-kuma
   labels:
     app: uptime-kuma
 spec:

@@ -21,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: forgejo-svc
+                name: forgejo
                 port:
                   name: http
     {{- end }}

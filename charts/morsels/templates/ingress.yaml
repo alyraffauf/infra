@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: morsels-ingress
+  name: morsels
   labels:
     app: morsels
 spec:
@@ -20,7 +20,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: morsels-svc
+                name: morsels
                 port:
                   number: {{ $.Values.service.port }}
     {{- end }}

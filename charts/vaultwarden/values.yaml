@@ -27,8 +27,7 @@ env:
   ROCKET_LOG: critical
   SIGNUPS_ALLOWED: "false"
 
-# Secret with ADMIN_TOKEN, SMTP_HOST, SMTP_PORT, SMTP_FROM, SMTP_PASSWORD.
-# Created out-of-band: kubectl create secret generic vaultwarden-env --from-env-file=...
+# Templated by templates/secret.yaml from .Values.secret (vals + sops).
 envFromSecret: vaultwarden-env
 
 ingress:

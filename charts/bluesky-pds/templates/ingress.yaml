@@ -21,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: bluesky-pds-svc
+                name: bluesky-pds
                 port:
                   number: {{ $.Values.service.port }}
     {{- end }}

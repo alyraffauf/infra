@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: aly-codes-ingress
+  name: aly-codes
   labels:
     app: aly-codes
   {{- with .Values.ingress.annotations }}
@@ -24,7 +24,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: aly-codes-svc
+                name: aly-codes
                 port:
                   number: {{ $.Values.service.port }}
     {{- end }}

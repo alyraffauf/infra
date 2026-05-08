@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: watsup-ingress
+  name: watsup
   labels:
     app: watsup
   {{- with .Values.ingress.annotations }}
@@ -24,7 +24,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: watsup-svc
+                name: watsup
                 port:
                   number: {{ $.Values.service.port }}
     {{- end }}

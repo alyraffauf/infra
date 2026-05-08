@@ -4,6 +4,8 @@ metadata:
   name: morsels-data
   labels:
     app: morsels
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce

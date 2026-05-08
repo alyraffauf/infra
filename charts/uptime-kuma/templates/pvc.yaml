@@ -4,6 +4,8 @@ metadata:
   name: uptime-kuma-data
   labels:
     app: uptime-kuma
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce

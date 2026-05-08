@@ -4,6 +4,8 @@ metadata:
   name: bluesky-pds-data
   labels:
     app: bluesky-pds
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce
