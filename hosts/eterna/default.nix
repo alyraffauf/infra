@@ -80,6 +80,16 @@
     kubernetes-helm
   ];
 
+  systemd.services.k3s = {
+    after = ["tailscaled.service"];
+    wants = ["tailscaled.service"];
+    serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
+      until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
+        ${pkgs.coreutils}/bin/sleep 1
+      done
+    '';
+  };
+
   services.k3s = {
     enable = true;
     role = "server";
