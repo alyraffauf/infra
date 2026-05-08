@@ -60,10 +60,14 @@ releases:
     values:
       - defaultSettings:
           defaultDataPath: /var/lib/longhorn
-          # 2 replicas per volume, hard zone anti-affinity → 1 cloud + 1 home
+          # 2 replicas per volume, hard zone anti-affinity → 1 of {home,
+          # cloud-hetzner, cloud-netcup} per replica.
           defaultReplicaCount: 2
           replicaSoftAntiAffinity: false
           replicaZoneSoftAntiAffinity: false
+          # Gradually move replicas around to satisfy zone constraints +
+          # equalize disk pressure when nodes join/leave.
+          replicaAutoBalance: best-effort
           allowRecurringJobWhileVolumeDetached: true
         # S3-compatible backup target (B2). bucket@region is the longhorn
         # convention; AWS_ENDPOINTS in the longhorn-b2 Secret overrides region.

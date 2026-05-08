@@ -1,0 +1,19 @@
+{{- if .Values.ui.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: longhorn-ui
+  labels:
+    app: longhorn-creds
+spec:
+  ingressClassName: tailscale
+  # Tailscale operator reads tls.hosts[0] as the device hostname.
+  tls:
+    - hosts:
+        - {{ .Values.ui.hostname }}
+  defaultBackend:
+    service:
+      name: {{ .Values.ui.service.name }}
+      port:
+        number: {{ .Values.ui.service.port }}
+{{- end }}
