@@ -27,17 +27,16 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /app/data
+          # Embedded MariaDB bootstrap closes the setup HTTP server then takes
+          # several minutes before the main server binds; using `/` as a probe
+          # path satisfies startup early and then liveness kills the container
+          # mid-bootstrap. Drop liveness; rely on container exit + readiness.
           startupProbe:
             httpGet:
               path: /
               port: {{ .Values.service.targetPort }}
             periodSeconds: 10
-            failureThreshold: 90
-          livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.targetPort }}
-            periodSeconds: 30
+            failureThreshold: 180
           readinessProbe:
             httpGet:
               path: /

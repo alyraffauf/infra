@@ -8,22 +8,28 @@ metadata:
     app: {{ $route.name }}
 spec:
   ports:
-    - port: {{ $route.target.port }}
+    - name: http
+      port: {{ $route.target.port }}
       protocol: TCP
       targetPort: {{ $route.target.port }}
 ---
-apiVersion: v1
-kind: Endpoints
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
 metadata:
-  name: {{ $route.name }}   # must match Service name
+  name: {{ $route.name }}
   labels:
     app: {{ $route.name }}
-subsets:
+    kubernetes.io/service-name: {{ $route.name }}
+addressType: IPv4
+ports:
+  - name: http
+    port: {{ $route.target.port }}
+    protocol: TCP
+endpoints:
   - addresses:
-      - ip: {{ $route.target.ip }}
-    ports:
-      - port: {{ $route.target.port }}
-        protocol: TCP
+      - {{ $route.target.ip }}
+    conditions:
+      ready: true
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -31,17 +37,31 @@ metadata:
   name: {{ $route.name }}
   labels:
     app: {{ $route.name }}
+  {{- if $route.tailscaleHostname }}
+  annotations:
+    tailscale.com/hostname: {{ $route.tailscaleHostname }}
+  {{- end }}
 spec:
-  ingressClassName: {{ $.Values.ingressClassName }}
+  {{- $class := $route.ingressClassName | default $.Values.ingressClassName }}
+  ingressClassName: {{ $class }}
   {{- $hosts := prepend (default (list) $route.aliases) $route.host }}
-  {{- if $route.tls }}
+  {{- if or $route.tls (eq $class "tailscale") }}
   tls:
     - hosts:
         {{- range $hosts }}
         - {{ . }}
         {{- end }}
+      {{- if and $route.tls $route.tls.secretName }}
       secretName: {{ $route.tls.secretName }}
+      {{- end }}
   {{- end }}
+  {{- if eq $class "tailscale" }}
+  defaultBackend:
+    service:
+      name: {{ $route.name }}
+      port:
+        number: {{ $route.target.port }}
+  {{- else }}
   rules:
     {{- range $hosts }}
     - host: {{ . }}
@@ -55,4 +75,5 @@ spec:
                 port:
                   number: {{ $route.target.port }}
     {{- end }}
+  {{- end }}
 {{- end }}

@@ -1,6 +1,6 @@
 image:
   repository: louislam/uptime-kuma
-  tag: "1"
+  tag: "2"
   pullPolicy: Always
 
 resources:
@@ -8,8 +8,8 @@ resources:
     cpu: 50m
     memory: 256Mi
   limits:
-    cpu: 500m
-    memory: 512Mi
+    cpu: "1"
+    memory: 1Gi
 
 service:
   type: ClusterIP
