@@ -5,6 +5,8 @@
   self,
   ...
 }: {
+  imports = [./known-hosts.nix];
+
   options.myNixOS.base.enable = lib.mkEnableOption "base system configuration";
 
   config = lib.mkIf config.myNixOS.base.enable {
@@ -39,7 +41,6 @@
       git.enable = true;
       htop.enable = true;
       nh.enable = true;
-      ssh.knownHosts = config.mySnippets.ssh.knownHosts;
     };
 
     networking.networkmanager.enable = true;

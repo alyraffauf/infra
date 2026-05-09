@@ -76,15 +76,6 @@
       url = "github:ZeroQI/Hama.bundle";
       flake = false;
     };
-
-    # Kept only because `mySnippets.ssh.knownHosts` in the snippets flake
-    # references `self.inputs.secrets/publicKeys/*.pub`. Once the snippets
-    # flake stops doing that, drop this input. Cute.haus's own secrets
-    # live in ./secrets/*.yaml now, not here.
-    secrets = {
-      url = "github:alyraffauf/secrets";
-      flake = false;
-    };
   };
 
   nixConfig = {

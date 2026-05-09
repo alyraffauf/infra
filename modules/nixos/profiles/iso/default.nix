@@ -54,7 +54,6 @@
       };
 
       htop.enable = true;
-      ssh.knownHosts = config.mySnippets.ssh.knownHosts;
     };
 
     system = {

@@ -1,5 +1,4 @@
 {
-  config,
   modulesPath,
   self,
   ...
@@ -33,7 +32,6 @@
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
-  programs.ssh.knownHosts = config.mySnippets.ssh.knownHosts;
   system.stateVersion = "25.11";
   time.timeZone = "America/New_York";
   myDisko.installDrive = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_62292463";

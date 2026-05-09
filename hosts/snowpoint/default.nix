@@ -84,7 +84,6 @@
 
   networking.hostName = "snowpoint";
   nixpkgs.hostPlatform = "x86_64-linux";
-  programs.ssh.knownHosts = config.mySnippets.ssh.knownHosts;
   system.stateVersion = "25.11";
 
   services = {
