@@ -97,7 +97,7 @@
       systems = ["aarch64-darwin" "x86_64-linux"];
 
       imports = [
-        ./modules/flake
+        ./nix/modules/flake
         inputs.actions-nix.flakeModules.default
         inputs.files.flakeModules.default
         inputs.git-hooks-nix.flakeModule

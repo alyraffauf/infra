@@ -16,11 +16,11 @@
 
     secrets = {
       aws = {
-        sopsFile = ../../secrets/aly.yaml;
+        sopsFile = ../../../secrets/aly.yaml;
         key = "aws";
       };
       rclone-b2 = {
-        sopsFile = ../../secrets/b2.yaml;
+        sopsFile = ../../../secrets/b2.yaml;
         key = "rclone_config";
       };
     };

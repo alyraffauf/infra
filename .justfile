@@ -30,7 +30,7 @@ update-nixpkgs: (update "nixpkgs")
 update-caddy-tailscale:
     #!/usr/bin/env bash
     set -euo pipefail
-    CADDY_FILE="modules/nixos/services/caddy/default.nix"
+    CADDY_FILE="nix/modules/nixos/services/caddy/default.nix"
     RESPONSE=$(curl -sf "https://api.github.com/repos/tailscale/caddy-tailscale/commits?per_page=1")
     SHA=$(echo "$RESPONSE" | grep -m1 '"sha"' | sed 's/.*"sha": *"//;s/".*//')
     SHA12=${SHA:0:12}
