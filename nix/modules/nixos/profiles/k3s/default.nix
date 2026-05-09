@@ -99,16 +99,41 @@ in {
         "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
       ];
 
-      # Block k3s startup until tailscale0 has its IP — flannel-iface=tailscale0
-      # otherwise races and etcd peer setup fails on cold boot.
-      services.k3s = {
-        after = ["tailscaled.service"];
-        wants = ["tailscaled.service"];
-        serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
-          until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
-            ${pkgs.coreutils}/bin/sleep 1
-          done
-        '';
+      services = {
+        # Block k3s startup until tailscale0 has its IP — flannel-iface=tailscale0
+        # otherwise races and etcd peer setup fails on cold boot.
+        k3s = {
+          after = ["tailscaled.service"];
+          wants = ["tailscaled.service"];
+          serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
+            until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
+              ${pkgs.coreutils}/bin/sleep 1
+            done
+          '';
+        };
+
+        # Without this, reboots hang ~5min: k3s stops, the longhorn engine pod
+        # on this node dies → kernel iSCSI session sees a connection error,
+        # udev spawns scsi_id against the dead device, scsi_id hangs until its
+        # 3min timeout, then systemd-shutdown SIGKILLs everything. Explicitly
+        # logging out before iscsid stops lets the kernel close the session
+        # gracefully. Ordering: starts after iscsid + before k3s, so on
+        # shutdown it stops AFTER k3s (CSI volumes already detached) and
+        # BEFORE iscsid (sessions still managable).
+        iscsi-logout = {
+          description = "Log out iSCSI sessions cleanly at shutdown";
+          after = ["iscsid.service"];
+          before = ["k3s.service"];
+          requires = ["iscsid.service"];
+          wantedBy = ["multi-user.target"];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            ExecStart = "${pkgs.coreutils}/bin/true";
+            ExecStop = "-${pkgs.openiscsi}/bin/iscsiadm -m node -u";
+            TimeoutStopSec = "30s";
+          };
+        };
       };
     };
   };
