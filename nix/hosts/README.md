@@ -28,10 +28,10 @@ hosts/
 
 1. **Install NixOS** on the device using this flake. Secrets will not decrypt on first boot until the host's age key is a recipient.
 
-1. **Add SSH host key as a sops recipient**: copy `/etc/ssh/ssh_host_ed25519_key.pub` from the new device into `publicKeys/root_$HOSTNAME.pub`, then run `just sops-rekey` to regenerate `.sops.yaml` and re-encrypt every secret.
+1. **Add SSH host key as a sops recipient**: copy `/etc/ssh/ssh_host_ed25519_key.pub` from the new device into `keys/root_$HOSTNAME.pub`, then run `just sops-rekey` to regenerate `.sops.yaml` and re-encrypt every secret.
 
 1. **Rebuild** on the new device. Secrets land at `/run/secrets/` (sops-nix).
 
-1. **(Optional) Add a user key**: drop `~/.ssh/id_ed25519.pub` from the new device into `publicKeys/$USER_$HOSTNAME.pub` and re-run `just sops-rekey` so the user can decrypt secrets too.
+1. **(Optional) Add a user key**: drop `~/.ssh/id_ed25519.pub` from the new device into `keys/$USER_$HOSTNAME.pub` and re-run `just sops-rekey` so the user can decrypt secrets too.
 
 ---

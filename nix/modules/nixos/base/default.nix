@@ -57,9 +57,9 @@
     };
 
     # Decrypt sops secrets using the host's ssh ed25519 host key (converted
-    # to age at decrypt time). Each host's pubkey lives in publicKeys/
-    # and is listed in .sops.yaml; per-secret declarations live in each
-    # host's secrets.nix.
+    # to age at decrypt time). Each host's pubkey lives in keys/ and is
+    # listed in .sops.yaml; per-secret declarations live in each host's
+    # secrets.nix.
     sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
 
     system.configurationRevision = self.rev or self.dirtyRev or null;

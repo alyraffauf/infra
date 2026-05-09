@@ -7,7 +7,7 @@
   ...
 }: let
   tnet = config.mySnippets.tailnet.name;
-  pub = host: "${self}/publicKeys/root_${host}.pub";
+  pub = host: "${self}/keys/root_${host}.pub";
 in {
   programs.ssh.knownHosts = {
     snowpoint = {

@@ -34,7 +34,7 @@ This repository contains NixOS and home-manager configurations, along with whate
 │   ├── charts/              # In-tree helm charts (see k8s/charts/README.md)
 │   └── values/              # Per-chart vals refs into ../secrets/
 ├── secrets/                 # SOPS-encrypted yaml (multi-recipient age)
-├── publicKeys/              # Per-host + per-user age recipients
+├── keys/                    # Per-host + per-user age recipients
 ├── terraform/               # Cloudflare DNS, etc.
 ├── ansible/                 # Server playbooks (deploy-offline, reboots)
 └── BACKUPS.md               # B2 backup + restore runbook (CNPG + Longhorn)

@@ -12,9 +12,9 @@
       isNormalUser = true;
 
       openssh.authorizedKeys.keyFiles =
-        lib.map (file: "${self}/publicKeys/${file}")
+        lib.map (file: "${self}/keys/${file}")
         (lib.filter (file: lib.hasPrefix "aly_" file)
-          (builtins.attrNames (builtins.readDir "${self}/publicKeys")));
+          (builtins.attrNames (builtins.readDir "${self}/keys")));
 
       uid = 1000;
     };
