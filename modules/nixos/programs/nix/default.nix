@@ -53,7 +53,7 @@ in {
       group = "nixbuild";
 
       openssh.authorizedKeys.keyFiles = let
-        pubDir = "${self.inputs.secrets}/publicKeys";
+        pubDir = "${self}/publicKeys";
         aly = lib.filter (file: lib.hasPrefix "aly_" file) (builtins.attrNames (builtins.readDir pubDir));
         root = lib.filter (file: lib.hasPrefix "root_" file) (builtins.attrNames (builtins.readDir pubDir));
       in

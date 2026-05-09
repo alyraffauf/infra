@@ -1,9 +1,20 @@
-{self, ...}: {
-  age.secrets = {
-    cloudflare.file = "${self.inputs.secrets}/cloudflare.age";
-    k3s.file = "${self.inputs.secrets}/k3s.age";
-    rclone-b2.file = "${self.inputs.secrets}/rclone/b2.age";
-    restic-passwd.file = "${self.inputs.secrets}/restic-password.age";
-    tailscaleAuthKey.file = "${self.inputs.secrets}/tailscale/auth.age";
+{
+  sops.secrets = {
+    k3s = {
+      sopsFile = ../../secrets/k3s.yaml;
+      key = "TOKEN";
+    };
+    rclone-b2 = {
+      sopsFile = ../../secrets/b2.yaml;
+      key = "rclone_config";
+    };
+    restic-passwd = {
+      sopsFile = ../../secrets/restic.yaml;
+      key = "PASSWORD";
+    };
+    tailscaleAuthKey = {
+      sopsFile = ../../secrets/tailscale.yaml;
+      key = "auth_key";
+    };
   };
 }

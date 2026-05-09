@@ -13,7 +13,7 @@
       "allow_other"
       "args2env"
       "cache-dir=${dataDirectory}/.rclone-cache"
-      "config=${config.age.secrets.rclone-b2.path}"
+      "config=${config.sops.secrets.rclone-b2.path}"
       "dir-cache-time=1h"
       "nodev"
       "nofail"

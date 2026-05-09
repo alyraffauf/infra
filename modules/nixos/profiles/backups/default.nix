@@ -8,6 +8,15 @@
   mkRepo = service: "${backupDestination}/${service}";
   stop = service: "${pkgs.systemd}/bin/systemctl stop ${service}";
   start = service: "${pkgs.systemd}/bin/systemctl start ${service}";
+  # mySnippets.restic still wires `passwordFile`/`rcloneConfigFile` to
+  # `config.age.secrets.*.path`. Override to point at the sops-managed
+  # paths so we can drop ragenix.
+  restic =
+    config.mySnippets.restic
+    // {
+      passwordFile = config.sops.secrets.restic-passwd.path;
+      rcloneConfigFile = config.sops.secrets.rclone-b2.path;
+    };
 in {
   options.myNixOS.profiles.backups = {
     enable = lib.mkEnableOption "automatically back up enabled services to b2";
@@ -16,7 +25,7 @@ in {
   config = lib.mkIf config.myNixOS.profiles.backups.enable {
     services.restic.backups = {
       audiobookshelf = lib.mkIf config.services.audiobookshelf.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "audiobookshelf";
           backupPrepareCommand = stop "audiobookshelf";
@@ -26,7 +35,7 @@ in {
       );
 
       bazarr = lib.mkIf config.services.bazarr.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "bazarr";
           backupPrepareCommand = stop "bazarr";
@@ -36,7 +45,7 @@ in {
       );
 
       couchdb = lib.mkIf config.services.couchdb.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "couchdb";
           backupPrepareCommand = stop "couchdb";
@@ -46,7 +55,7 @@ in {
       );
 
       forgejo = lib.mkIf (config.services.forgejo.enable && config.services.forgejo.settings.storage.STORAGE_TYPE != "minio") (
-        config.mySnippets.restic
+        restic
         // {
           paths = [config.services.forgejo.stateDir];
           repository = mkRepo "forgejo";
@@ -54,7 +63,7 @@ in {
       );
 
       homebridge = lib.mkIf config.services.homebridge.enable (
-        config.mySnippets.restic
+        restic
         // {
           paths = ["/var/lib/homebridge"];
           repository = "rclone:b2:aly-backups/${config.networking.hostName}/homebridge";
@@ -62,7 +71,7 @@ in {
       );
 
       immich = lib.mkIf config.services.immich.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "immich-server";
           backupPrepareCommand = stop "immich-server";
@@ -79,7 +88,7 @@ in {
       );
 
       jellyfin = lib.mkIf config.services.jellyfin.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "jellyfin";
           backupPrepareCommand = stop "jellyfin";
@@ -89,7 +98,7 @@ in {
       );
 
       lidarr = lib.mkIf config.services.lidarr.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "lidarr";
           backupPrepareCommand = stop "lidarr";
@@ -99,7 +108,7 @@ in {
       );
 
       ombi = lib.mkIf config.services.ombi.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "ombi";
           backupPrepareCommand = stop "ombi";
@@ -109,7 +118,7 @@ in {
       );
 
       pds = lib.mkIf config.services.bluesky-pds.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "bluesky-pds";
           backupPrepareCommand = stop "bluesky-pds";
@@ -119,7 +128,7 @@ in {
       );
 
       plex = lib.mkIf config.services.plex.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "plex";
           backupPrepareCommand = stop "plex";
@@ -130,7 +139,7 @@ in {
       );
 
       postgresql = lib.mkIf config.services.postgresql.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "postgresql";
           backupPrepareCommand = stop "postgresql";
@@ -140,7 +149,7 @@ in {
       );
 
       prowlarr = lib.mkIf config.services.prowlarr.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "prowlarr";
           backupPrepareCommand = stop "prowlarr";
@@ -150,7 +159,7 @@ in {
       );
 
       qbittorrent = lib.mkIf config.myNixOS.services.qbittorrent.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "qbittorrent";
           backupPrepareCommand = stop "qbittorrent";
@@ -160,7 +169,7 @@ in {
       );
 
       radarr = lib.mkIf config.services.radarr.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "radarr";
           backupPrepareCommand = stop "radarr";
@@ -170,7 +179,7 @@ in {
       );
 
       readarr = lib.mkIf config.services.readarr.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "readarr";
           backupPrepareCommand = stop "readarr";
@@ -180,7 +189,7 @@ in {
       );
 
       sonarr = lib.mkIf config.services.sonarr.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "sonarr";
           backupPrepareCommand = stop "sonarr";
@@ -190,7 +199,7 @@ in {
       );
 
       tautulli = lib.mkIf config.services.tautulli.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "tautulli";
           backupPrepareCommand = stop "tautulli";
@@ -200,7 +209,7 @@ in {
       );
 
       uptime-kuma = lib.mkIf config.services.uptime-kuma.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "uptime-kuma";
           backupPrepareCommand = stop "uptime-kuma";
@@ -210,7 +219,7 @@ in {
       );
 
       vaultwarden = lib.mkIf config.services.vaultwarden.enable (
-        config.mySnippets.restic
+        restic
         // {
           backupCleanupCommand = start "vaultwarden";
           backupPrepareCommand = stop "vaultwarden";

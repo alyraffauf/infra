@@ -7,13 +7,23 @@
 }: {
   imports = [
     self.homeModules.default
-    self.inputs.agenix.homeManagerModules.default
+    self.inputs.sops-nix.homeManagerModules.sops
     self.inputs.safari.homeModules.default
   ];
 
-  age.secrets = {
-    aws.file = "${self.inputs.secrets}/aly/aws.age";
-    rclone-b2.file = "${self.inputs.secrets}/rclone/b2.age";
+  sops = {
+    age.sshKeyPaths = ["${config.home.homeDirectory}/.ssh/id_ed25519"];
+
+    secrets = {
+      aws = {
+        sopsFile = ../../secrets/aly.yaml;
+        key = "aws";
+      };
+      rclone-b2 = {
+        sopsFile = ../../secrets/b2.yaml;
+        key = "rclone_config";
+      };
+    };
   };
 
   home = {
@@ -35,7 +45,7 @@
 
       credentials = {
         "default" = {
-          "credential_process" = ''sh -c "${lib.getExe' pkgs.uutils-coreutils-noprefix "cat"} ${config.age.secrets.aws.path}"'';
+          "credential_process" = ''sh -c "${lib.getExe' pkgs.uutils-coreutils-noprefix "cat"} ${config.sops.secrets.aws.path}"'';
         };
       };
     };

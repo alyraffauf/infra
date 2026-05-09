@@ -1,6 +1,68 @@
+# Recipient keys are derived from publicKeys/*.pub via ssh-to-age. Every
+# host and user-machine that may need to read any secret is a recipient
+# (no per-file privacy enforcement). Add or remove a key by adding a
+# .pub file and running `just sops-rekey` (or `sops updatekeys` per file).
+keys:
+  # === user keys (aly@<host>) ===
+  - &user_aly_eterna age1g79dfm0p44q5yxzhwd9syg965lupdu3n5lgyltdannmul5v5v5aszzz3gs
+  - &user_aly_fallarbor age1cpcg5t420nf72k0c9rrx7amg0szch98uzqu273exj7lw3yu0j99q6vcckn
+  - &user_aly_fortree age1w4mzwe89aqgs56mn8zg7dd2l623kwmw80k90wr2sa6dnlcdmhcnsp4kt54
+  - &user_aly_jubilife age1e5a0aaueyk34klry2qk094zrwfsvga0uft93mwweye30xhqhvfzs3jgqku
+  - &user_aly_kyogre age1amxkn2xafmz5284l2cs506emuuuthjkcgl020uqu5md3lz4tzdvsks0kts
+  - &user_aly_oreburgh age1g9xp04ut8ds6g3ejhhznnjvwgr5cn4fz5uysxy3pxf5klxse2u7q8n4ej4
+  - &user_aly_pacifidlog age1j9jju3whwj72udhge7v4c77gk6v6w2cq8zjngzyppwtptfsz499qyywu9a
+  - &user_aly_petalburg age162sx8kppp90mjxw88eqs78hgnpkddf8k9kgtksmmexzvcdxknpkspmkgaf
+  - &user_aly_roxanne age1jej9njh9p4zj5khllv3rw7v2m6vc50e7wyrc7n29umyc5nnmgf6s2j5s7s
+  - &user_aly_rustboro age12qh3vyt3srzelqaw9v62g3jzj07sq7aj7h2vc5yevpu0yuvwhp6sd99lsa
+  - &user_aly_slateport age1mpcyeqjcl8j0dd4sj6f0vufs2vpus3xn4dvxe3cr8g8rgcm0nfxq03ds4y
+  - &user_aly_sootopolis age1ntdvfac379q6dtwwmrspcktvymhsd72r47370gqqu2nr9xx2zgjsxdgepd
+  - &user_aly_verdanturf age1ar3m2qqv20wg4lkyxswnmt538ht7vln7a24kqd394rjmsu2xp9wqgg5d7s
+  # === host keys (root@<host>) ===
+  - &host_celestic age15mhrzghrmprq387xqsln6996yx3ja2e2zpamh9mtuu9zqmxahunqg9qugw
+  - &host_eterna age1su5lre6favcv6gdc50yh7ecv33qgfp0tm6klunpuasa3q79kmqtsykaq0d
+  - &host_fallarbor age1v4x5alkmvxsx5jsrwpecx0tne0ch2rwfkk0rq5w8x578j2pf5urssg5gx2
+  - &host_fortree age1f9hd8fu0694rc3tr6hwxz3ldfpepref937rmvqdxvvsr0kfcjdxswyzvw3
+  - &host_jubilife age157en2pt286a22pxzyugt84ak6rn2at89tpma88juqfgj84lme5csq4999g
+  - &host_oreburgh age1a5hhzaptle8ld2vj0yrmcseu46l6rzapejmt4z6nv24sp5su85lqu5764x
+  - &host_pacifidlog age1axn36h9356ena7rq6y2xa4rcm250w9h0m9pz6x0677gla0v4f4dsj92yfm
+  - &host_petalburg age1kgp3x48wn0dmzwqp0vdpfsdw42rej0ypkj0qavs7c2t2tgdud5zqcmhl40
+  - &host_roxanne age1fht4gjmjvqrn3umlmpndau5urp3w8lktr7t5aqhv3d5y5urgeawstv77ps
+  - &host_rustboro age1tmzw0gsq0fm27x3l7zvad5fxgj6xdykgz5whhh8axtphmlpl3ccqj2fhf6
+  - &host_slateport age1ephzrpgftmvq4cul9766q2r3mss38xu6un74ryfmw0729afysghsh0a3qg
+  - &host_snowpoint age1stsuakfyj3gkee4sm328ky2crmymyuzwjjmxrpvnm754sdt2zvnshf68jx
+  - &host_solaceon age1n66v74s70rma853sdhf7q9tn2wj85v25hh6qvyvxrf42hca284esqr26wa
+  - &host_sootopolis age1s7ecrfntus8rvyprzhffjpqk2tmrc259knf9xqajlrqvewfp8d6svwp9pp
+  - &host_verdanturf age16lttarwtv0dhrc6l2v49caxrrtraycexkagu08t4uzmpd7he7d4ql5s604
+
 creation_rules:
   - path_regex: ^secrets/.*\.ya?ml$
-    age: >-
-      age1j9jju3whwj72udhge7v4c77gk6v6w2cq8zjngzyppwtptfsz499qyywu9a,
-      age162sx8kppp90mjxw88eqs78hgnpkddf8k9kgtksmmexzvcdxknpkspmkgaf,
-      age1e5a0aaueyk34klry2qk094zrwfsvga0uft93mwweye30xhqhvfzs3jgqku
+    key_groups:
+      - age:
+          - *user_aly_eterna
+          - *user_aly_fallarbor
+          - *user_aly_fortree
+          - *user_aly_jubilife
+          - *user_aly_kyogre
+          - *user_aly_oreburgh
+          - *user_aly_pacifidlog
+          - *user_aly_petalburg
+          - *user_aly_roxanne
+          - *user_aly_rustboro
+          - *user_aly_slateport
+          - *user_aly_sootopolis
+          - *user_aly_verdanturf
+          - *host_celestic
+          - *host_eterna
+          - *host_fallarbor
+          - *host_fortree
+          - *host_jubilife
+          - *host_oreburgh
+          - *host_pacifidlog
+          - *host_petalburg
+          - *host_roxanne
+          - *host_rustboro
+          - *host_slateport
+          - *host_snowpoint
+          - *host_solaceon
+          - *host_sootopolis
+          - *host_verdanturf

@@ -13,11 +13,6 @@
       };
     };
 
-    agenix = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:yaxitech/ragenix";
-    };
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,6 +51,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -77,6 +77,10 @@
       flake = false;
     };
 
+    # Kept only because `mySnippets.ssh.knownHosts` in the snippets flake
+    # references `self.inputs.secrets/publicKeys/*.pub`. Once the snippets
+    # flake stops doing that, drop this input. Cute.haus's own secrets
+    # live in ./secrets/*.yaml now, not here.
     secrets = {
       url = "github:alyraffauf/secrets";
       flake = false;

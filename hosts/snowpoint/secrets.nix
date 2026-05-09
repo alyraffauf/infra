@@ -1,11 +1,32 @@
-{self, ...}: {
-  age.secrets = {
-    k3s.file = "${self.inputs.secrets}/k3s.age";
-    navidrome.file = "${self.inputs.secrets}/navidrome.age";
-    rclone-b2.file = "${self.inputs.secrets}/rclone/b2.age";
-    restic-passwd.file = "${self.inputs.secrets}/restic-password.age";
-    syncthingCert.file = "${self.inputs.secrets}/aly/syncthing/snowpoint/cert.age";
-    syncthingKey.file = "${self.inputs.secrets}/aly/syncthing/snowpoint/key.age";
-    tailscaleAuthKey.file = "${self.inputs.secrets}/tailscale/auth.age";
+{
+  sops.secrets = {
+    k3s = {
+      sopsFile = ../../secrets/k3s.yaml;
+      key = "TOKEN";
+    };
+    navidrome = {
+      sopsFile = ../../secrets/navidrome.yaml;
+      key = "env";
+    };
+    rclone-b2 = {
+      sopsFile = ../../secrets/b2.yaml;
+      key = "rclone_config";
+    };
+    restic-passwd = {
+      sopsFile = ../../secrets/restic.yaml;
+      key = "PASSWORD";
+    };
+    syncthingCert = {
+      sopsFile = ../../secrets/syncthing.yaml;
+      key = "snowpoint_cert";
+    };
+    syncthingKey = {
+      sopsFile = ../../secrets/syncthing.yaml;
+      key = "snowpoint_key";
+    };
+    tailscaleAuthKey = {
+      sopsFile = ../../secrets/tailscale.yaml;
+      key = "auth_key";
+    };
   };
 }

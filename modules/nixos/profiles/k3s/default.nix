@@ -61,7 +61,7 @@ in {
         enable = true;
         inherit (cfg) role clusterInit;
         serverAddr = lib.mkIf (cfg.serverAddr != null) cfg.serverAddr;
-        tokenFile = config.age.secrets.k3s.path;
+        tokenFile = config.sops.secrets.k3s.path;
         extraFlags =
           ["--flannel-iface=tailscale0"]
           ++ lib.optionals (cfg.role == "server") (

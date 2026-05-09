@@ -29,13 +29,16 @@
       }
     ];
 
-    age.secrets.act-runner.file = "${self.inputs.secrets}/act-runner.age";
+    sops.secrets.act-runner = {
+      sopsFile = "${self}/secrets/act-runner.yaml";
+      key = "TOKEN";
+    };
 
     services.gitea-actions-runner = let
       arch = lib.replaceStrings ["-"] ["_"] pkgs.stdenv.hostPlatform.system;
     in {
       instances = let
-        tokenFile = config.age.secrets.act-runner.path;
+        tokenFile = config.sops.secrets.act-runner.path;
       in {
         alycodes-containers = {
           inherit tokenFile;

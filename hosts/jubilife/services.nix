@@ -126,7 +126,7 @@ in {
       enable = true;
       originalsPath = "/mnt/Media/Photos/";
       address = "0.0.0.0";
-      passwordFile = config.age.secrets.photoprismAdminPass.path;
+      passwordFile = config.sops.secrets.photoprismAdminPass.path;
 
       settings = {
         PHOTOPRISM_SITE_URL = "https://photoprism.narwhal-snapper.ts.net";

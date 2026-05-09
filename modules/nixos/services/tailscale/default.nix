@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  self,
   ...
 }: {
   options.myNixOS.services.tailscale = {
@@ -10,7 +9,7 @@
 
     authKeyFile = lib.mkOption {
       description = "Key file to use for authentication";
-      default = config.age.secrets.tailscaleAuthKey.path or null;
+      default = config.sops.secrets.tailscaleAuthKey.path or null;
       type = lib.types.nullOr lib.types.path;
     };
 
@@ -34,8 +33,6 @@
         message = "config.tailscale.authKeyFile cannot be null.";
       }
     ];
-
-    age.secrets.tailscaleCaddyAuth.file = "${self.inputs.secrets}/tailscale/caddyAuth.age";
 
     home-manager.sharedModules = [
       {

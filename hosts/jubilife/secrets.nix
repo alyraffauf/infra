@@ -1,42 +1,52 @@
-{self, ...}: {
-  age.secrets = {
-    # deluge = {
-    #   file = "${self.inputs.secrets}/deluge.age";
-    #   owner = "deluge";
-    # };
-
-    # lastfmId = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/lastfm/api.age";
-    # };
-
-    # lastfmSecret = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/lastfm/secret.age";
-    # };
-
-    # spotifyId = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/spotify/client-id.age";
-    # };
-
-    # spotifySecret = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/spotify/client-secret.age";
-    # };
-
-    bazarrApiKey.file = "${self.inputs.secrets}/arr/bazarrApiKey.age";
-    k3s.file = "${self.inputs.secrets}/k3s.age";
-    lidarrApiKey.file = "${self.inputs.secrets}/arr/lidarrApiKey.age";
-    photoprismAdminPass.file = "${self.inputs.secrets}/photoprism.age";
-    prowlarrApiKey.file = "${self.inputs.secrets}/arr/prowlarrApiKey.age";
-    radarrApiKey.file = "${self.inputs.secrets}/arr/radarrApiKey.age";
-    rclone-b2.file = "${self.inputs.secrets}/rclone/b2.age";
-    restic-passwd.file = "${self.inputs.secrets}/restic-password.age";
-    slskd.file = "${self.inputs.secrets}/slskd.age";
-    sonarrApiKey.file = "${self.inputs.secrets}/arr/sonarrApiKey.age";
-    syncthingCert.file = "${self.inputs.secrets}/aly/syncthing/jubilife/cert.age";
-    syncthingKey.file = "${self.inputs.secrets}/aly/syncthing/jubilife/key.age";
-    tailscaleAuthKey.file = "${self.inputs.secrets}/tailscale/auth.age";
+{
+  sops.secrets = {
+    bazarrApiKey = {
+      sopsFile = ../../secrets/arr.yaml;
+      key = "bazarr_api_key";
+    };
+    k3s = {
+      sopsFile = ../../secrets/k3s.yaml;
+      key = "TOKEN";
+    };
+    lidarrApiKey = {
+      sopsFile = ../../secrets/arr.yaml;
+      key = "lidarr_api_key";
+    };
+    photoprismAdminPass = {
+      sopsFile = ../../secrets/photoprism.yaml;
+      key = "ADMIN_PASSWORD";
+    };
+    prowlarrApiKey = {
+      sopsFile = ../../secrets/arr.yaml;
+      key = "prowlarr_api_key";
+    };
+    radarrApiKey = {
+      sopsFile = ../../secrets/arr.yaml;
+      key = "radarr_api_key";
+    };
+    rclone-b2 = {
+      sopsFile = ../../secrets/b2.yaml;
+      key = "rclone_config";
+    };
+    restic-passwd = {
+      sopsFile = ../../secrets/restic.yaml;
+      key = "PASSWORD";
+    };
+    sonarrApiKey = {
+      sopsFile = ../../secrets/arr.yaml;
+      key = "sonarr_api_key";
+    };
+    syncthingCert = {
+      sopsFile = ../../secrets/syncthing.yaml;
+      key = "jubilife_cert";
+    };
+    syncthingKey = {
+      sopsFile = ../../secrets/syncthing.yaml;
+      key = "jubilife_key";
+    };
+    tailscaleAuthKey = {
+      sopsFile = ../../secrets/tailscale.yaml;
+      key = "auth_key";
+    };
   };
 }

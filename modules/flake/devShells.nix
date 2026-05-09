@@ -21,7 +21,6 @@ _: {
         ])
         # ++ lib.attrValues config.treefmt.build.programs
         ++ [
-          inputs'.agenix.packages.default
           inputs'.nynx.packages.nynx
           self'.packages.gen-files
         ]

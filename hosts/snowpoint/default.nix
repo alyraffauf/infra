@@ -42,7 +42,7 @@
       "allow_other"
       "args2env"
       "cache-dir=/mnt/Backblaze/.rclone-cache"
-      "config=${config.age.secrets.rclone-b2.path}"
+      "config=${config.sops.secrets.rclone-b2.path}"
       "dir-cache-time=1h"
       "nodev"
       "nofail"
@@ -92,7 +92,7 @@
 
     navidrome = {
       enable = true;
-      environmentFile = config.age.secrets.navidrome.path;
+      environmentFile = config.sops.secrets.navidrome.path;
 
       settings = {
         Address = "0.0.0.0";
@@ -143,8 +143,8 @@
 
       syncthing = {
         enable = true;
-        certFile = config.age.secrets.syncthingCert.path;
-        keyFile = config.age.secrets.syncthingKey.path;
+        certFile = config.sops.secrets.syncthingCert.path;
+        keyFile = config.sops.secrets.syncthingKey.path;
         syncROMs = false;
         user = "aly";
       };

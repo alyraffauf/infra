@@ -4,7 +4,6 @@
     ./cachefilesd
     ./caddy
     ./fail2ban
-    ./forgejo
     ./forgejo-runner
     ./plex
     ./prometheusNode

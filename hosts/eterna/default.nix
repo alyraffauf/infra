@@ -18,7 +18,7 @@
       "allow_other"
       "args2env"
       "cache-dir=/mnt/Storage/.rclone-cache"
-      "config=${config.age.secrets.rclone-b2.path}"
+      "config=${config.sops.secrets.rclone-b2.path}"
       "dir-cache-time=1h"
       "nodev"
       "nofail"
@@ -124,8 +124,8 @@
 
       syncthing = {
         enable = true;
-        certFile = config.age.secrets.syncthingCert.path;
-        keyFile = config.age.secrets.syncthingKey.path;
+        certFile = config.sops.secrets.syncthingCert.path;
+        keyFile = config.sops.secrets.syncthingKey.path;
         user = "aly";
       };
 

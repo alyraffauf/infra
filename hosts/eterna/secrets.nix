@@ -1,33 +1,28 @@
-{self, ...}: {
-  age.secrets = {
-    k3s.file = "${self.inputs.secrets}/k3s.age";
-    rclone-b2.file = "${self.inputs.secrets}/rclone/b2.age";
-    restic-passwd.file = "${self.inputs.secrets}/restic-password.age";
-    tailscaleAuthKey.file = "${self.inputs.secrets}/tailscale/auth.age";
-
-    # lastfmId = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/lastfm/api.age";
-    # };
-
-    # lastfmSecret = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/lastfm/secret.age";
-    # };
-
-    slskd.file = "${self.inputs.secrets}/slskd.age";
-
-    # spotifyId = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/spotify/client-id.age";
-    # };
-
-    # spotifySecret = {
-    #   owner = "navidrome";
-    #   file = "${self.inputs.secrets}/spotify/client-secret.age";
-    # };
-
-    syncthingCert.file = "${self.inputs.secrets}/aly/syncthing/eterna/cert.age";
-    syncthingKey.file = "${self.inputs.secrets}/aly/syncthing/eterna/key.age";
+{
+  sops.secrets = {
+    k3s = {
+      sopsFile = ../../secrets/k3s.yaml;
+      key = "TOKEN";
+    };
+    rclone-b2 = {
+      sopsFile = ../../secrets/b2.yaml;
+      key = "rclone_config";
+    };
+    restic-passwd = {
+      sopsFile = ../../secrets/restic.yaml;
+      key = "PASSWORD";
+    };
+    syncthingCert = {
+      sopsFile = ../../secrets/syncthing.yaml;
+      key = "eterna_cert";
+    };
+    syncthingKey = {
+      sopsFile = ../../secrets/syncthing.yaml;
+      key = "eterna_key";
+    };
+    tailscaleAuthKey = {
+      sopsFile = ../../secrets/tailscale.yaml;
+      key = "auth_key";
+    };
   };
 }
