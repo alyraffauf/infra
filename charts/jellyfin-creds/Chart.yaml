@@ -1,6 +1,0 @@
-apiVersion: v2
-name: jellyfin-creds
-description: Rclone (B2) credentials Secret for the jellyfin pod's rclone sidecar.
-type: application
-version: 0.1.0
-appVersion: "1.0.0"

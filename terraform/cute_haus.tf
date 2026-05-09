@@ -31,6 +31,17 @@ resource "cloudflare_dns_record" "cute_haus_couchdb_a" {
   settings = {}
 }
 
+resource "cloudflare_dns_record" "cute_haus_jellyfin_a_solaceon" {
+  zone_id  = local.zones.cute_haus
+  name     = "jellyfin.cute.haus"
+  type     = "A"
+  content  = local.hosts.solaceon
+  proxied  = true
+  ttl      = 1
+  tags     = []
+  settings = {}
+}
+
 resource "cloudflare_dns_record" "cute_haus_kuma_a" {
   zone_id  = local.zones.cute_haus
   name     = "kuma.cute.haus"

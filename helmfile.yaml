@@ -7,8 +7,6 @@ repositories:
     url: https://cloudnative-pg.github.io/charts
   - name: tailscale
     url: https://pkgs.tailscale.com/helmcharts
-  - name: jellyfin
-    url: https://jellyfin.github.io/jellyfin-helm
 
 releases:
   # ─── Cluster infra ──────────────────────────────────────────────────────
@@ -172,25 +170,6 @@ releases:
       - default/cluster-tls
     values:
       - values/secrets/bluesky-pds.yaml
-
-  # B2 (rclone) creds Secret for jellyfin's rclone sidecar. Must exist
-  # before the jellyfin release runs.
-  - name: jellyfin-creds
-    namespace: default
-    chart: ./charts/jellyfin-creds
-    values:
-      - values/secrets/jellyfin-creds.yaml
-
-  # Upstream chart: jellyfin/jellyfin-helm. See values/jellyfin.yaml for the
-  # full overlay (affinity, tolerations, NFS + B2 mounts, rclone sidecar).
-  - name: jellyfin
-    namespace: default
-    chart: jellyfin/jellyfin
-    needs:
-      - default/cluster-tls
-      - default/jellyfin-creds
-    values:
-      - values/jellyfin.yaml
 
   # Ingress + Service + EndpointSlice for services that live OUTSIDE the
   # cluster (on tailnet IPs). e.g. plex/immich on jubilife, audiobookshelf

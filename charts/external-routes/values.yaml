@@ -18,6 +18,11 @@ routes:
     target: { ip: 100.81.61.31, port: 2283 } # jubilife
     tls: { secretName: cute-haus-tls }
 
+  - name: jellyfin
+    host: jellyfin.cute.haus
+    target: { ip: 100.81.61.31, port: 8096 } # jubilife
+    tls: { secretName: cute-haus-tls }
+
   - name: ombi
     host: ombi.cute.haus
     target: { ip: 100.81.61.31, port: 5000 } # jubilife
