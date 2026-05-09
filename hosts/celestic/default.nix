@@ -1,5 +1,4 @@
 {
-  config,
   modulesPath,
   pkgs,
   self,
@@ -40,7 +39,7 @@
     after = ["network.target"];
 
     serviceConfig = {
-      ExecStart = "${pkgs.socat}/bin/socat TCP-LISTEN:23,fork,reuseaddr TCP:${config.mySnippets.cute-haus.networkMap.atbbs.hostName}:2323";
+      ExecStart = "${pkgs.socat}/bin/socat TCP-LISTEN:23,fork,reuseaddr TCP:eterna:2323";
       Restart = "always";
     };
   };

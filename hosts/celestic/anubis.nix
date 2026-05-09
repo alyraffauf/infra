@@ -10,7 +10,7 @@ _: {
 
     instances = {
       # forgejo.settings = {
-      #   TARGET = "http://${config.mySnippets.cute-haus.networkMap.forgejo.hostName}:${toString config.mySnippets.cute-haus.networkMap.forgejo.port}";
+      #   TARGET = "http://solaceon:3001";
       #   BIND = ":60123";
       #   BIND_NETWORK = "tcp";
       #   METRICS_BIND = "0.0.0.0:20123";

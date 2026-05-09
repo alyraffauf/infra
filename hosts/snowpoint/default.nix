@@ -97,7 +97,7 @@
         Address = "0.0.0.0";
         DefaultTheme = "Auto";
         MusicFolder = "/mnt/Media/Music";
-        Port = config.mySnippets.tailnet.networkMap.navidrome.port;
+        Port = 4533;
         SubsonicArtistParticipations = true;
         UIWelcomeMessage = "Welcome to Navidrome @ ${config.networking.hostName}";
       };

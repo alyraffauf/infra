@@ -126,7 +126,7 @@ in {
       promtail.enable = true;
 
       qbittorrent = {
-        inherit (config.mySnippets.tailnet.networkMap.qbittorrent) port;
+        port = 8080;
         enable = true;
       };
 

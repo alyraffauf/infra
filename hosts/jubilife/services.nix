@@ -1,83 +1,66 @@
 {config, ...}: let
   dataDirectory = "/mnt/Data";
+  tnet = "narwhal-snapper.ts.net";
 in {
   networking.firewall.allowedTCPPorts = [6881];
 
   services = {
     caddy.virtualHosts = {
-      "${config.mySnippets.tailnet.networkMap.bazarr.vHost}" = {
-        extraConfig = ''
-          bind tailscale/bazarr
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.bazarr.hostName}:${toString config.mySnippets.tailnet.networkMap.bazarr.port}
-        '';
-      };
+      "bazarr.${tnet}".extraConfig = ''
+        bind tailscale/bazarr
+        encode zstd gzip
+        reverse_proxy jubilife:6767
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.jellyfin.vHost}" = {
-        extraConfig = ''
-          bind tailscale/jellyfin
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.jellyfin.hostName}:${toString config.mySnippets.tailnet.networkMap.jellyfin.port} {
-            flush_interval -1
-          }
-        '';
-      };
+      "jellyfin.${tnet}".extraConfig = ''
+        bind tailscale/jellyfin
+        encode zstd gzip
+        reverse_proxy jubilife:8096 {
+          flush_interval -1
+        }
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.lidarr.vHost}" = {
-        extraConfig = ''
-          bind tailscale/lidarr
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.lidarr.hostName}:${toString config.mySnippets.tailnet.networkMap.lidarr.port}
-        '';
-      };
+      "lidarr.${tnet}".extraConfig = ''
+        bind tailscale/lidarr
+        encode zstd gzip
+        reverse_proxy jubilife:8686
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.ollama.vHost}" = {
-        extraConfig = ''
-          bind tailscale/ollama
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.ollama.hostName}:${toString config.mySnippets.tailnet.networkMap.ollama.port}
-        '';
-      };
+      "ollama.${tnet}".extraConfig = ''
+        bind tailscale/ollama
+        encode zstd gzip
+        reverse_proxy jubilife:11434
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.prowlarr.vHost}" = {
-        extraConfig = ''
-          bind tailscale/prowlarr
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.prowlarr.hostName}:${toString config.mySnippets.tailnet.networkMap.prowlarr.port}
-        '';
-      };
+      "prowlarr.${tnet}".extraConfig = ''
+        bind tailscale/prowlarr
+        encode zstd gzip
+        reverse_proxy jubilife:9696
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.qbittorrent.vHost}" = {
-        extraConfig = ''
-          bind tailscale/qbittorrent
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.qbittorrent.hostName}:${toString config.mySnippets.tailnet.networkMap.qbittorrent.port}
-        '';
-      };
+      "qbittorrent.${tnet}".extraConfig = ''
+        bind tailscale/qbittorrent
+        encode zstd gzip
+        reverse_proxy jubilife:8080
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.radarr.vHost}" = {
-        extraConfig = ''
-          bind tailscale/radarr
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.radarr.hostName}:${toString config.mySnippets.tailnet.networkMap.radarr.port}
-        '';
-      };
+      "radarr.${tnet}".extraConfig = ''
+        bind tailscale/radarr
+        encode zstd gzip
+        reverse_proxy jubilife:7878
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.sonarr.vHost}" = {
-        extraConfig = ''
-          bind tailscale/sonarr
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.sonarr.hostName}:${toString config.mySnippets.tailnet.networkMap.sonarr.port}
-        '';
-      };
+      "sonarr.${tnet}".extraConfig = ''
+        bind tailscale/sonarr
+        encode zstd gzip
+        reverse_proxy jubilife:8989
+      '';
 
-      "${config.mySnippets.tailnet.networkMap.tautulli.vHost}" = {
-        extraConfig = ''
-          bind tailscale/tautulli
-          encode zstd gzip
-          reverse_proxy ${config.mySnippets.tailnet.networkMap.tautulli.hostName}:${toString config.mySnippets.tailnet.networkMap.tautulli.port}
-        '';
-      };
+      "tautulli.${tnet}".extraConfig = ''
+        bind tailscale/tautulli
+        encode zstd gzip
+        reverse_proxy jubilife:8181
+      '';
     };
 
     immich = {
@@ -85,7 +68,7 @@ in {
       host = "0.0.0.0";
       mediaLocation = "${dataDirectory}/immich";
       openFirewall = true;
-      inherit (config.mySnippets.cute-haus.networkMap.immich) port;
+      port = 2283;
     };
 
     jellyfin = {
@@ -116,8 +99,8 @@ in {
     };
 
     ombi = {
-      inherit (config.mySnippets.cute-haus.networkMap.ombi) port;
       enable = true;
+      port = 5000;
       dataDir = "/mnt/Data/ombi";
       openFirewall = true;
     };

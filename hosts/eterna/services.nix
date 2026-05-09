@@ -1,4 +1,6 @@
-{config, ...}: {
+_: let
+  tnet = "narwhal-snapper.ts.net";
+in {
   networking = {
     firewall.allowedTCPPorts = [80 443 2379 2380 3000 6443 61208];
     firewall.allowedUDPPorts = [8472];
@@ -19,29 +21,23 @@
     caddy = {
       email = "alyraffauf@fastmail.com";
       virtualHosts = {
-        "${config.mySnippets.tailnet.networkMap.grafana.vHost}" = {
-          extraConfig = ''
-            bind tailscale/grafana
-            encode zstd gzip
-            reverse_proxy ${config.mySnippets.tailnet.networkMap.grafana.hostName}:${toString config.mySnippets.tailnet.networkMap.grafana.port}
-          '';
-        };
+        "grafana.${tnet}".extraConfig = ''
+          bind tailscale/grafana
+          encode zstd gzip
+          reverse_proxy eterna:3010
+        '';
 
-        "${config.mySnippets.tailnet.networkMap.loki.vHost}" = {
-          extraConfig = ''
-            bind tailscale/loki
-            encode zstd gzip
-            reverse_proxy ${config.mySnippets.tailnet.networkMap.loki.hostName}:${toString config.mySnippets.tailnet.networkMap.loki.port}
-          '';
-        };
+        "loki.${tnet}".extraConfig = ''
+          bind tailscale/loki
+          encode zstd gzip
+          reverse_proxy eterna:3030
+        '';
 
-        "${config.mySnippets.tailnet.networkMap.prometheus.vHost}" = {
-          extraConfig = ''
-            bind tailscale/prometheus
-            encode zstd gzip
-            reverse_proxy ${config.mySnippets.tailnet.networkMap.prometheus.hostName}:${toString config.mySnippets.tailnet.networkMap.prometheus.port}
-          '';
-        };
+        "prometheus.${tnet}".extraConfig = ''
+          bind tailscale/prometheus
+          encode zstd gzip
+          reverse_proxy eterna:3020
+        '';
       };
     };
 
@@ -58,8 +54,8 @@
         INFERENCE_JOB_TIMEOUT_SEC = "600";
         INFERENCE_LANG = "english";
         INFERENCE_TEXT_MODEL = INFERENCE_IMAGE_MODEL;
-        NEXTAUTH_URL = "https://${config.mySnippets.cute-haus.networkMap.karakeep.vHost}";
-        OLLAMA_BASE_URL = "https://ollama.${config.mySnippets.tailnet.name}";
+        NEXTAUTH_URL = "https://karakeep.cute.haus";
+        OLLAMA_BASE_URL = "https://ollama.${tnet}";
         OLLAMA_KEEP_ALIVE = "5m";
         PORT = "7020";
       };

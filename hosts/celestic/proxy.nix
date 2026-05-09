@@ -1,4 +1,4 @@
-{config, ...}: {
+_: {
   security.acme = {
     acceptTerms = true;
     defaults.email = "alyraffauf@fastmail.com";
@@ -12,7 +12,7 @@
         "morsels.blue" = {
           extraConfig = ''
             encode gzip zstd
-            reverse_proxy ${config.mySnippets.cute-haus.networkMap.morsels.hostName}:${toString config.mySnippets.cute-haus.networkMap.morsels.port}
+            reverse_proxy eterna:8484
           '';
 
           serverAliases = ["www.morsels.blue"];

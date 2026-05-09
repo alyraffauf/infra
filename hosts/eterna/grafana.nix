@@ -1,4 +1,4 @@
-{config, ...}: {
+_: {
   services = {
     grafana = {
       enable = true;
@@ -6,8 +6,8 @@
       settings = {
         server = {
           http_addr = "0.0.0.0";
-          http_port = config.mySnippets.tailnet.networkMap.grafana.port;
-          domain = config.mySnippets.tailnet.networkMap.grafana.vHost;
+          http_port = 3010;
+          domain = "grafana.narwhal-snapper.ts.net";
         };
       };
 
@@ -19,13 +19,13 @@
             name = "Prometheus";
             type = "prometheus";
             access = "proxy";
-            url = "https://${config.mySnippets.tailnet.networkMap.prometheus.vHost}";
+            url = "https://prometheus.narwhal-snapper.ts.net";
           }
           {
             name = "Loki";
             type = "loki";
             access = "proxy";
-            url = "https://${config.mySnippets.tailnet.networkMap.loki.vHost}";
+            url = "https://loki.narwhal-snapper.ts.net";
           }
         ];
       };
@@ -38,7 +38,7 @@
         auth_enabled = false;
 
         server = {
-          http_listen_port = config.mySnippets.tailnet.networkMap.loki.port;
+          http_listen_port = 3030;
           grpc_listen_port = 0;
         };
 
@@ -112,7 +112,7 @@
     prometheus = {
       enable = true;
       globalConfig.scrape_interval = "10s";
-      inherit (config.mySnippets.tailnet.networkMap.prometheus) port;
+      port = 3020;
 
       scrapeConfigs = [
         {

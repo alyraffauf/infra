@@ -1,24 +1,22 @@
-{config, ...}: {
+_: let
+  tnet = "narwhal-snapper.ts.net";
+in {
   services = {
     caddy = {
       email = "alyraffauf@fastmail.com";
 
       virtualHosts = {
-        "${config.mySnippets.tailnet.networkMap.navidrome.vHost}" = {
-          extraConfig = ''
-            bind tailscale/navidrome
-            encode zstd gzip
-            reverse_proxy ${config.mySnippets.tailnet.networkMap.navidrome.hostName}:${toString config.mySnippets.tailnet.networkMap.navidrome.port}
-          '';
-        };
+        "navidrome.${tnet}".extraConfig = ''
+          bind tailscale/navidrome
+          encode zstd gzip
+          reverse_proxy snowpoint:4533
+        '';
 
-        "${config.mySnippets.tailnet.networkMap.photoprism.vHost}" = {
-          extraConfig = ''
-            bind tailscale/photoprism
-            encode zstd gzip
-            reverse_proxy ${config.mySnippets.tailnet.networkMap.photoprism.hostName}:${toString config.mySnippets.tailnet.networkMap.photoprism.port}
-          '';
-        };
+        "photoprism.${tnet}".extraConfig = ''
+          bind tailscale/photoprism
+          encode zstd gzip
+          reverse_proxy jubilife:2342
+        '';
       };
     };
   };
