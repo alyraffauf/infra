@@ -105,7 +105,7 @@ releases:
     namespace: cert-manager
     createNamespace: true
     chart: jetstack/cert-manager
-    version: v1.16.2
+    version: v1.20.2
     values:
       - crds:
           enabled: true
