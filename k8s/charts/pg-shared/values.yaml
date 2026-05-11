@@ -4,10 +4,11 @@ cluster:
   imageName: ghcr.io/cloudnative-pg/postgresql:17.6
   postgresVersion: 17
 
-  # 2 longhorn replicas per instance — masks disk-level faults transparently
-  # without forcing CNPG to re-init the instance from a primary.
+  # local-path: node-local SSD for low-latency fsync. CNPG handles HA via
+  # streaming replication across instances; replicated block storage
+  # underneath is double-paying for HA at the cost of write latency.
   storage:
-    storageClass: longhorn-pg
+    storageClass: local-path
     size: 5Gi
 
   resources:
