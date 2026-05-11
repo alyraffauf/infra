@@ -12,17 +12,20 @@ all per-app config lives in `values.yaml`.
 
 ```plaintext
 charts/
-├── common/             # Library chart with shared partials
-├── aly-codes/          # Static site (aly.codes)
-├── watsup/             # Homelab dashboard (cute.haus)
-├── morsels/            # atproto pastebin (morsels.blue)
-├── vaultwarden/        # Bitwarden-compatible vault
-├── bluesky-pds/        # atproto Personal Data Server (aly.social)
-├── forgejo/            # Git hosting (git.aly.codes)
-├── uptime-kuma/        # Uptime monitoring + status pages
-├── pg-shared/          # CloudNativePG cluster + longhorn-pg StorageClass
-├── cluster-tls/        # Cloudflare Origin TLS Secrets per domain
-└── external-routes/    # Ingress + Service + EndpointSlice for off-cluster targets
+├── aly-codes/              # Static site (aly.codes)
+├── bluesky-pds/            # Reference atproto Personal Data Server
+├── cert-manager-issuers/   # Let's Encrypt ClusterIssuer + wildcard Certificates (Cloudflare DNS-01)
+├── cluster-tls/            # Cloudflare Origin TLS Secrets per domain
+├── common/                 # Library chart with shared partials
+├── external-routes/        # Ingress + Service + EndpointSlice for off-cluster targets
+├── forgejo/                # Git hosting (git.aly.codes)
+├── longhorn-creds/         # B2 backup-target Secret + recurring backup job + UI ingress
+├── morsels/                # atproto pastebin (morsels.blue)
+├── pg-shared/              # CloudNativePG cluster + longhorn-pg StorageClass
+├── tranquil-pds/           # TRanquil atproto Personal Data Server
+├── uptime-kuma/            # Uptime monitoring + status pages
+├── vaultwarden/            # Bitwarden-compatible vault
+└── watsup/                 # Homelab dashboard (cute.haus)
 ```
 
 ---
@@ -104,3 +107,10 @@ These have unique enough shape that the library wouldn't help:
   `Service` + `EndpointSlice` + `Ingress` pointing at an external IP
   (typically a Tailscale IP for a service running on jubilife or eterna).
   Supports both traefik and tailscale ingress classes.
+- **`cert-manager-issuers`** — one `ClusterIssuer` (Let's Encrypt + Cloudflare
+  DNS-01) plus one wildcard `Certificate` per entry in `.Values.wildcards`.
+  Each cert lands as a Secret apps reference via `tlsSecret` in ingress routes.
+- **`longhorn-creds`** — the B2 credentials Secret that Longhorn references via
+  `defaultBackupStore.backupTargetCredentialSecret`, plus a daily `RecurringJob`
+  for the `default` volume group and an Ingress exposing the Longhorn UI on the
+  tailnet. Must apply before `longhorn` (the `needs:` chain enforces this).
