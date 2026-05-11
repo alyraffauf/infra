@@ -4,8 +4,8 @@ terminationGracePeriodSeconds: 10
 
 image:
   repository: vaultwarden/server
-  tag: latest
-  pullPolicy: Always
+  tag: latest@sha256:d626d04934cd1192ad8ced1adb975099fca78cec33ab467d2d3c923cde7f3b0c
+  pullPolicy: IfNotPresent
 
 resources:
   requests:

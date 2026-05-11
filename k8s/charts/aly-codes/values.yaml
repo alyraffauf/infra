@@ -3,8 +3,8 @@ spread: true
 
 image:
   repository: ghcr.io/alyraffauf/aly.codes
-  tag: latest
-  pullPolicy: Always
+  tag: latest@sha256:097b85facb39e3139a516ffeabd295781e81392b921c3393020193513d228d27
+  pullPolicy: IfNotPresent
 
 resources:
   requests:

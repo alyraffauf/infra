@@ -4,8 +4,8 @@ dnsPolicy: Default
 
 image:
   repository: ghcr.io/alyraffauf/morsels
-  tag: latest
-  pullPolicy: Always
+  tag: latest@sha256:ab0f176bd61e4863ae1c5b4da342e069ffff0f148d222134a33737c3ac0ce29a
+  pullPolicy: IfNotPresent
 
 resources:
   requests:
