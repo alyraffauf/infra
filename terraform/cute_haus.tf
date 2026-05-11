@@ -1,35 +1,25 @@
 locals {
-  cute_haus_solaceon_a = toset([
-    "cute.haus",
-    "audiobookshelf.cute.haus",
-    "jellyfin.cute.haus",
-    "kuma.cute.haus",
-    "immich.cute.haus",
-    "ombi.cute.haus",
-    "plex.cute.haus",
-    "status.cute.haus",
-    "vault.cute.haus",
-  ])
+  cute_haus_solaceon = {
+    "audiobookshelf.cute.haus" = true
+    "cute.haus"                = true
+    "immich.cute.haus"         = true
+    "jellyfin.cute.haus"       = false
+    "kuma.cute.haus"           = true
+    "ombi.cute.haus"           = true
+    "pds.cute.haus"            = false
+    "plex.cute.haus"           = false
+    "status.cute.haus"         = true
+    "vault.cute.haus"          = true
+  }
 }
 
 resource "cloudflare_dns_record" "cute_haus_a_solaceon" {
-  for_each = local.cute_haus_solaceon_a
+  for_each = local.cute_haus_solaceon
   zone_id  = local.zones.cute_haus
-  name     = each.value
+  name     = each.key
   type     = "A"
   content  = local.hosts.solaceon
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "cute_haus_couchdb_a" {
-  zone_id  = local.zones.cute_haus
-  name     = "couchdb.cute.haus"
-  type     = "A"
-  content  = "34.203.252.172"
-  proxied  = true
+  proxied  = each.value
   ttl      = 1
   tags     = []
   settings = {}
@@ -51,7 +41,7 @@ resource "cloudflare_dns_record" "cute_haus_www_cname" {
   name    = "www.cute.haus"
   type    = "CNAME"
   content = "cute.haus"
-  proxied = true
+  proxied = false
   ttl     = 1
   tags    = []
   settings = {
