@@ -2,7 +2,7 @@ locals {
   cute_haus_solaceon = {
     "audiobookshelf.cute.haus" = true
     "cute.haus"                = true
-    "immich.cute.haus"         = true
+    "immich.cute.haus"         = false
     "jellyfin.cute.haus"       = false
     "kuma.cute.haus"           = true
     "ombi.cute.haus"           = true
