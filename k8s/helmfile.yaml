@@ -99,7 +99,7 @@ releases:
     namespace: cnpg-system
     createNamespace: true
     chart: cnpg/cloudnative-pg
-    version: 0.28.0
+    version: 0.28.1
 
   - name: cert-manager
     namespace: cert-manager
