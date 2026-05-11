@@ -1,6 +1,5 @@
 {
   imports = [
-    ./actions.nix
     ./devShells.nix
     ./files
     ./git-hooks-nix.nix
