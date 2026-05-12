@@ -62,6 +62,9 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    # systemd-oomd fights kubelet's eviction manager
+    systemd.oomd.enable = lib.mkForce false;
+
     services = {
       k3s = {
         enable = true;
