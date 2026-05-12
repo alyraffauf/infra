@@ -26,10 +26,22 @@ in {
         reverse_proxy jubilife:8686
       '';
 
+      "navidrome.${tnet}".extraConfig = ''
+        bind tailscale/navidrome
+        encode zstd gzip
+        reverse_proxy snowpoint:4533
+      '';
+
       "ollama.${tnet}".extraConfig = ''
         bind tailscale/ollama
         encode zstd gzip
         reverse_proxy jubilife:11434
+      '';
+
+      "photoprism.${tnet}".extraConfig = ''
+        bind tailscale/photoprism
+        encode zstd gzip
+        reverse_proxy jubilife:2342
       '';
 
       "prowlarr.${tnet}".extraConfig = ''
