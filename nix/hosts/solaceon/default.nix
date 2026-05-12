@@ -27,7 +27,7 @@
   };
 
   networking = {
-    firewall.allowedTCPPorts = [2222 8282 8383];
+    firewall.allowedTCPPorts = [8282 8383];
     hostName = "solaceon";
   };
 

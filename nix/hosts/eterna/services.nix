@@ -1,11 +1,6 @@
 _: let
   tnet = "narwhal-snapper.ts.net";
 in {
-  networking = {
-    firewall.allowedTCPPorts = [80 443 2379 2380 3000 6443 61208];
-    firewall.allowedUDPPorts = [8472];
-  };
-
   myNixOS.services = {
     atbbs.enable = true;
   };

@@ -65,6 +65,11 @@ in {
     # systemd-oomd fights kubelet's eviction manager
     systemd.oomd.enable = lib.mkForce false;
 
+    # Traefik DaemonSet binds these hostPorts on every ingress-labeled node.
+    # 80/443 = HTTP(S), 2222 = forgejo SSH (see k8s/helmfile.yaml traefik
+    # ports config).
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.ingress [80 443 2222];
+
     services = {
       k3s = {
         enable = true;
