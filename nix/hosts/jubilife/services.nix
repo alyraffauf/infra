@@ -110,13 +110,6 @@ in {
       openFirewall = true;
     };
 
-    ombi = {
-      enable = true;
-      port = 5000;
-      dataDir = "/mnt/Data/ombi";
-      openFirewall = true;
-    };
-
     photoprism = {
       enable = true;
       originalsPath = "/mnt/Media/Photos/";

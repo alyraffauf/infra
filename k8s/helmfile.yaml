@@ -175,6 +175,12 @@ releases:
     needs:
       - default/cluster-tls
 
+  - name: ombi
+    namespace: default
+    chart: ./charts/ombi
+    needs:
+      - default/cluster-tls
+
   - name: uptime-kuma
     namespace: default
     chart: ./charts/uptime-kuma
