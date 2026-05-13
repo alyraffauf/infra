@@ -59,6 +59,8 @@ env:
   FORGEJO__repository__ENABLE_PUSH_CREATE_USER: "true"
   FORGEJO__repository__ENABLE_PUSH_CREATE_ORG: "true"
   FORGEJO__log__LOGGER_SSH_MODE: file
+  FORGEJO__oauth2_client__ACCOUNT_LINKING: login
+  FORGEJO__oauth2_client__ENABLE_AUTO_REGISTRATION: "true"
 
 secret: {}
 envFromSecret: forgejo-env

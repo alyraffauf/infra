@@ -1,0 +1,7 @@
+pocket_id_app_config:
+  appName: cute.haus
+  smtpHost: smtp.resend.com
+  smtpPort: "2465"
+  smtpUser: resend
+  smtpFrom: id@aly.social
+  smtpTls: tls

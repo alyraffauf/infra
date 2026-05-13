@@ -1,0 +1,35 @@
+---
+- name: Get current application configuration
+  ansible.builtin.uri:
+    url: "{{ pocket_id_url }}/api/application-configuration/all"
+    headers:
+      X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
+    return_content: true
+  register: app_config_response
+
+- name: Flatten current config (list → dict)
+  ansible.builtin.set_fact:
+    pocket_id_current_config: >-
+      {{
+        dict(
+          app_config_response.json
+            | map(attribute='key')
+            | zip(app_config_response.json | map(attribute='value'))
+        )
+      }}
+
+- name: PUT merged configuration
+  ansible.builtin.uri:
+    url: "{{ pocket_id_url }}/api/application-configuration"
+    method: PUT
+    headers:
+      X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
+    body_format: json
+    body: >-
+      {{
+        pocket_id_current_config
+          | combine(pocket_id_app_config)
+          | combine({'smtpPassword': pocket_id_secrets.smtp_password})
+      }}
+    status_code: [200, 204]
+  no_log: true

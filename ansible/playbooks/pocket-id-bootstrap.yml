@@ -1,0 +1,57 @@
+---
+# Reconciles Pocket ID app config + OIDC clients + per-app integrations.
+# Requires an admin API key in secrets/pocket-id.yaml.
+- name: Bootstrap Pocket ID
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    pocket_id_url: https://id.cute.haus
+    k8s_namespace: default
+
+  vars_files:
+    - vars/pocket-id.yml
+    - vars/oidc-clients.yml
+
+  tasks:
+    - name: Load Pocket ID secrets from sops
+      community.sops.load_vars:
+        file: "{{ playbook_dir }}/../../secrets/pocket-id.yaml"
+        name: pocket_id_secrets
+
+    - name: Reconcile application configuration (incl. SMTP)
+      ansible.builtin.include_tasks: tasks/ensure-app-config.yml
+
+    - name: List existing OIDC clients
+      ansible.builtin.uri:
+        url: "{{ pocket_id_url }}/api/oidc/clients?pagination[limit]=200"
+        headers:
+          X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
+        return_content: true
+      register: existing_response
+
+    - name: Index existing clients by name
+      ansible.builtin.set_fact:
+        existing_clients: >-
+          {{
+            dict(
+              (existing_response.json.data | default([]))
+              | map(attribute='name')
+              | zip(existing_response.json.data | default([]))
+            )
+          }}
+
+    - name: Reconcile each declared client
+      ansible.builtin.include_tasks: tasks/ensure-oidc-client.yml
+      loop: "{{ oidc_clients }}"
+      loop_control:
+        loop_var: client_spec
+        label: "{{ client_spec.key }}"
+
+    - name: Wire each client into its target app
+      ansible.builtin.include_tasks: "tasks/integrations/{{ client_spec.integration }}.yml"
+      loop: "{{ oidc_clients | selectattr('integration', 'defined') }}"
+      loop_control:
+        loop_var: client_spec
+        label: "{{ client_spec.integration }}"

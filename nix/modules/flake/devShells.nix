@@ -6,19 +6,31 @@ _: {
     inputs',
     self',
     ...
-  }: {
+  }: let
+    # `kubernetes.core` ansible collection needs the kubernetes python lib.
+    ansibleWithK8s = pkgs.python3.withPackages (ps:
+      with ps; [
+        ansible
+        ansible-core
+        kubernetes
+      ]);
+  in {
     devShells.default = pkgs.mkShell {
       packages =
         (with pkgs; [
           (lib.hiPrio uutils-coreutils-noprefix)
           age
-          ansible
+          ansibleWithK8s
           git
+          helmfile
           just
+          kubectl
+          kubernetes-helm
           nh
           sops
           ssh-to-age
           terraform
+          vals
         ])
         # ++ lib.attrValues config.treefmt.build.programs
         ++ [

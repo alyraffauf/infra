@@ -1,0 +1,11 @@
+oidc_clients:
+  - key: forgejo
+    name: Forgejo
+    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/forgejo.png
+    launchURL: https://git.aly.codes/
+    callbackURLs:
+      - https://git.aly.codes/user/oauth2/cute.haus/callback
+    logoutCallbackURLs: []
+    isPublic: false
+    pkceEnabled: true
+    integration: forgejo
