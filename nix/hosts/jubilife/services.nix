@@ -81,6 +81,7 @@ in {
       mediaLocation = "${dataDirectory}/immich";
       openFirewall = true;
       port = 2283;
+      environment.IMMICH_CONFIG_FILE = config.sops.templates."immich-config.json".path;
     };
 
     jellyfin = {

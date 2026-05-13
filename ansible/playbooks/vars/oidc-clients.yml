@@ -19,3 +19,17 @@ oidc_clients:
     isPublic: false
     pkceEnabled: true
     integration: tranquil
+
+  # immich runs on jubilife (NixOS), not k8s — no integration task. Read
+  # creds from the oidc-client-immich K8s Secret and feed them into the
+  # immich NixOS module via sops.
+  - key: immich
+    name: Immich
+    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/immich.png
+    launchURL: https://immich.cute.haus/
+    callbackURLs:
+      - https://immich.cute.haus/auth/login
+      - app.immich:/
+    logoutCallbackURLs: []
+    isPublic: false
+    pkceEnabled: true

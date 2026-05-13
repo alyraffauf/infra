@@ -1,4 +1,24 @@
-{
+{config, ...}: {
+  sops.templates."immich-config.json" = {
+    owner = "immich";
+    content = ''
+      {
+        "oauth": {
+          "enabled": true,
+          "issuerUrl": "https://id.cute.haus",
+          "clientId": "${config.sops.placeholder.immichOauthClientId}",
+          "clientSecret": "${config.sops.placeholder.immichOauthClientSecret}",
+          "scope": "openid email profile",
+          "buttonText": "Sign in with cute.haus",
+          "autoRegister": true,
+          "autoLaunch": false,
+          "mobileOverrideEnabled": false,
+          "mobileRedirectUri": ""
+        }
+      }
+    '';
+  };
+
   sops.secrets = {
     bazarrApiKey = {
       sopsFile = ../../../secrets/arr.yaml;
@@ -11,6 +31,16 @@
     lidarrApiKey = {
       sopsFile = ../../../secrets/arr.yaml;
       key = "lidarr_api_key";
+    };
+    immichOauthClientId = {
+      sopsFile = ../../../secrets/immich.yaml;
+      key = "oauth/client_id";
+      owner = "immich";
+    };
+    immichOauthClientSecret = {
+      sopsFile = ../../../secrets/immich.yaml;
+      key = "oauth/client_secret";
+      owner = "immich";
     };
     photoprismAdminPass = {
       sopsFile = ../../../secrets/photoprism.yaml;
