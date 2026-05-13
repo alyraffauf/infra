@@ -33,3 +33,14 @@ oidc_clients:
     logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
+
+  - key: audiobookshelf
+    name: Audiobookshelf
+    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/audiobookshelf.png
+    launchURL: https://audiobookshelf.cute.haus/
+    callbackURLs:
+      - https://audiobookshelf.cute.haus/audiobookshelf/auth/openid/callback
+      - https://audiobookshelf.cute.haus/audiobookshelf/auth/openid/mobile-redirect
+    logoutCallbackURLs: []
+    isPublic: false
+    pkceEnabled: true
