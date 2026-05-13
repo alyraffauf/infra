@@ -6,13 +6,6 @@ in {
   };
 
   services = {
-    audiobookshelf = {
-      enable = true;
-      host = "0.0.0.0";
-      openFirewall = true;
-      port = 13378;
-    };
-
     caddy = {
       email = "alyraffauf@fastmail.com";
       virtualHosts = {
