@@ -46,11 +46,10 @@ env:
   S3_BUCKET: aly-tranquil-blobs
   S3_ENDPOINT: https://s3.us-east-005.backblazeb2.com
   AWS_REGION: us-east-005
-  TRANQUIL_STORE_DATA_DIR: /data/store
   PLC_DIRECTORY_URL: https://plc.directory
   CRAWLERS: https://bsky.network
   INVITE_CODE_REQUIRED: "true"
-  SKIP_IMPORT_VERIFICATION: "true"
+  SKIP_IMPORT_VERIFICATION: "false"
   # Email via existing Resend account (same SMTP creds as bluesky-pds).
   MAIL_FROM_ADDRESS: admin@aly.social
   MAIL_FROM_NAME: tranquil
