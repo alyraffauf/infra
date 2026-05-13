@@ -181,6 +181,15 @@ releases:
     needs:
       - default/cluster-tls
 
+  - name: pocket-id
+    namespace: default
+    chart: ./charts/pocket-id
+    needs:
+      - default/cluster-tls
+      - cnpg-system/pg-shared
+    values:
+      - values/secrets/pocket-id.yaml
+
   - name: uptime-kuma
     namespace: default
     chart: ./charts/uptime-kuma

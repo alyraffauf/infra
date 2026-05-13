@@ -1,0 +1,70 @@
+replicaCount: 1
+strategy: Recreate
+terminationGracePeriodSeconds: 15
+
+image:
+  repository: ghcr.io/pocket-id/pocket-id
+  tag: v1@sha256:f8cde808e8e840acda25683fc2168e0206e3f3fb1a48cca89d211aafd87eaeef
+  pullPolicy: IfNotPresent
+
+# pocket-id's container entrypoint runs as uid/gid 1000.
+podSecurityContext:
+  fsGroup: 1000
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
+
+ports:
+  - name: http
+    containerPort: 1411
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 1411
+
+# /app/data holds the JWT signing keys + uploaded user profile pictures.
+# Postgres has the user table + passkey credentials.
+persistence:
+  enabled: true
+  storageClassName: longhorn-pg
+  size: 1Gi
+  mountPath: /app/data
+
+env:
+  APP_URL: https://id.cute.haus
+  TRUST_PROXY: "true"
+  DB_PROVIDER: postgres
+
+secret: {}
+envFromSecret: pocket-id-env
+
+failover:
+  fastTolerationSeconds: 60
+
+probes:
+  startup:
+    httpGet: { path: /healthz, port: http }
+    periodSeconds: 5
+    failureThreshold: 60
+  liveness:
+    httpGet: { path: /healthz, port: http }
+    periodSeconds: 30
+  readiness:
+    httpGet: { path: /healthz, port: http }
+    periodSeconds: 5
+    failureThreshold: 2
+
+ingress:
+  enabled: true
+  className: traefik
+  routes:
+    - host: id.cute.haus
+      tlsSecret: cute-haus-tls
