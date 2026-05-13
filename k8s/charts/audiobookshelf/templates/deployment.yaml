@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategy | default "Recreate" }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 30 }}
+      {{- with .Values.failover }}
+      {{- if .fastTolerationSeconds }}
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: {{ .fastTolerationSeconds }}
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: {{ .fastTolerationSeconds }}
+      {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            {{- range $k, $v := .Values.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /config
+              subPath: config
+            - name: data
+              mountPath: /metadata
+              subPath: metadata
+            - name: data
+              mountPath: /podcasts
+              subPath: podcasts
+            - name: media
+              mountPath: {{ .Values.rclone.mountPath }}
+              mountPropagation: HostToContainer
+          livenessProbe:
+            httpGet: { path: /healthcheck, port: http }
+            periodSeconds: 30
+          readinessProbe:
+            httpGet: { path: /healthcheck, port: http }
+            periodSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet: { path: /healthcheck, port: http }
+            periodSeconds: 5
+            failureThreshold: 60
+
+        - name: rclone
+          image: "{{ .Values.rclone.image.repository }}:{{ .Values.rclone.image.tag }}"
+          imagePullPolicy: {{ .Values.rclone.image.pullPolicy | default "IfNotPresent" }}
+          args:
+            - mount
+            - {{ .Values.rclone.remote | quote }}
+            - {{ .Values.rclone.mountPath | quote }}
+            - --allow-non-empty
+            - --vfs-cache-mode=full
+            - --vfs-cache-max-age={{ .Values.rclone.vfsCacheMaxAge }}
+            - --vfs-cache-max-size={{ .Values.rclone.vfsCacheMaxSize }}
+            - --read-only
+            - --uid=99
+            - --gid=100
+            - --umask=022
+            - --log-level=INFO
+          securityContext:
+            privileged: true
+          envFrom:
+            - secretRef:
+                name: {{ .Values.envFromSecret }}
+          volumeMounts:
+            - name: media
+              mountPath: {{ .Values.rclone.mountPath }}
+              mountPropagation: Bidirectional
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-data
+        - name: media
+          emptyDir: {}

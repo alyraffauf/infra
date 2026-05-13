@@ -1,0 +1,54 @@
+replicaCount: 1
+strategy: Recreate
+terminationGracePeriodSeconds: 30
+
+image:
+  repository: ghcr.io/advplyr/audiobookshelf
+  tag: 2.32.0@sha256:de4daea50968fe2bb0b6c543c5586601cee14f2ea7543544c89ebea94491005c
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: "2"
+    memory: 1Gi
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+
+persistence:
+  enabled: true
+  storageClassName: longhorn
+  size: 30Gi
+
+env:
+  TZ: America/New_York
+
+secret: {}
+envFromSecret: audiobookshelf-rclone
+
+failover:
+  fastTolerationSeconds: 60
+
+rclone:
+  image:
+    repository: rclone/rclone
+    tag: "1.71"
+    pullPolicy: IfNotPresent
+  remote: b2:aly-audiobooks
+  mountPath: /audiobooks
+  vfsCacheMaxAge: 168h
+  vfsCacheMaxSize: 5G
+
+ingress:
+  enabled: true
+  className: traefik
+  routes:
+    - host: audiobookshelf.cute.haus
+      tlsSecret: cute-haus-tls

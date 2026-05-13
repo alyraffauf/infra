@@ -163,6 +163,14 @@ releases:
     needs:
       - default/cluster-tls
 
+  - name: audiobookshelf
+    namespace: default
+    chart: ./charts/audiobookshelf
+    needs:
+      - default/cluster-tls
+    values:
+      - values/secrets/audiobookshelf.yaml
+
   - name: watsup
     namespace: default
     chart: ./charts/watsup
