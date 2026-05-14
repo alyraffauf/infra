@@ -9,6 +9,7 @@ locals {
     "kuma.cute.haus"           = true
     "navidrome.cute.haus"      = true
     "ombi.cute.haus"           = true
+    "paperless.cute.haus"      = true
     "pds.cute.haus"            = false
     "photoprism.cute.haus"     = false
     "plex.cute.haus"           = false
