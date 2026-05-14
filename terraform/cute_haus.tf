@@ -1,7 +1,7 @@
 locals {
   cute_haus_solaceon = {
     "audiobookshelf.cute.haus" = true
-    "auth.cute.haus"           = true
+    "auth-navidrome.cute.haus" = true
     "cute.haus"                = true
     "id.cute.haus"             = true
     "immich.cute.haus"         = false

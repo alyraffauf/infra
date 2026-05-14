@@ -96,10 +96,48 @@
       settings = {
         Address = "0.0.0.0";
         DefaultTheme = "Auto";
+        EnableUserEditing = false;
         MusicFolder = "/mnt/Media/Music";
         Port = 4533;
         SubsonicArtistParticipations = true;
         UIWelcomeMessage = "Welcome to Navidrome @ ${config.networking.hostName}";
+
+        # SSO via traefik-forward-auth in the cluster (auth.cute.haus).
+        # TrustedSources covers the request source navidrome sees as X-Real-IP:
+        # tailnet 100.64.0.0/10 for direct caddy hits, plus Cloudflare ranges
+        # for navidrome.cute.haus (the auth chain runs through CF → traefik).
+        # Subsonic mobile clients don't send the header and fall back to local
+        # username/password.
+        ExtAuth = {
+          UserHeader = "X-Forwarded-User";
+          TrustedSources = builtins.concatStringsSep "," [
+            "100.64.0.0/10"
+            # Cloudflare IPv4 https://www.cloudflare.com/ips-v4
+            "173.245.48.0/20"
+            "103.21.244.0/22"
+            "103.22.200.0/22"
+            "103.31.4.0/22"
+            "141.101.64.0/18"
+            "108.162.192.0/18"
+            "190.93.240.0/20"
+            "188.114.96.0/20"
+            "197.234.240.0/22"
+            "198.41.128.0/17"
+            "162.158.0.0/15"
+            "104.16.0.0/13"
+            "104.24.0.0/14"
+            "172.64.0.0/13"
+            "131.0.72.0/22"
+            # Cloudflare IPv6 https://www.cloudflare.com/ips-v6
+            "2400:cb00::/32"
+            "2606:4700::/32"
+            "2803:f800::/32"
+            "2405:b500::/32"
+            "2405:8100::/32"
+            "2a06:98c0::/29"
+            "2c0f:f248::/32"
+          ];
+        };
       };
     };
   };
