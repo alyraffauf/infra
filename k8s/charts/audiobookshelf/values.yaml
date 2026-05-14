@@ -31,7 +31,8 @@ env:
   TZ: America/New_York
 
 secret: {}
-envFromSecret: audiobookshelf-rclone
+envFromSecret:
+  - audiobookshelf-rclone
 
 failover:
   fastTolerationSeconds: 60

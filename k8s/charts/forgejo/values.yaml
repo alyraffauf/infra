@@ -63,7 +63,8 @@ env:
   FORGEJO__oauth2_client__ENABLE_AUTO_REGISTRATION: "true"
 
 secret: {}
-envFromSecret: forgejo-env
+envFromSecret:
+  - forgejo-env
 
 failover:
   fastTolerationSeconds: 60

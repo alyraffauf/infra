@@ -36,7 +36,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if and (gt (int (.Values.replicaCount | default 1)) 1) .Values.spread }}
+      {{- if .Values.spread }}
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -73,14 +73,9 @@ spec:
           {{- end }}
           {{- with .Values.envFromSecret }}
           envFrom:
-            {{- if kindIs "string" . }}
-            - secretRef:
-                name: {{ . }}
-            {{- else }}
             {{- range . }}
             - secretRef:
                 name: {{ . }}
-            {{- end }}
             {{- end }}
           {{- end }}
           {{- with .Values.resources }}

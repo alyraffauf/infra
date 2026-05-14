@@ -40,7 +40,8 @@ env:
   SIGNUPS_ALLOWED: "false"
 
 # Templated by common.secret from .Values.secret (vals + sops).
-envFromSecret: vaultwarden-env
+envFromSecret:
+  - vaultwarden-env
 
 failover:
   fastTolerationSeconds: 60

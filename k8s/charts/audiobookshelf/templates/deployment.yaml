@@ -88,8 +88,10 @@ spec:
           securityContext:
             privileged: true
           envFrom:
+            {{- range .Values.envFromSecret }}
             - secretRef:
-                name: {{ .Values.envFromSecret }}
+                name: {{ . }}
+            {{- end }}
           volumeMounts:
             - name: media
               mountPath: {{ .Values.rclone.mountPath }}

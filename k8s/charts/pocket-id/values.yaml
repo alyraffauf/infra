@@ -37,7 +37,8 @@ env:
   FILE_BACKEND: database
 
 secret: {}
-envFromSecret: pocket-id-env
+envFromSecret:
+  - pocket-id-env
 
 failover:
   fastTolerationSeconds: 60
