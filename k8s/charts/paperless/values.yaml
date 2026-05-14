@@ -1,0 +1,98 @@
+replicaCount: 1
+strategy: Recreate
+terminationGracePeriodSeconds: 30
+
+# Off — k8s would auto-inject PAPERLESS_PORT=tcp://... from our Service.
+enableServiceLinks: false
+
+image:
+  repository: ghcr.io/paperless-ngx/paperless-ngx
+  tag: latest@sha256:6c86cad803970ea782683a8e80e7403444c5bf3cf70de63b4d3c8e87500db92f
+  pullPolicy: IfNotPresent
+
+podSecurityContext:
+  fsGroup: 1000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+ports:
+  - name: http
+    containerPort: 8000
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+
+env:
+  PAPERLESS_URL: https://paperless.cute.haus
+  PAPERLESS_TIME_ZONE: America/New_York
+  PAPERLESS_OCR_LANGUAGE: eng
+  PAPERLESS_REDIS: redis://paperless-redis:6379
+  PAPERLESS_DBHOST: pg-shared-rw.cnpg-system.svc
+  PAPERLESS_DBPORT: "5432"
+  PAPERLESS_DBNAME: paperless
+  PAPERLESS_DBUSER: paperless
+  PAPERLESS_ADMIN_USER: alyraffauf
+  PAPERLESS_ADMIN_MAIL: alyraffauf@fastmail.com
+  # Writable paths under the PVC, not under the image's /usr/src/paperless.
+  PAPERLESS_DATA_DIR: /paperless/data
+  PAPERLESS_MEDIA_ROOT: /paperless/media
+  PAPERLESS_CONSUMPTION_DIR: /paperless/consume
+  PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+  PAPERLESS_SOCIAL_AUTO_SIGNUP: "True"
+  PAPERLESS_ACCOUNT_DEFAULT_HTTP_PROTOCOL: https
+
+secret: {}
+envFromSecret:
+  - paperless-env
+  - paperless-sso-env
+
+persistence:
+  enabled: true
+  storageClassName: longhorn
+  size: 50Gi
+  mountPath: /paperless
+
+failover:
+  fastTolerationSeconds: 60
+
+probes:
+  startup:
+    httpGet: { path: /api/, port: http }
+    periodSeconds: 5
+    failureThreshold: 60
+  liveness:
+    httpGet: { path: /api/, port: http }
+    periodSeconds: 30
+  readiness:
+    httpGet: { path: /api/, port: http }
+    periodSeconds: 10
+
+ingress:
+  enabled: true
+  className: traefik
+  routes:
+    - host: paperless.cute.haus
+      tlsSecret: cute-haus-tls
+
+redis:
+  image:
+    repository: redis
+    tag: 7-alpine@sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi

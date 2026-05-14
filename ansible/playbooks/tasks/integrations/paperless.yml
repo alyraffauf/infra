@@ -1,0 +1,49 @@
+---
+- name: "[paperless] Build PAPERLESS_SOCIALACCOUNT_PROVIDERS JSON"
+  ansible.builtin.set_fact:
+    paperless_social_providers:
+      openid_connect:
+        APPS:
+          - provider_id: pocket-id
+            name: cute.haus
+            client_id: "{{ client_credentials_map[client_spec.key].client_id }}"
+            secret: "{{ client_credentials_map[client_spec.key].client_secret }}"
+            settings:
+              server_url: "{{ pocket_id_url }}/.well-known/openid-configuration"
+        OAUTH_PKCE_ENABLED: true
+  no_log: true
+
+- name: "[paperless] Write SSO env Secret"
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: paperless-sso-env
+        namespace: "{{ k8s_namespace }}"
+        labels:
+          app.kubernetes.io/managed-by: ansible-oidc-bootstrap
+          app.kubernetes.io/component: sso-env
+        annotations:
+          helm.sh/resource-policy: keep
+      type: Opaque
+      stringData:
+        PAPERLESS_SOCIALACCOUNT_PROVIDERS: "{{ paperless_social_providers | to_json }}"
+  no_log: true
+  register: paperless_sso_secret
+
+- name: "[paperless] Rollout restart to pick up new env"
+  when: paperless_sso_secret.changed
+  kubernetes.core.k8s:
+    state: patched
+    api_version: apps/v1
+    kind: Deployment
+    namespace: "{{ k8s_namespace }}"
+    name: paperless
+    definition:
+      spec:
+        template:
+          metadata:
+            annotations:
+              kubectl.kubernetes.io/restartedAt: "{{ lookup('pipe', 'date -u +%FT%TZ') }}"

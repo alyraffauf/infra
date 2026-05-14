@@ -56,3 +56,14 @@ oidc_clients:
     logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
+
+  - key: paperless
+    name: Paperless
+    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/paperless-ngx.png
+    launchURL: https://paperless.cute.haus/
+    callbackURLs:
+      - https://paperless.cute.haus/accounts/oidc/pocket-id/login/callback/
+    logoutCallbackURLs: []
+    isPublic: false
+    pkceEnabled: true
+    integration: paperless

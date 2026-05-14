@@ -206,6 +206,15 @@ releases:
     values:
       - values/secrets/forward-auth.yaml
 
+  - name: paperless
+    namespace: default
+    chart: ./charts/paperless
+    needs:
+      - default/cluster-tls
+      - cnpg-system/pg-shared
+    values:
+      - values/secrets/paperless.yaml
+
   - name: uptime-kuma
     namespace: default
     chart: ./charts/uptime-kuma
