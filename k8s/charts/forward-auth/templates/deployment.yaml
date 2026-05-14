@@ -1,0 +1,65 @@
+{{- range $key, $app := .Values.apps }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forward-auth-{{ $key }}
+  labels:
+    app: forward-auth-{{ $key }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: forward-auth-{{ $key }}
+  template:
+    metadata:
+      labels:
+        app: forward-auth-{{ $key }}
+    spec:
+      terminationGracePeriodSeconds: 15
+      {{- with $.Values.failover }}
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: {{ .fastTolerationSeconds }}
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: {{ .fastTolerationSeconds }}
+      {{- end }}
+      containers:
+        - name: forward-auth
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 4181
+          env:
+            - name: DEFAULT_PROVIDER
+              value: oidc
+            - name: PROVIDERS_OIDC_ISSUER_URL
+              value: {{ $.Values.issuerURL | quote }}
+            - name: AUTH_HOST
+              value: "auth-{{ $key }}.cute.haus"
+            - name: COOKIE_DOMAIN
+              value: {{ $.Values.cookieDomain | quote }}
+            # Each TFA pod needs its own cookie name, otherwise they overwrite each other's cookies on cute.haus.
+            - name: COOKIE_NAME
+              value: "_fa_{{ $key }}"
+            - name: URL_PATH
+              value: /_oauth
+            - name: LIFETIME
+              value: {{ $.Values.lifetime | quote }}
+            - name: LOG_LEVEL
+              value: {{ $.Values.logLevel | quote }}
+          envFrom:
+            - secretRef:
+                name: forward-auth-{{ $key }}-env
+            - secretRef:
+                name: forward-auth-{{ $key }}-oidc-env
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+{{- end }}

@@ -1,0 +1,30 @@
+{{- range $key, $app := .Values.apps }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: forward-auth-{{ $key }}
+  labels:
+    app: forward-auth-{{ $key }}
+  # TFA needs the X-Forwarded-Uri header to handle its own /_oauth callback,
+  # so this ingress goes through the middleware too.
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: "{{ $.Release.Namespace }}-forward-auth-{{ $key }}@kubernetescrd"
+spec:
+  ingressClassName: {{ $.Values.ingressClassName }}
+  tls:
+    - hosts:
+        - "auth-{{ $key }}.cute.haus"
+      secretName: {{ $.Values.tlsSecret }}
+  rules:
+    - host: "auth-{{ $key }}.cute.haus"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: forward-auth-{{ $key }}
+                port:
+                  number: 80
+{{- end }}

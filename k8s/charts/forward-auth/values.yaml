@@ -1,0 +1,33 @@
+# traefik-forward-auth, one TFA pod per protected app. Each app entry
+# becomes a Deployment, Service, Ingress, Middleware and Secret (all
+# named forward-auth-<key>), plus an auth-<key>.cute.haus callback host.
+# The OIDC client creds live in a separate Secret that ansible writes —
+# see ansible/playbooks/tasks/integrations/forward-auth.yml.
+
+image:
+  repository: thomseddon/traefik-forward-auth
+  tag: "2@sha256:69a2c985d2c518b6f0e77161a98628a148a5d964e4e84fc52cc62e19bb4da634"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 500m
+    memory: 128Mi
+
+failover:
+  fastTolerationSeconds: 60
+
+ingressClassName: traefik
+tlsSecret: cute-haus-tls
+issuerURL: https://id.cute.haus
+cookieDomain: cute.haus
+lifetime: "604800"
+logLevel: warn
+
+# apps:
+#   <key>:
+#     signingSecret: ref+sops://...
+apps: {}

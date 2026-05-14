@@ -1,0 +1,15 @@
+{{- range $key, $app := .Values.apps }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: forward-auth-{{ $key }}
+  labels:
+    app: forward-auth-{{ $key }}
+spec:
+  forwardAuth:
+    address: "http://forward-auth-{{ $key }}.{{ $.Release.Namespace }}.svc/"
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Forwarded-User
+{{- end }}

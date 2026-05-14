@@ -20,6 +20,18 @@ oidc_clients:
     pkceEnabled: true
     integration: tranquil
 
+  # The key here has to match the forward-auth-<app> Deployment name.
+  - key: forward-auth-navidrome
+    name: Navidrome
+    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/navidrome.png
+    launchURL: https://navidrome.cute.haus/
+    callbackURLs:
+      - https://auth-navidrome.cute.haus/_oauth
+    logoutCallbackURLs: []
+    isPublic: false
+    pkceEnabled: false
+    integration: forward-auth
+
   # immich runs on jubilife (NixOS), not k8s — no integration task. Read
   # creds from the oidc-client-immich K8s Secret and feed them into the
   # immich NixOS module via sops.

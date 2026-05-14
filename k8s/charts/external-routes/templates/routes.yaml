@@ -37,9 +37,18 @@ metadata:
   name: {{ $route.name }}
   labels:
     app: {{ $route.name }}
+  {{- $annotations := dict }}
   {{- if $route.tailscaleHostname }}
+  {{- $_ := set $annotations "tailscale.com/hostname" $route.tailscaleHostname }}
+  {{- end }}
+  {{- if $route.middlewares }}
+  {{- $_ := set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (join "," $route.middlewares) }}
+  {{- end }}
+  {{- if $annotations }}
   annotations:
-    tailscale.com/hostname: {{ $route.tailscaleHostname }}
+    {{- range $k, $v := $annotations }}
+    {{ $k | quote }}: {{ $v | quote }}
+    {{- end }}
   {{- end }}
 spec:
   {{- $class := $route.ingressClassName | default $.Values.ingressClassName }}

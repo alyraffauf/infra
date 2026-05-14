@@ -1,0 +1,36 @@
+---
+- name: "[{{ client_spec.key }}] Write OIDC env Secret"
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: "{{ client_spec.key }}-oidc-env"
+        namespace: "{{ k8s_namespace }}"
+        labels:
+          app.kubernetes.io/managed-by: ansible-oidc-bootstrap
+          app.kubernetes.io/component: sso-env
+        annotations:
+          helm.sh/resource-policy: keep
+      type: Opaque
+      stringData:
+        PROVIDERS_OIDC_CLIENT_ID: "{{ client_credentials_map[client_spec.key].client_id }}"
+        PROVIDERS_OIDC_CLIENT_SECRET: "{{ client_credentials_map[client_spec.key].client_secret }}"
+  no_log: true
+  register: forward_auth_oidc_secret
+
+- name: "[{{ client_spec.key }}] Rollout restart to pick up new env"
+  when: forward_auth_oidc_secret.changed
+  kubernetes.core.k8s:
+    state: patched
+    api_version: apps/v1
+    kind: Deployment
+    namespace: "{{ k8s_namespace }}"
+    name: "{{ client_spec.key }}"
+    definition:
+      spec:
+        template:
+          metadata:
+            annotations:
+              kubectl.kubernetes.io/restartedAt: "{{ lookup('pipe', 'date -u +%FT%TZ') }}"

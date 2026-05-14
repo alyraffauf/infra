@@ -1,0 +1,18 @@
+{{- range $key, $app := .Values.apps }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forward-auth-{{ $key }}
+  labels:
+    app: forward-auth-{{ $key }}
+spec:
+  type: ClusterIP
+  selector:
+    app: forward-auth-{{ $key }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: 4181
+      protocol: TCP
+{{- end }}

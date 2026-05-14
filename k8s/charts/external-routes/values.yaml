@@ -13,6 +13,13 @@ routes:
     target: { ip: 100.81.61.31, port: 8096 } # jubilife
     tls: { secretName: cute-haus-tls }
 
+  - name: navidrome
+    host: navidrome.cute.haus
+    target: { ip: 100.95.27.71, port: 4533 } # snowpoint
+    tls: { secretName: cute-haus-tls }
+    middlewares:
+      - default-forward-auth-navidrome@kubernetescrd
+
   - name: plex
     host: plex.cute.haus
     target: { ip: 100.81.61.31, port: 32400 } # jubilife

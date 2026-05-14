@@ -198,6 +198,14 @@ releases:
     values:
       - values/secrets/pocket-id.yaml
 
+  - name: forward-auth
+    namespace: default
+    chart: ./charts/forward-auth
+    needs:
+      - default/cluster-tls
+    values:
+      - values/secrets/forward-auth.yaml
+
   - name: uptime-kuma
     namespace: default
     chart: ./charts/uptime-kuma
