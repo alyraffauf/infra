@@ -52,7 +52,7 @@ jobs:
       - name: Install ansible-core + collections
         run: |
           pip install --quiet ansible-core
-          ansible-galaxy collection install --quiet kubernetes.core community.sops
+          ansible-galaxy collection install kubernetes.core community.sops
       - name: Syntax check every playbook
         run: |
           set -e
