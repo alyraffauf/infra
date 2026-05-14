@@ -1,0 +1,74 @@
+name: check-config
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+on:
+  push:
+    paths-ignore:
+      - "**/*.md"
+      - .github/**
+      - _img/**
+  workflow_dispatch: {}
+
+jobs:
+  consistency-checks:
+    name: Bun consistency checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: { fetch-depth: 1 }
+      - uses: oven-sh/setup-bun@v2
+      - run: bun scripts/check.ts
+
+  chart-templates:
+    name: helm template each chart
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: { fetch-depth: 1 }
+      - uses: azure/setup-helm@v4
+      - name: helm template each local chart
+        run: |
+          set -e
+          for chart in k8s/charts/*/; do
+            name="$(basename "$chart")"
+            [[ "$name" == "common" ]] && continue
+            echo "::group::$name"
+            helm dependency update "$chart" >/dev/null
+            helm template "$chart" >/dev/null
+            echo "::endgroup::"
+          done
+
+  ansible-syntax:
+    name: ansible playbook syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: { fetch-depth: 1 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.x" }
+      - name: Install ansible-core + collections
+        run: |
+          pip install --quiet ansible-core
+          ansible-galaxy collection install --quiet kubernetes.core community.sops
+      - name: Syntax check every playbook
+        run: |
+          set -e
+          for playbook in ansible/playbooks/*.yml; do
+            echo "::group::$playbook"
+            ansible-playbook --syntax-check "$playbook"
+            echo "::endgroup::"
+          done
+
+  terraform-validate:
+    name: terraform fmt + validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: { fetch-depth: 1 }
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform -chdir=terraform fmt -check -diff
+      - run: terraform -chdir=terraform init -backend=false -input=false
+      - run: terraform -chdir=terraform validate
