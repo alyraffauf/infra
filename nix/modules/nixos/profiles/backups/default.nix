@@ -96,6 +96,19 @@ in {
         }
       );
 
+      k3s = lib.mkIf (config.services.k3s.enable && config.services.k3s.role == "server") (
+        restic
+        // {
+          backupPrepareCommand = "${config.services.k3s.package}/bin/k3s etcd-snapshot save";
+          paths = [
+            "/var/lib/rancher/k3s/server/db/snapshots"
+            "/var/lib/rancher/k3s/server/cred"
+            "/var/lib/rancher/k3s/server/tls"
+          ];
+          repository = mkRepo "k3s";
+        }
+      );
+
       lidarr = lib.mkIf config.services.lidarr.enable (
         restic
         // {
