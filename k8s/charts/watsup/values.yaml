@@ -4,7 +4,7 @@ dnsPolicy: Default
 
 image:
   repository: ghcr.io/alyraffauf/watsup
-  tag: latest@sha256:c97fdb235397c5ba6061ea4f8727aebe4845995994c567f52ad5ae1d8a47ccae
+  tag: latest@sha256:57d10ef8e52fe536ac50dc5c2ce333d6a987087165e15c8bf30f883e565b86c3
   pullPolicy: IfNotPresent
 
 resources:
