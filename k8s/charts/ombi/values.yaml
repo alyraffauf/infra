@@ -4,7 +4,7 @@ terminationGracePeriodSeconds: 30
 
 image:
   repository: lscr.io/linuxserver/ombi
-  tag: latest@sha256:2a1edf438ebfc4f1aae148c32914d7d7c1ba4c92923b32fed7a19d03933812ed
+  tag: latest@sha256:0caadf03b8047e1e6ec8396069bfd7aa2ecacb7d26cd67435dc1f334634d04ac
   pullPolicy: IfNotPresent
 
 podSecurityContext:
