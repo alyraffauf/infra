@@ -41,6 +41,14 @@ releases:
               default: true
             exposedPort: 2222
             protocol: TCP
+        updateStrategy:
+          type: RollingUpdate
+          rollingUpdate:
+            maxUnavailable: 1
+            maxSurge: 0
+        additionalArguments:
+          - "--entrypoints.web.http.middlewares=default-error-pages@kubernetescrd"
+          - "--entrypoints.websecure.http.middlewares=default-error-pages@kubernetescrd"
         nodeSelector:
           cute.haus/ingress: "true"
         tolerations:
@@ -153,6 +161,12 @@ releases:
       - values/secrets/cluster-tls.yaml
 
   # ─── Apps ───────────────────────────────────────────────────────────────
+
+  - name: error-pages
+    namespace: default
+    chart: ./charts/error-pages
+    needs:
+      - default/cluster-tls
 
   - name: aly-codes
     namespace: default

@@ -1,0 +1,36 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/tarampampam/error-pages
+  tag: 4@sha256:7c57706501e6ad4ed91031c5b529591395d7cbd509a311f8210236bb608f6557
+  pullPolicy: IfNotPresent
+
+env:
+  TEMPLATE_NAME: app-down
+
+resources:
+  requests:
+    cpu: 5m
+    memory: 16Mi
+  limits:
+    cpu: 100m
+    memory: 32Mi
+
+ports:
+  - name: http
+    containerPort: 8080
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+
+probes:
+  liveness:
+    httpGet: { path: /healthz, port: http }
+    periodSeconds: 30
+  readiness:
+    httpGet: { path: /healthz, port: http }
+    periodSeconds: 10
