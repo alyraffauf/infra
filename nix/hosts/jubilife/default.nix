@@ -127,7 +127,7 @@ in {
       };
 
       prometheusNode.enable = true;
-      promtail.enable = true;
+      alloy.enable = true;
 
       qbittorrent = {
         port = 8080;

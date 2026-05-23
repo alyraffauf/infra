@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./alloy
     ./atbbs
     ./cachefilesd
     ./caddy
@@ -7,7 +8,6 @@
     ./forgejo-runner
     ./plex
     ./prometheusNode
-    ./promtail
     ./qbittorrent
     ./syncthing
     ./tailscale

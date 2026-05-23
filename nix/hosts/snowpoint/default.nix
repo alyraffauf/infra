@@ -157,7 +157,7 @@
       caddy.enable = true;
       plex.enable = true;
       prometheusNode.enable = true;
-      promtail.enable = true;
+      alloy.enable = true;
 
       syncthing = {
         enable = true;

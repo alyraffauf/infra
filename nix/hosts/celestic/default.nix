@@ -87,7 +87,7 @@
 
     services = {
       prometheusNode.enable = true;
-      promtail.enable = true;
+      alloy.enable = true;
 
       tailscale = {
         enable = true;
