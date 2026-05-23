@@ -101,6 +101,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- end }}
+        {{- with .Values.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- if and .Values.persistence .Values.persistence.enabled }}
       volumes:
         - name: data
