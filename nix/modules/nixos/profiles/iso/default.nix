@@ -58,7 +58,6 @@
 
     system = {
       configurationRevision = self.rev or self.dirtyRev or null;
-      rebuild.enableNg = true;
       switch.enable = false;
     };
 
