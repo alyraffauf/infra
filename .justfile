@@ -36,6 +36,11 @@ update-caddy-tailscale:
 #
 ############################################################################
 
+# Build a NixOS host locally without deploying.
+[group('servers')]
+build host:
+    nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel
+
 # Deploy hosts with nynx.
 [group('servers')]
 deploy jobs='':
