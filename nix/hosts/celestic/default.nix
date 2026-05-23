@@ -89,10 +89,7 @@
       prometheusNode.enable = true;
       alloy.enable = true;
 
-      tailscale = {
-        enable = true;
-        enableCaddy = false;
-      };
+      tailscale.enable = true;
     };
   };
 

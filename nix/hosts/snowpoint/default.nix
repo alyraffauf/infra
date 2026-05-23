@@ -154,7 +154,6 @@
     programs.nix.enable = true;
 
     services = {
-      caddy.enable = true;
       plex.enable = true;
       prometheusNode.enable = true;
       alloy.enable = true;

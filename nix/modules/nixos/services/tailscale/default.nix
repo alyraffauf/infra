@@ -13,11 +13,7 @@
       type = lib.types.nullOr lib.types.path;
     };
 
-    enableCaddy = lib.mkOption {
-      description = "Whether to serve supported local services on Tailnet with Caddy.";
-      default = true;
-      type = lib.types.bool;
-    };
+    caddy.enable = lib.mkEnableOption "serving supported local services on Tailnet with Caddy";
 
     operator = lib.mkOption {
       description = "Tailscale operator name";
@@ -48,7 +44,7 @@
     };
 
     services = {
-      caddy = lib.mkIf config.myNixOS.services.tailscale.enableCaddy {
+      caddy = lib.mkIf config.myNixOS.services.tailscale.caddy.enable {
         enable = true;
 
         virtualHosts = {

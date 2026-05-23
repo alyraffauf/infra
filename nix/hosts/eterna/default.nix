@@ -134,10 +134,7 @@
         user = "aly";
       };
 
-      tailscale = {
-        enable = true;
-        enableCaddy = false;
-      };
+      tailscale.enable = true;
     };
   };
 

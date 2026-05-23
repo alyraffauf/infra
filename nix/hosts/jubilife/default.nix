@@ -143,7 +143,10 @@ in {
         user = "aly";
       };
 
-      tailscale.enable = true;
+      tailscale = {
+        enable = true;
+        caddy.enable = true;
+      };
     };
   };
 
