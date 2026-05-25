@@ -12,12 +12,15 @@
       delegate_to: localhost
       changed_when: true
 
+    # --disable-eviction skips PDB checks (Longhorn instance-manager and
+    # single-replica CNPG pods otherwise block eviction indefinitely).
     - name: Drain node
       ansible.builtin.command: >-
         kubectl drain {{ inventory_hostname }}
         --ignore-daemonsets
         --delete-emptydir-data
         --force
+        --disable-eviction
         --timeout={{ drain_timeout }}s
       delegate_to: localhost
       changed_when: true
