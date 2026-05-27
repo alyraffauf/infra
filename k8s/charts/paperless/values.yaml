@@ -62,6 +62,14 @@ persistence:
   storageClassName: longhorn
   size: 5Gi
 
+extraVolumeMounts:
+  - name: data
+    mountPath: /paperless/data
+    subPath: data
+  - name: data
+    mountPath: /paperless/consume
+    subPath: consume
+
 failover:
   fastTolerationSeconds: 60
 
@@ -74,6 +82,9 @@ rclone:
   mountPath: /paperless/media
   vfsCacheMaxAge: 168h
   vfsCacheMaxSize: 5G
+  allowOther: true
+  uid: 1000
+  gid: 1000
 
 probes:
   startup:

@@ -7,6 +7,10 @@ image:
   tag: 2.35.0@sha256:89276ff2e0b3d2f07dd334b641f27a34ab7f02e1047c60b7b8a30126cb0813a5
   pullPolicy: IfNotPresent
 
+ports:
+  - name: http
+    containerPort: 80
+
 resources:
   requests:
     cpu: 100m
@@ -27,6 +31,17 @@ persistence:
   storageClassName: longhorn
   size: 30Gi
 
+extraVolumeMounts:
+  - name: data
+    mountPath: /config
+    subPath: config
+  - name: data
+    mountPath: /metadata
+    subPath: metadata
+  - name: data
+    mountPath: /podcasts
+    subPath: podcasts
+
 env:
   TZ: America/New_York
 
@@ -37,6 +52,19 @@ envFromSecret:
 failover:
   fastTolerationSeconds: 60
 
+probes:
+  startup:
+    httpGet: { path: /healthcheck, port: http }
+    periodSeconds: 5
+    failureThreshold: 60
+  liveness:
+    httpGet: { path: /healthcheck, port: http }
+    periodSeconds: 30
+  readiness:
+    httpGet: { path: /healthcheck, port: http }
+    periodSeconds: 5
+    failureThreshold: 3
+
 rclone:
   image:
     repository: rclone/rclone
@@ -46,6 +74,9 @@ rclone:
   mountPath: /audiobooks
   vfsCacheMaxAge: 168h
   vfsCacheMaxSize: 5G
+  readOnly: true
+  uid: 99
+  gid: 100
 
 ingress:
   enabled: true

@@ -82,10 +82,26 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if and .Values.persistence .Values.persistence.enabled }}
+          {{- $hasMounts := or (and .Values.persistence .Values.persistence.enabled) .Values.extraVolumeMounts .Values.rclone }}
+          {{- if $hasMounts }}
           volumeMounts:
+            {{- if and .Values.persistence .Values.persistence.enabled }}
+            {{- if not (hasKey .Values.persistence "mountPath") }}
             - name: data
-              mountPath: {{ .Values.persistence.mountPath | default "/data" }}
+              mountPath: /data
+            {{- else if .Values.persistence.mountPath }}
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if .Values.rclone }}
+            - name: rclone-media
+              mountPath: {{ .Values.rclone.mountPath }}
+              mountPropagation: HostToContainer
+            {{- end }}
           {{- end }}
           {{- with .Values.probes }}
           {{- with .startup }}
@@ -104,10 +120,57 @@ spec:
         {{- with .Values.extraContainers }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- if and .Values.persistence .Values.persistence.enabled }}
+        {{- if .Values.rclone }}
+        - name: rclone
+          image: "{{ .Values.rclone.image.repository }}:{{ .Values.rclone.image.tag }}"
+          imagePullPolicy: {{ .Values.rclone.image.pullPolicy | default "IfNotPresent" }}
+          args:
+            - mount
+            - {{ .Values.rclone.remote | quote }}
+            - {{ .Values.rclone.mountPath | quote }}
+            - --allow-non-empty
+            {{- if .Values.rclone.readOnly }}
+            - --read-only
+            {{- end }}
+            {{- if .Values.rclone.allowOther }}
+            - --allow-other
+            {{- end }}
+            - --vfs-cache-mode=full
+            - --vfs-cache-max-age={{ .Values.rclone.vfsCacheMaxAge }}
+            - --vfs-cache-max-size={{ .Values.rclone.vfsCacheMaxSize }}
+            - --uid={{ .Values.rclone.uid | default 1000 }}
+            - --gid={{ .Values.rclone.gid | default 1000 }}
+            - --umask=022
+            - --log-level=INFO
+          securityContext:
+            privileged: true
+          {{- $rcloneSecrets := .Values.rclone.envFromSecret | default .Values.envFromSecret }}
+          {{- with $rcloneSecrets }}
+          envFrom:
+            {{- range . }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+          {{- end }}
+          volumeMounts:
+            - name: rclone-media
+              mountPath: {{ .Values.rclone.mountPath }}
+              mountPropagation: Bidirectional
+        {{- end }}
+      {{- $hasVolumes := or (and .Values.persistence .Values.persistence.enabled) .Values.extraVolumes .Values.rclone }}
+      {{- if $hasVolumes }}
       volumes:
+        {{- if and .Values.persistence .Values.persistence.enabled }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Chart.Name }}-data
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.rclone }}
+        - name: rclone-media
+          emptyDir: {}
+        {{- end }}
       {{- end }}
 {{- end -}}
