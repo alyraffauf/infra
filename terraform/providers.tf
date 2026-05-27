@@ -2,6 +2,10 @@ terraform {
   required_version = ">= 1.10"
 
   required_providers {
+    b2 = {
+      source  = "Backblaze/b2"
+      version = "~> 0.12"
+    }
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "~> 5.0"
@@ -41,6 +45,10 @@ terraform {
 
 provider "cloudflare" {
   # Reads CLOUDFLARE_API_TOKEN from the environment.
+}
+
+provider "b2" {
+  # Reads B2_APPLICATION_KEY_ID and B2_APPLICATION_KEY from the environment.
 }
 
 provider "hcloud" {
