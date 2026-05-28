@@ -17,6 +17,21 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: {{ .Values.cluster.topologyKey }}
+    # Soft preference home > netcup > hetzner; small Hetzner VPSes are last resort.
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: topology.kubernetes.io/zone
+                operator: In
+                values: [home]
+        - weight: 50
+          preference:
+            matchExpressions:
+              - key: topology.kubernetes.io/zone
+                operator: In
+                values: [cloud-netcup]
     {{- with .Values.failover }}
     {{- if .fastTolerationSeconds }}
     tolerations:
