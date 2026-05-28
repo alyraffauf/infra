@@ -11,8 +11,14 @@
 // with `repository` and `tag` fields, then keeps only the ones whose tag
 // already contains `@sha256:` (i.e. is digest-pinned). Floating tags are
 // skipped — they don't need bumping.
+//
+// Private registries that need credentials are skipped here too — `skopeo
+// inspect --no-creds` can't reach them. Bump those via their own recipe
+// (e.g. `just bump-tranquil` for atcr.io).
 
 import { $ } from "bun";
+
+const PRIVATE_REGISTRIES = ["atcr.io/"];
 
 type PinnedImage = {
   chartName: string;
@@ -60,6 +66,8 @@ function* findImageBlocks(
   }
 }
 
+const privateRegistryCharts = new Set<string>();
+
 async function discoverPinnedImages(): Promise<PinnedImage[]> {
   const glob = new Bun.Glob("k8s/charts/*/values.yaml");
   const pinned: PinnedImage[] = [];
@@ -71,6 +79,10 @@ async function discoverPinnedImages(): Promise<PinnedImage[]> {
     for (const block of findImageBlocks(values)) {
       const [floatTag, digestHex] = block.tag.split("@sha256:");
       if (!digestHex) continue; // floating tag, skip
+      if (PRIVATE_REGISTRIES.some((r) => block.repository.startsWith(r))) {
+        privateRegistryCharts.add(chartName);
+        continue;
+      }
 
       pinned.push({
         chartName,
@@ -150,6 +162,12 @@ if (arg === "--all") {
 } else {
   imagesToBump = allImages.filter((image) => image.chartName === arg);
   if (imagesToBump.length === 0) {
+    if (privateRegistryCharts.has(arg)) {
+      console.error(
+        `${arg} is on a private registry; use its dedicated recipe (e.g. \`just bump-tranquil\`)`,
+      );
+      process.exit(1);
+    }
     console.error(`no chart '${arg}' with a digest-pinned image`);
     process.exit(1);
   }

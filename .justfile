@@ -159,6 +159,31 @@ check:
 bump TARGET:
     bun scripts/bump-image.ts {{ TARGET }}
 
+# Bump tranquil-pds to its current atcr.io digest. Separate from `just bump`
+# because atcr.io is private — `skopeo --no-creds` can't reach it.
+[group('kubes')]
+bump-tranquil:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    VALUES=k8s/charts/tranquil-pds/values.yaml
+    REPO=$(awk '/^image:/{f=1;next} f&&/repository:/{print $2;exit}' "$VALUES")
+    TAG=$(awk '/^image:/{f=1;next} f&&/tag:/{print $2;exit}' "$VALUES")
+    FLOAT_TAG="${TAG%@sha256:*}"
+    CURRENT_DIGEST=""
+    if [[ "$TAG" == *@sha256:* ]]; then
+        CURRENT_DIGEST="sha256:${TAG#*@sha256:}"
+    fi
+    USERNAME=$(sops -d --extract '["username"]' secrets/atcr.yaml)
+    PASSWORD=$(sops -d --extract '["password"]' secrets/atcr.yaml)
+    UPSTREAM=$(skopeo inspect --creds "$USERNAME:$PASSWORD" \
+        "docker://${REPO}:${FLOAT_TAG}" --format '{{"{{"}}.Digest{{"}}"}}')
+    if [[ "$UPSTREAM" == "$CURRENT_DIGEST" ]]; then
+        echo "tranquil-pds: ✓ up to date"
+        exit 0
+    fi
+    echo "tranquil-pds: ${CURRENT_DIGEST:0:19} → ${UPSTREAM:0:19}"
+    sed -i "s|tag: ${TAG}|tag: ${FLOAT_TAG}@${UPSTREAM}|" "$VALUES"
+
 # Scaffold a new app chart under k8s/charts/<name>. After running, edit the
 # values.yaml and add a release block to k8s/helmfile.yaml. See k8s/charts/README.md.
 [group('kubes')]

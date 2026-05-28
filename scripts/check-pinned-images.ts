@@ -5,7 +5,7 @@
 // loop.
 
 const HELMFILE = "k8s/helmfile.yaml";
-const ALLOW_FLOATING = new Set(["tranquil-pds"]);
+const ALLOW_FLOATING = new Set<string>();
 
 const DIGEST_SUFFIX = /@sha256:[0-9a-f]{64}$/;
 
