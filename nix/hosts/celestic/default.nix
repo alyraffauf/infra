@@ -63,9 +63,8 @@
 
       k3s = {
         enable = true;
-        role = "server";
+        role = "agent";
         serverAddr = "https://solaceon:6443";
-        tlsSans = ["solaceon" "eterna"];
         zone = "cloud-hetzner";
         ingress = true;
       };
