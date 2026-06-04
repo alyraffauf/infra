@@ -76,7 +76,7 @@ releases:
     namespace: longhorn-system
     createNamespace: true
     chart: longhorn/longhorn
-    version: 1.11.2
+    version: 1.12.0
     needs:
       - longhorn-system/longhorn-creds
     values:
