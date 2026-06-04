@@ -105,7 +105,7 @@
         enable = true;
         role = "server";
         serverAddr = "https://solaceon:6443";
-        tlsSans = ["solaceon" "celestic"];
+        tlsSans = ["solaceon" "pastoria"];
         zone = "home";
         ingress = true;
       };

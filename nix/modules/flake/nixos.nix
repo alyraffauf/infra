@@ -24,6 +24,7 @@
         "celestic"
         "eterna"
         "jubilife"
+        "pastoria"
         "snowpoint"
         "solaceon"
         "twinleaf"

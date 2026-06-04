@@ -20,6 +20,7 @@ keys:
   - &host_fortree age1f9hd8fu0694rc3tr6hwxz3ldfpepref937rmvqdxvvsr0kfcjdxswyzvw3
   - &host_jubilife age157en2pt286a22pxzyugt84ak6rn2at89tpma88juqfgj84lme5csq4999g
   - &host_pacifidlog age1axn36h9356ena7rq6y2xa4rcm250w9h0m9pz6x0677gla0v4f4dsj92yfm
+  - &host_pastoria age1xwlrtfu3du4jxg2l6eemzqeed8tflhdkjn0q5j9pzpecshtp3cpsh60l4j
   - &host_petalburg age1kgp3x48wn0dmzwqp0vdpfsdw42rej0ypkj0qavs7c2t2tgdud5zqcmhl40
   - &host_rustboro age1sukfru07msq8fm5ddgym23yal9lfm99090p999p09mxgrrwh9aqs6zp4fy
   - &host_slateport age1ephzrpgftmvq4cul9766q2r3mss38xu6un74ryfmw0729afysghsh0a3qg
@@ -47,6 +48,7 @@ creation_rules:
           - *host_fortree
           - *host_jubilife
           - *host_pacifidlog
+          - *host_pastoria
           - *host_petalburg
           - *host_rustboro
           - *host_slateport

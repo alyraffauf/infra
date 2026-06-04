@@ -26,15 +26,11 @@
     };
   };
 
-  networking = {
-    firewall.allowedTCPPorts = [8282 8383];
-    hostName = "solaceon";
-  };
-
+  networking.hostName = "pastoria";
   nixpkgs.hostPlatform = "x86_64-linux";
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
   time.timeZone = "America/New_York";
-  myDisko.installDrive = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_62292463";
+  myDisko.installDrive = "/dev/sda";
 
   myNixOS = {
     base.enable = true;
@@ -42,7 +38,7 @@
     profiles = {
       autoUpgrade = {
         enable = true;
-        dates = "02:00";
+        dates = "01:45";
       };
 
       backups.enable = true;
@@ -50,17 +46,17 @@
       k3s = {
         enable = true;
         role = "server";
-        clusterInit = true;
-        tlsSans = ["pastoria" "eterna"];
-        zone = "cloud-hetzner";
-        ingress = true;
+        serverAddr = "https://solaceon:6443";
+        tlsSans = ["solaceon" "eterna"];
+        zone = "cloud-ovhcloud";
+        ingress = false;
       };
 
       vps.enable = true;
 
       swap = {
         enable = true;
-        size = 2048;
+        size = 4096;
       };
 
       zram.enable = true;
@@ -74,7 +70,6 @@
     services = {
       prometheusNode.enable = true;
       alloy.enable = true;
-
       tailscale.enable = true;
     };
   };
