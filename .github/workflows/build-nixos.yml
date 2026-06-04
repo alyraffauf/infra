@@ -2,24 +2,6 @@ concurrency:
   cancel-in-progress: true
   group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  build-celestic:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@main
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        fetch-depth: 1
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@main
-    - name: Cachix
-      uses: cachix/cachix-action@master
-      with:
-        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-        name: cutehaus
-    - name: Build celestic
-      run: nix build --accept-flake-config --print-out-paths .#nixosConfigurations.celestic.config.system.build.toplevel
   build-eterna:
     runs-on: ubuntu-latest
     steps:
@@ -56,6 +38,24 @@ jobs:
         name: cutehaus
     - name: Build jubilife
       run: nix build --accept-flake-config --print-out-paths .#nixosConfigurations.jubilife.config.system.build.toplevel
+  build-pastoria:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 1
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@main
+    - name: Cachix
+      uses: cachix/cachix-action@master
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: cutehaus
+    - name: Build pastoria
+      run: nix build --accept-flake-config --print-out-paths .#nixosConfigurations.pastoria.config.system.build.toplevel
   build-snowpoint:
     runs-on: ubuntu-latest
     steps:
