@@ -16,6 +16,19 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      initContainers:
+        - name: wait-deps
+          image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:6c86cad803970ea782683a8e80e7403444c5bf3cf70de63b4d3c8e87500db92f
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              echo "waiting for tika..."
+              until curl -sf http://tika:9998/; do sleep 2; done
+              echo "waiting for gotenberg..."
+              until curl -sf http://gotenberg:3000/health; do sleep 2; done
+              echo "dependencies ready"
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
       securityContext:
@@ -66,6 +79,12 @@ spec:
               value: "redis://valkey.default.svc:6379/0"
             - name: PAPERLESS_SOCIAL_AUTO_SIGNUP
               value: "True"
+            - name: PAPERLESS_TIKA_ENABLED
+              value: "1"
+            - name: PAPERLESS_TIKA_ENDPOINT
+              value: "http://tika:9998"
+            - name: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
+              value: "http://gotenberg:3000"
             - name: PAPERLESS_TIME_ZONE
               value: "America/New_York"
             - name: PAPERLESS_URL
@@ -74,8 +93,10 @@ spec:
               value: "true"
             - name: PAPERLESS_USE_X_FORWARD_PORT
               value: "true"
+            - name: PAPERLESS_TASK_WORKERS
+              value: "2"
             - name: PAPERLESS_WEBSERVER_WORKERS
-              value: "4"
+              value: "2"
           envFrom:
             - secretRef:
                 name: paperless-env
@@ -89,7 +110,7 @@ spec:
               cpu: 500m
               memory: 1Gi
             limits:
-              cpu: "2"
+              cpu: "4"
               memory: 4Gi
           volumeMounts:
             - name: data
@@ -112,8 +133,8 @@ spec:
             httpGet:
               path: /api/
               port: http
-            periodSeconds: 30
-            timeoutSeconds: 5
+            periodSeconds: 60
+            timeoutSeconds: 15
           readinessProbe:
             httpGet:
               path: /api/

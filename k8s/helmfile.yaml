@@ -159,6 +159,16 @@ releases:
     namespace: default
     chart: ./charts/valkey
 
+  # Apache Tika (document parsing + OCR) and Gotenberg (doc-to-PDF).
+  # Paperless offloads OCR and conversion to these.
+  - name: tika
+    namespace: default
+    chart: ./charts/tika
+
+  - name: gotenberg
+    namespace: default
+    chart: ./charts/gotenberg
+
   # Cloudflare Origin TLS Secrets per domain (aly-codes, aly-social,
   # cute-haus, morsels-blue). Apps reference these by name in ingress.routes.
   - name: cluster-tls
@@ -231,6 +241,8 @@ releases:
       - default/cluster-tls
       - cnpg-system/pg-shared
       - default/valkey
+      - default/tika
+      - default/gotenberg
     values:
       - values/secrets/paperless.yaml
 
