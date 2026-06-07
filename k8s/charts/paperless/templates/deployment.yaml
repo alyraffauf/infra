@@ -93,6 +93,8 @@ spec:
               value: "true"
             - name: PAPERLESS_USE_X_FORWARD_PORT
               value: "true"
+            - name: PAPERLESS_CONSUMER_DELETE
+              value: "true"
             - name: PAPERLESS_TASK_WORKERS
               value: "1"
             - name: PAPERLESS_OCR_PAGES
@@ -156,6 +158,8 @@ spec:
             - --vfs-cache-mode=full
             - --vfs-cache-max-age=168h
             - --vfs-cache-max-size=5G
+            - --dir-cache-time=24h
+            - --poll-interval=0
             - --transfers=4
             - --uid=1000
             - --gid=1000
