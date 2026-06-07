@@ -1,4 +1,4 @@
-resource "cloudflare_dns_record" "morsels_blue_apex_a_solaceon" {
+resource "cloudflare_dns_record" "morsels_blue_apex_a" {
   zone_id  = local.zones.morsels_blue
   name     = "morsels.blue"
   type     = "A"

@@ -1,5 +1,5 @@
 locals {
-  cute_haus_solaceon = {
+  cute_haus_ingress = {
     "audiobookshelf.cute.haus" = true
     "auth-navidrome.cute.haus" = true
     "cute.haus"                = true
@@ -9,7 +9,7 @@ locals {
     "kuma.cute.haus"           = true
     "navidrome.cute.haus"      = true
     "ombi.cute.haus"           = true
-    "paperless.cute.haus"      = true
+    "paperless.cute.haus"      = false
     "pds.cute.haus"            = false
     "photoprism.cute.haus"     = false
     "plex.cute.haus"           = false
@@ -18,8 +18,8 @@ locals {
   }
 }
 
-resource "cloudflare_dns_record" "cute_haus_a_solaceon" {
-  for_each = local.cute_haus_solaceon
+resource "cloudflare_dns_record" "cute_haus_a" {
+  for_each = local.cute_haus_ingress
   zone_id  = local.zones.cute_haus
   name     = each.key
   type     = "A"

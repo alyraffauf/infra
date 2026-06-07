@@ -9,7 +9,7 @@ resource "cloudflare_dns_record" "aly_social_wildcard_a" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "aly_social_apex_a_solaceon" {
+resource "cloudflare_dns_record" "aly_social_apex_a" {
   zone_id  = local.zones.aly_social
   name     = "aly.social"
   type     = "A"
@@ -20,7 +20,7 @@ resource "cloudflare_dns_record" "aly_social_apex_a_solaceon" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "aly_social_status_a_solaceon" {
+resource "cloudflare_dns_record" "aly_social_status_a" {
   zone_id  = local.zones.aly_social
   name     = "status.aly.social"
   type     = "A"

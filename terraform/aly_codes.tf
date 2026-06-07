@@ -1,5 +1,5 @@
 locals {
-  aly_codes_solaceon_a = toset([
+  aly_codes_ingress_hosts = toset([
     "aly.codes",
     "git.aly.codes",
     "status.aly.codes",
@@ -8,8 +8,8 @@ locals {
   aly_codes_fm_dkim = toset(["fm1", "fm2", "fm3"])
 }
 
-resource "cloudflare_dns_record" "aly_codes_a_solaceon" {
-  for_each = local.aly_codes_solaceon_a
+resource "cloudflare_dns_record" "aly_codes_a" {
+  for_each = local.aly_codes_ingress_hosts
   zone_id  = local.zones.aly_codes
   name     = each.value
   type     = "A"
