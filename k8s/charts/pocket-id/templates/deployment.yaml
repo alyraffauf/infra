@@ -64,10 +64,12 @@ spec:
             httpGet:
               path: /healthz
               port: http
-            periodSeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 15
           readinessProbe:
             httpGet:
               path: /healthz
               port: http
-            periodSeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 10
             failureThreshold: 2
