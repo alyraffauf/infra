@@ -1,9 +1,9 @@
 apiVersion: v2
-name: paperless
-description: paperless-ngx document management
+name: valkey
+description: Shared Valkey instance used as cache/queue/session/broker backend by other apps
 type: application
 version: 0.1.0
-appVersion: "2"
+appVersion: "9"
 dependencies:
   - name: common
     version: 0.1.0

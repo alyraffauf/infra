@@ -40,7 +40,7 @@ env:
   PAPERLESS_TIME_ZONE: America/New_York
   PAPERLESS_WEBSERVER_WORKERS: "4"
   PAPERLESS_OCR_LANGUAGE: eng
-  PAPERLESS_REDIS: redis://localhost:6379
+  PAPERLESS_REDIS: redis://valkey.default.svc:6379/0
   PAPERLESS_DBHOST: pg-shared-rw.cnpg-system.svc
   PAPERLESS_DBPORT: "5432"
   PAPERLESS_DBNAME: paperless
@@ -111,14 +111,3 @@ ingress:
   routes:
     - host: paperless.cute.haus
       tlsSecret: cute-haus-tls
-
-extraContainers:
-  - name: redis
-    image: redis:8-alpine@sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1
-    imagePullPolicy: IfNotPresent
-    ports:
-      - name: redis
-        containerPort: 6379
-    resources:
-      requests: { cpu: 10m, memory: 32Mi }
-      limits: { cpu: 200m, memory: 128Mi }

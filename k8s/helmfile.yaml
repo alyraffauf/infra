@@ -154,6 +154,11 @@ releases:
     values:
       - values/secrets/pg-shared.yaml
 
+  # Shared cache/queue/broker backend; apps pick their own logical DB number.
+  - name: valkey
+    namespace: default
+    chart: ./charts/valkey
+
   # Cloudflare Origin TLS Secrets per domain (aly-codes, aly-social,
   # cute-haus, morsels-blue). Apps reference these by name in ingress.routes.
   - name: cluster-tls
@@ -225,6 +230,7 @@ releases:
     needs:
       - default/cluster-tls
       - cnpg-system/pg-shared
+      - default/valkey
     values:
       - values/secrets/paperless.yaml
 
@@ -249,6 +255,7 @@ releases:
     needs:
       - default/cluster-tls
       - cnpg-system/pg-shared
+      - default/valkey
     values:
       - values/secrets/forgejo.yaml
 
