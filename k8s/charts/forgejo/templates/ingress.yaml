@@ -1,1 +1,23 @@
-{{- include "common.ingress" . }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - "git.aly.codes"
+      secretName: aly-codes-tls
+  rules:
+    - host: "git.aly.codes"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: 80

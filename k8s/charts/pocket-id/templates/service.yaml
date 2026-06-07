@@ -1,1 +1,14 @@
-{{- include "common.service" . }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Chart.Name }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: 1411

@@ -1,1 +1,118 @@
-{{- include "common.deployment" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      terminationGracePeriodSeconds: 15
+      imagePullSecrets:
+        - name: atcr-pull
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: {{ .Chart.Name }}
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      containers:
+        - name: {{ .Chart.Name }}
+          image: atcr.io/tranquil.farm/tranquil-pds:latest@sha256:eb8e4c5042501fffe28a5298a9c06797412ff68cea35bd0899c12b4ad5d63465
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: AWS_REGION
+              value: "us-east-005"
+            - name: BLOB_STORAGE_BACKEND
+              value: "s3"
+            - name: CRAWLERS
+              value: "https://bsky.network"
+            - name: DATABASE_ACQUIRE_TIMEOUT_SECS
+              value: "60"
+            - name: DATABASE_MIN_CONNECTIONS
+              value: "1"
+            - name: INVITE_CODE_REQUIRED
+              value: "true"
+            - name: MAIL_FROM_ADDRESS
+              value: "admin@aly.social"
+            - name: MAIL_FROM_NAME
+              value: "tranquil"
+            - name: MAIL_SMARTHOST_HOST
+              value: "smtp.resend.com"
+            - name: MAIL_SMARTHOST_PORT
+              value: "2465"
+            - name: MAIL_SMARTHOST_TLS
+              value: "implicit"
+            - name: MAIL_SMARTHOST_USERNAME
+              value: "resend"
+            - name: PDS_HOSTNAME
+              value: "pds.cute.haus"
+            - name: PDS_USER_HANDLE_DOMAINS
+              value: "aly.social"
+            - name: PLC_DIRECTORY_URL
+              value: "https://plc.directory"
+            - name: S3_BUCKET
+              value: "aly-tranquil-blobs"
+            - name: S3_ENDPOINT
+              value: "https://s3.us-east-005.backblazeb2.com"
+            - name: SERVER_HOST
+              value: "0.0.0.0"
+            - name: SERVER_PORT
+              value: "3000"
+            - name: SKIP_IMPORT_VERIFICATION
+              value: "false"
+            - name: SSO_OIDC_DISPLAY_NAME
+              value: "cute.haus"
+            - name: SSO_OIDC_ENABLED
+              value: "true"
+            - name: SSO_OIDC_ISSUER
+              value: "https://id.cute.haus"
+          envFrom:
+            - secretRef:
+                name: tranquil-pds-env
+            - secretRef:
+                name: tranquil-sso-env
+          ports:
+            - name: http
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          startupProbe:
+            httpGet:
+              path: /xrpc/_health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /xrpc/_health
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /xrpc/_health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 2

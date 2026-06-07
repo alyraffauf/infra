@@ -4,7 +4,3 @@ description: Audiobookshelf with an rclone B2 sidecar for media
 type: application
 version: 0.1.0
 appVersion: "2.32.0"
-dependencies:
-  - name: common
-    version: 0.1.0
-    repository: file://../common

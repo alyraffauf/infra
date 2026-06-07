@@ -1,20 +1,19 @@
-// Every chart that's actually deployed must pin its image (or any sidecar
-// image, like the redis or rclone sidecars) to a specific digest. Charts in
-// ALLOW_FLOATING are exempt — usually because they live on a private
-// registry with active dev where pinning would break the push-and-redeploy
-// loop.
+// Every deployed chart must pin every container image to a sha256 digest.
+// Charts in ALLOW_FLOATING are exempt — usually because they live on a
+// private registry with active dev where pinning would break the
+// push-and-redeploy loop.
 
 const HELMFILE = "k8s/helmfile.yaml";
+const GLOB = "k8s/charts/*/templates/deployment.yaml";
 const ALLOW_FLOATING = new Set<string>();
 
-const DIGEST_SUFFIX = /@sha256:[0-9a-f]{64}$/;
+const DIGEST_RE = /image:\s+\S+?:\S+?@(sha256:[0-9a-f]{64})/;
 
 type Release = { chart: string };
 type Helmfile = { releases: Release[] };
 
-function chartNameFromPath(valuesPath: string): string {
-  // valuesPath looks like "k8s/charts/<name>/values.yaml"
-  return valuesPath.split("/")[2];
+function chartNameFromPath(templatePath: string): string {
+  return templatePath.split("/")[2];
 }
 
 async function deployedChartNames(): Promise<Set<string>> {
@@ -28,60 +27,40 @@ async function deployedChartNames(): Promise<Set<string>> {
   return names;
 }
 
-// Walks a parsed YAML tree and returns every `image: {tag: ...}` it finds,
-// along with the dotted path that gets you there (e.g. "image",
-// "rclone.image"). Mirrors what renovate's helm-values manager looks for.
-function findImageTags(
-  node: unknown,
-  pathSegments: string[] = [],
-): Array<{ path: string; tag: string }> {
-  if (!node || typeof node !== "object") return [];
+async function findImageRefs(
+  templatePath: string,
+): Promise<Array<{ tag: string }>> {
+  const text = await Bun.file(templatePath).text();
+  const refs: Array<{ tag: string }> = [];
 
-  const found: Array<{ path: string; tag: string }> = [];
-
-  if (Array.isArray(node)) {
-    for (let i = 0; i < node.length; i++) {
-      found.push(...findImageTags(node[i], [...pathSegments, `[${i}]`]));
-    }
-    return found;
+  for (const match of text.matchAll(
+    /image:\s+(\S+?):(\S+?)@(sha256:[a-f0-9]*)/g,
+  )) {
+    refs.push({ tag: `${match[2]}@${match[3]}` });
   }
 
-  for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
-    if (
-      key === "image" &&
-      value &&
-      typeof value === "object" &&
-      "tag" in value
-    ) {
-      const tag = (value as { tag?: unknown }).tag;
-      if (tag) {
-        found.push({
-          path: [...pathSegments, "image"].join("."),
-          tag: String(tag),
-        });
-      }
-    }
-    found.push(...findImageTags(value, [...pathSegments, key]));
-  }
-
-  return found;
+  return refs;
 }
 
 export async function checkPinnedImages(): Promise<string[]> {
   const deployed = await deployedChartNames();
   const errors: string[] = [];
 
-  const glob = new Bun.Glob("k8s/charts/*/values.yaml");
-  for await (const valuesPath of glob.scan(".")) {
-    const chartName = chartNameFromPath(valuesPath);
+  const glob = new Bun.Glob(GLOB);
+  for await (const templatePath of glob.scan(".")) {
+    const chartName = chartNameFromPath(templatePath);
     if (!deployed.has(chartName)) continue;
     if (ALLOW_FLOATING.has(chartName)) continue;
 
-    const values = Bun.YAML.parse(await Bun.file(valuesPath).text());
-    for (const { path, tag } of findImageTags(values)) {
-      if (!DIGEST_SUFFIX.test(tag)) {
+    const text = await Bun.file(templatePath).text();
+    // Find all image: lines and check whether they contain @sha256:
+    const imageLines = [...text.matchAll(/image:\s+(\S+):(\S+)/g)];
+    for (const match of imageLines) {
+      const fullRef = `${match[1]}:${match[2]}`;
+      if (!fullRef.includes("@sha256:")) {
+        const shortRepo = match[1].split("/").slice(-1)[0];
         errors.push(
-          `${chartName}: ${path}.tag '${tag}' is not pinned to a sha256 digest`,
+          `${chartName}: ${shortRepo} '${match[2]}' is not pinned to a sha256 digest`,
         );
       }
     }

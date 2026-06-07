@@ -1,1 +1,114 @@
-{{- include "common.deployment" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      terminationGracePeriodSeconds: 15
+      securityContext:
+        fsGroup: 1000
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      containers:
+        - name: {{ .Chart.Name }}
+          image: codeberg.org/forgejo/forgejo:15@sha256:db04c7114b656f896e206ba3873fe8d3a7adf2daa44907037f0274f4ba653fb9
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FORGEJO_CUSTOM
+              value: "/var/lib/forgejo/custom"
+            - name: FORGEJO_WORK_DIR
+              value: "/var/lib/forgejo"
+            - name: FORGEJO__cache__ADAPTER
+              value: "redis"
+            - name: FORGEJO__cache__ENABLED
+              value: "true"
+            - name: FORGEJO__cache__HOST
+              value: "redis://valkey.default.svc:6379/1"
+            - name: FORGEJO__database__DB_TYPE
+              value: "postgres"
+            - name: FORGEJO__database__HOST
+              value: "pg-shared-rw.cnpg-system.svc:5432"
+            - name: FORGEJO__database__NAME
+              value: "forgejo"
+            - name: FORGEJO__database__USER
+              value: "forgejo"
+            - name: FORGEJO__log__LOGGER_SSH_MODE
+              value: "file"
+            - name: FORGEJO__oauth2_client__ACCOUNT_LINKING
+              value: "login"
+            - name: FORGEJO__oauth2_client__ENABLE_AUTO_REGISTRATION
+              value: "true"
+            - name: FORGEJO__queue__CONN_STR
+              value: "redis://valkey.default.svc:6379/3"
+            - name: FORGEJO__queue__TYPE
+              value: "redis"
+            - name: FORGEJO__repository__ENABLE_PUSH_CREATE_ORG
+              value: "true"
+            - name: FORGEJO__repository__ENABLE_PUSH_CREATE_USER
+              value: "true"
+            - name: FORGEJO__session__PROVIDER
+              value: "redis"
+            - name: FORGEJO__session__PROVIDER_CONFIG
+              value: "redis://valkey.default.svc:6379/2"
+            - name: USER_GID
+              value: "1000"
+            - name: USER_UID
+              value: "1000"
+          envFrom:
+            - secretRef:
+                name: forgejo-env
+          ports:
+            - name: http
+              containerPort: 3001
+            - name: ssh
+              containerPort: 2222
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/forgejo
+          startupProbe:
+            httpGet:
+              path: /api/healthz
+              port: http
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /api/healthz
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/healthz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 2
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-data

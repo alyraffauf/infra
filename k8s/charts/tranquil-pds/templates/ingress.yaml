@@ -1,1 +1,47 @@
-{{- include "common.ingress" . }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - "pds.cute.haus"
+      secretName: cute-haus-tls
+    - hosts:
+        - "aly.social"
+        - "*.aly.social"
+      secretName: aly-social-tls
+  rules:
+    - host: "pds.cute.haus"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: 80
+    - host: "aly.social"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: 80
+    - host: "*.aly.social"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: 80

@@ -1,1 +1,153 @@
-{{- include "common.deployment" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+      securityContext:
+        fsGroup: 1000
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      containers:
+        - name: {{ .Chart.Name }}
+          image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:6c86cad803970ea782683a8e80e7403444c5bf3cf70de63b4d3c8e87500db92f
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PAPERLESS_ACCOUNT_DEFAULT_GROUP
+              value: "users"
+            - name: PAPERLESS_ACCOUNT_DEFAULT_HTTP_PROTOCOL
+              value: "https"
+            - name: PAPERLESS_ADMIN_MAIL
+              value: "alyraffauf@fastmail.com"
+            - name: PAPERLESS_ADMIN_USER
+              value: "alyraffauf"
+            - name: PAPERLESS_APPS
+              value: "allauth.socialaccount.providers.openid_connect"
+            - name: PAPERLESS_CONSUMPTION_DIR
+              value: "/paperless/consume"
+            - name: PAPERLESS_DATA_DIR
+              value: "/paperless/data"
+            - name: PAPERLESS_DBHOST
+              value: "pg-shared-rw.cnpg-system.svc"
+            - name: PAPERLESS_DBNAME
+              value: "paperless"
+            - name: PAPERLESS_DBPORT
+              value: "5432"
+            - name: PAPERLESS_DBUSER
+              value: "paperless"
+            - name: PAPERLESS_MEDIA_ROOT
+              value: "/paperless/media"
+            - name: PAPERLESS_OCR_LANGUAGE
+              value: "eng"
+            - name: PAPERLESS_PROXY_SSL_HEADER
+              value: '["HTTP_X_FORWARDED_PROTO", "https"]'
+            - name: PAPERLESS_REDIS
+              value: "redis://valkey.default.svc:6379/0"
+            - name: PAPERLESS_SOCIAL_AUTO_SIGNUP
+              value: "True"
+            - name: PAPERLESS_TIME_ZONE
+              value: "America/New_York"
+            - name: PAPERLESS_URL
+              value: "https://paperless.cute.haus"
+            - name: PAPERLESS_USE_X_FORWARD_HOST
+              value: "true"
+            - name: PAPERLESS_USE_X_FORWARD_PORT
+              value: "true"
+            - name: PAPERLESS_WEBSERVER_WORKERS
+              value: "4"
+          envFrom:
+            - secretRef:
+                name: paperless-env
+            - secretRef:
+                name: paperless-sso-env
+          ports:
+            - name: http
+              containerPort: 8000
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          volumeMounts:
+            - name: data
+              mountPath: /paperless/data
+              subPath: data
+            - name: data
+              mountPath: /paperless/consume
+              subPath: consume
+            - name: rclone-media
+              mountPath: /paperless/media
+              mountPropagation: HostToContainer
+          startupProbe:
+            httpGet:
+              path: /api/
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /api/
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+        - name: rclone
+          image: rclone/rclone:1.74@sha256:623378ad0ff3ebd5cebf77720843c0e02edfe46e2d5b5ac6bed54c6371780dfb
+          imagePullPolicy: IfNotPresent
+          args:
+            - mount
+            - "b2:aly-apps/paperless-ngx"
+            - "/paperless/media"
+            - --allow-non-empty
+            - --allow-other
+            - --vfs-cache-mode=full
+            - --vfs-cache-max-age=168h
+            - --vfs-cache-max-size=5G
+            - --uid=1000
+            - --gid=1000
+            - --umask=022
+            - --log-level=INFO
+          securityContext:
+            privileged: true
+          envFrom:
+            - secretRef:
+                name: paperless-env
+          volumeMounts:
+            - name: rclone-media
+              mountPath: /paperless/media
+              mountPropagation: Bidirectional
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-data
+        - name: rclone-media
+          emptyDir: {}

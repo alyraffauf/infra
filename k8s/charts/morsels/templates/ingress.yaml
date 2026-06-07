@@ -1,1 +1,34 @@
-{{- include "common.ingress" . }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - "morsels.blue"
+        - "www.morsels.blue"
+      secretName: morsels-blue-tls
+  rules:
+    - host: "morsels.blue"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: 80
+    - host: "www.morsels.blue"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: 80

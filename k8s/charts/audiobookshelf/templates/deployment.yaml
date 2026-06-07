@@ -1,1 +1,109 @@
-{{- include "common.deployment" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      containers:
+        - name: {{ .Chart.Name }}
+          image: ghcr.io/advplyr/audiobookshelf:2.35.1@sha256:1eef6716183c52abafe5405e7d6be8390248ecd59c7488c44af871757ac8fc4d
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "America/New_York"
+          envFrom:
+            - secretRef:
+                name: audiobookshelf-rclone
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /config
+              subPath: config
+            - name: data
+              mountPath: /metadata
+              subPath: metadata
+            - name: data
+              mountPath: /podcasts
+              subPath: podcasts
+            - name: rclone-media
+              mountPath: /audiobooks
+              mountPropagation: HostToContainer
+          startupProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+        - name: rclone
+          image: rclone/rclone:1.74@sha256:623378ad0ff3ebd5cebf77720843c0e02edfe46e2d5b5ac6bed54c6371780dfb
+          imagePullPolicy: IfNotPresent
+          args:
+            - mount
+            - "b2:aly-audiobooks"
+            - "/audiobooks"
+            - --allow-non-empty
+            - --read-only
+            - --vfs-cache-mode=full
+            - --vfs-cache-max-age=168h
+            - --vfs-cache-max-size=5G
+            - --uid=99
+            - --gid=100
+            - --umask=022
+            - --log-level=INFO
+          securityContext:
+            privileged: true
+          envFrom:
+            - secretRef:
+                name: audiobookshelf-rclone
+          volumeMounts:
+            - name: rclone-media
+              mountPath: /audiobooks
+              mountPropagation: Bidirectional
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-data
+        - name: rclone-media
+          emptyDir: {}
