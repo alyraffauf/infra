@@ -87,7 +87,6 @@ spec:
             - --vfs-cache-mode=full
             - --vfs-cache-max-age=168h
             - --vfs-cache-max-size=5G
-            - --vfs-write-back=5m
             - --transfers=4
             - --uid=99
             - --gid=100

@@ -94,7 +94,7 @@ spec:
             - name: PAPERLESS_USE_X_FORWARD_PORT
               value: "true"
             - name: PAPERLESS_TASK_WORKERS
-              value: "2"
+              value: "1"
             - name: PAPERLESS_OCR_PAGES
               value: "2"
             - name: PAPERLESS_WEBSERVER_WORKERS
@@ -142,7 +142,8 @@ spec:
               path: /api/
               port: http
             periodSeconds: 10
-            timeoutSeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 3
         - name: rclone
           image: rclone/rclone:1.74@sha256:623378ad0ff3ebd5cebf77720843c0e02edfe46e2d5b5ac6bed54c6371780dfb
           imagePullPolicy: IfNotPresent
@@ -155,7 +156,6 @@ spec:
             - --vfs-cache-mode=full
             - --vfs-cache-max-age=168h
             - --vfs-cache-max-size=5G
-            - --vfs-write-back=5m
             - --transfers=4
             - --uid=1000
             - --gid=1000
