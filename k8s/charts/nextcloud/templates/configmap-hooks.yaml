@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-hooks
+  labels:
+    app: {{ .Chart.Name }}
+data:
+  oidc.sh: |
+    #!/bin/sh
+    set -eu
+
+    occ() {
+      if [ "$(id -u)" = 0 ]; then
+        su -p www-data -s /bin/sh -c "php /var/www/html/occ $*"
+      else
+        php /var/www/html/occ "$@"
+      fi
+    }
+
+    echo "[office-hook] configuring richdocuments -> Collabora"
+    if occ app:install richdocuments 2>/dev/null || occ app:enable richdocuments; then
+      occ config:app:set richdocuments wopi_url        --value="http://collabora.default.svc:9980" || true
+      occ config:app:set richdocuments public_wopi_url --value="https://collabora.cute.haus" || true
+      occ config:app:delete richdocuments wopi_allowlist || true
+      occ richdocuments:activate-config --callback-url=https://nextcloud.cute.haus || true
+    else
+      echo "[office-hook] WARNING: richdocuments install/enable failed (non-fatal)"
+    fi
+
+    if [ -z "${OIDC_CLIENT_ID:-}" ] || [ -z "${OIDC_CLIENT_SECRET:-}" ]; then
+      echo "[oidc-hook] nextcloud-sso-env not present yet; skipping Pocket ID setup"
+      exit 0
+    fi
+
+    echo "[oidc-hook] installing/enabling user_oidc"
+    occ app:install user_oidc || true
+    occ app:enable user_oidc
+
+    echo "[oidc-hook] reconciling Pocket ID provider"
+    occ user_oidc:provider cute.haus \
+      --clientid="$OIDC_CLIENT_ID" \
+      --clientsecret="$OIDC_CLIENT_SECRET" \
+      --discoveryuri="https://id.cute.haus/.well-known/openid-configuration" \
+      --scope="openid email profile" \
+      --mapping-uid=preferred_username \
+      --mapping-email=email \
+      --mapping-display-name=name \
+      --unique-uid=0 \
+      || echo "[oidc-hook] WARNING: provider registration failed (non-fatal); SSO may be unconfigured"
+
+    echo "[oidc-hook] done"

@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      containers:
+        - name: {{ .Chart.Name }}
+          image: docker.io/collabora/code:26.04@sha256:75859dc9f9084d1877ce36cf96ec86600f495bade33289c9cbc27e0a0ee23b81
+          imagePullPolicy: IfNotPresent
+          # MKNOD is required for Collabora's per-document chroot jails.
+          securityContext:
+            capabilities:
+              add: ["MKNOD"]
+          env:
+            - name: aliasgroup1
+              value: 'https://nextcloud\.cute\.haus'
+            - name: server_name
+              value: "collabora.cute.haus"
+            - name: extra_params
+              value: "--o:ssl.enable=false --o:ssl.termination=true"
+            - name: DONT_GEN_SSL_CERT
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 9980
+          resources:
+            requests:
+              cpu: "2"
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 4Gi
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 60
+            timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3

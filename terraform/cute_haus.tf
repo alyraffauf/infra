@@ -2,12 +2,14 @@ locals {
   cute_haus_ingress = {
     "audiobookshelf.cute.haus" = true
     "auth-navidrome.cute.haus" = true
+    "collabora.cute.haus"      = false
     "cute.haus"                = true
     "id.cute.haus"             = true
     "immich.cute.haus"         = false
     "jellyfin.cute.haus"       = false
     "kuma.cute.haus"           = true
     "navidrome.cute.haus"      = true
+    "nextcloud.cute.haus"      = false
     "ombi.cute.haus"           = true
     "paperless.cute.haus"      = false
     "pds.cute.haus"            = false

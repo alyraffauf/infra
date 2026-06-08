@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+      securityContext:
+        fsGroup: 33
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      containers:
+        - name: {{ .Chart.Name }}
+          image: docker.io/library/nextcloud:33-apache@sha256:56bdc45109067500fd0832fa64832b7c77a167d9394cbf5f0f4b59740b94194d
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-config
+            - secretRef:
+                name: {{ .Chart.Name }}-env
+            - secretRef:
+                name: {{ .Chart.Name }}-sso-env
+                optional: true
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "4"
+              memory: 4Gi
+          volumeMounts:
+            - name: html
+              mountPath: /var/www/html
+            - name: hooks
+              mountPath: /docker-entrypoint-hooks.d/before-starting
+          startupProbe:
+            httpGet:
+              path: /status.php
+              port: http
+            periodSeconds: 10
+            failureThreshold: 90
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /status.php
+              port: http
+            periodSeconds: 60
+            timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /status.php
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3
+        - name: cron
+          image: docker.io/library/nextcloud:33-apache@sha256:56bdc45109067500fd0832fa64832b7c77a167d9394cbf5f0f4b59740b94194d
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+                php -f /var/www/html/cron.php || true
+                sleep 300
+              done
+          securityContext:
+            runAsUser: 33
+            runAsGroup: 33
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}-config
+            - secretRef:
+                name: {{ .Chart.Name }}-env
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          volumeMounts:
+            - name: html
+              mountPath: /var/www/html
+      volumes:
+        - name: html
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-data
+        - name: hooks
+          configMap:
+            name: {{ .Chart.Name }}-hooks
+            defaultMode: 0755

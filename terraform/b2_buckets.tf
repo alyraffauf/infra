@@ -128,6 +128,19 @@ resource "b2_bucket" "aly_music" {
   }
 }
 
+resource "b2_bucket" "aly_nextcloud" {
+  bucket_name = "aly-nextcloud"
+  bucket_type = "allPrivate"
+  default_server_side_encryption {
+    mode      = "SSE-B2"
+    algorithm = "AES256"
+  }
+  lifecycle_rules {
+    days_from_hiding_to_deleting = 7
+    file_name_prefix             = ""
+  }
+}
+
 resource "b2_bucket" "aly_outline" {
   bucket_name = "aly-outline"
   bucket_type = "allPrivate"

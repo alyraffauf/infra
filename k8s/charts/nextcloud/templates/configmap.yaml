@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-config
+  labels:
+    app: {{ .Chart.Name }}
+data:
+  NEXTCLOUD_ADMIN_USER: "alyraffauf"
+  NEXTCLOUD_TRUSTED_DOMAINS: "nextcloud.cute.haus"
+  OVERWRITEPROTOCOL: "https"
+  OVERWRITEHOST: "nextcloud.cute.haus"
+  OVERWRITECLIURL: "https://nextcloud.cute.haus"
+  TRUSTED_PROXIES: "10.42.0.0/16"
+  APACHE_DISABLE_REWRITE_IP: "1"
+  PHP_MEMORY_LIMIT: "512M"
+  PHP_UPLOAD_LIMIT: "10G"
+
+  POSTGRES_HOST: "pg-shared-rw.cnpg-system.svc"
+  POSTGRES_DB: "nextcloud"
+  POSTGRES_USER: "nextcloud"
+
+  REDIS_HOST: "valkey.default.svc"
+  REDIS_HOST_PORT: "6379"
+
+  OBJECTSTORE_S3_BUCKET: "aly-nextcloud"
+  OBJECTSTORE_S3_REGION: "us-east-005"
+  OBJECTSTORE_S3_HOST: "s3.us-east-005.backblazeb2.com"
+  OBJECTSTORE_S3_PORT: "443"
+  OBJECTSTORE_S3_SSL: "true"
+  OBJECTSTORE_S3_USEPATH_STYLE: "true"
+  OBJECTSTORE_S3_AUTOCREATE: "false"
+
+  SMTP_HOST: "smtp.resend.com"
+  SMTP_SECURE: "ssl"
+  SMTP_PORT: "465"
+  SMTP_AUTHTYPE: "LOGIN"
+  SMTP_NAME: "resend"
+  MAIL_FROM_ADDRESS: "admin"
+  MAIL_DOMAIN: "aly.social"

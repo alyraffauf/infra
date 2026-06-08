@@ -67,3 +67,14 @@ oidc_clients:
     isPublic: false
     pkceEnabled: true
     integration: paperless
+
+  - slug: nextcloud
+    name: Nextcloud
+    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/nextcloud.png
+    launchURL: https://nextcloud.cute.haus/
+    callbackURLs:
+      - https://nextcloud.cute.haus/apps/user_oidc/code
+    logoutCallbackURLs: []
+    isPublic: false
+    pkceEnabled: true
+    integration: nextcloud

@@ -254,6 +254,22 @@ releases:
     values:
       - values/secrets/paperless.yaml
 
+  - name: nextcloud
+    namespace: default
+    chart: ./charts/nextcloud
+    needs:
+      - default/cluster-tls
+      - cnpg-system/pg-shared
+      - default/valkey
+    values:
+      - values/secrets/nextcloud.yaml
+
+  - name: collabora
+    namespace: default
+    chart: ./charts/collabora
+    needs:
+      - default/cluster-tls
+
   - name: uptime-kuma
     namespace: default
     chart: ./charts/uptime-kuma
