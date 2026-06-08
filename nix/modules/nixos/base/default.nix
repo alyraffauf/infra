@@ -5,8 +5,6 @@
   self,
   ...
 }: {
-  imports = [./known-hosts.nix];
-
   options.myNixOS.base.enable = lib.mkEnableOption "base system configuration";
 
   config = lib.mkIf config.myNixOS.base.enable {

@@ -11,10 +11,10 @@
     };
 
     nixosModules = {
-      hardware = ../hardware;
+      hardware = inputs.import-tree ../hardware;
       locale-en-us = ../locale/en-us;
-      nixos = ../nixos;
-      users = ../users;
+      nixos = inputs.import-tree ../nixos;
+      users = inputs.import-tree ../users;
     };
 
     nixosConfigurations = let

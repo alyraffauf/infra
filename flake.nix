@@ -20,6 +20,7 @@
 
     files.url = "github:alyraffauf/flake-files";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:denful/import-tree";
 
     git-hooks-nix = {
       url = "github:cachix/git-hooks.nix";
@@ -97,7 +98,7 @@
       systems = ["aarch64-darwin" "x86_64-linux"];
 
       imports = [
-        ./nix/modules/flake
+        (inputs.import-tree ./nix/modules/flake)
         inputs.actions-nix.flakeModules.default
         inputs.files.flakeModules.default
         inputs.git-hooks-nix.flakeModule

@@ -5,11 +5,6 @@
   self,
   ...
 }: {
-  imports = [
-    ./aly
-    ./options.nix
-  ];
-
   config = lib.mkIf (config.myUsers.root.enable or config.myUsers.aly.enable or config.myUsers.dustin.enable) {
     programs.fish.enable = true;
 
