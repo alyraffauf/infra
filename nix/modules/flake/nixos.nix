@@ -31,7 +31,7 @@
         host:
           inputs.nixpkgs.lib.nixosSystem {
             modules = [
-              ../../hosts/${host}
+              (inputs.import-tree ../../hosts/${host})
               inputs.disko.nixosModules.disko
               inputs.home-manager.nixosModules.home-manager
               inputs.lanzaboote.nixosModules.lanzaboote

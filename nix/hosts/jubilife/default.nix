@@ -8,13 +8,6 @@
   dataDirectory = "/mnt/Data";
 in {
   imports = [
-    ./backups.nix
-    ./b2.nix
-    ./home.nix
-    ./oci.nix
-    ./prometheus.nix
-    ./secrets.nix
-    ./services.nix
     self.diskoConfigurations.luks-btrfs-subvolumes
     self.nixosModules.locale-en-us
   ];

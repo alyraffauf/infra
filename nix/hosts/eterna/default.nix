@@ -4,12 +4,6 @@
   ...
 }: {
   imports = [
-    ./backups.nix
-    ./disko.nix
-    ./grafana.nix
-    ./home.nix
-    ./secrets.nix
-    ./services.nix
     self.nixosModules.locale-en-us
   ];
 
