@@ -13,7 +13,7 @@ resource "cloudflare_dns_record" "aly_codes_a" {
   zone_id  = local.zones.aly_codes
   name     = each.value
   type     = "A"
-  content  = local.hosts.snowpoint
+  content  = local.hosts.pastoria
   proxied  = true
   ttl      = 1
   tags     = []
@@ -24,7 +24,7 @@ resource "cloudflare_dns_record" "aly_codes_ssh_a" {
   zone_id  = local.zones.aly_codes
   name     = "ssh.aly.codes"
   type     = "A"
-  content  = local.hosts.snowpoint
+  content  = local.hosts.pastoria
   proxied  = false
   ttl      = 1
   tags     = []

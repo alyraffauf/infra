@@ -48,7 +48,7 @@
         serverAddr = "https://solaceon:6443";
         tlsSans = ["solaceon" "eterna"];
         zone = "cloud-ovhcloud";
-        ingress = false;
+        ingress = true;
       };
 
       vps.enable = true;

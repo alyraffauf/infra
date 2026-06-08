@@ -25,7 +25,7 @@ resource "cloudflare_dns_record" "cute_haus_a" {
   zone_id  = local.zones.cute_haus
   name     = each.key
   type     = "A"
-  content  = local.hosts.snowpoint
+  content  = local.hosts.pastoria
   proxied  = each.value
   ttl      = 1
   tags     = []
