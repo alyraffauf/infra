@@ -13,11 +13,11 @@ cluster:
 
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: "1"
+      cpu: 200m
       memory: 1Gi
+    limits:
+      cpu: "3"
+      memory: 3Gi
 
   # Spread instances across control-plane nodes
   topologyKey: kubernetes.io/hostname
