@@ -42,11 +42,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    safari = {
-      url = "github:alyraffauf/safari";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     snippets = {
       url = "github:alyraffauf/snippets";
       inputs.nixpkgs.follows = "nixpkgs";

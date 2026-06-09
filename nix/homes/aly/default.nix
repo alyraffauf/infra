@@ -1,61 +1,19 @@
 {
-  config,
-  lib,
   pkgs,
   self,
   ...
 }: {
   imports = [
     self.homeModules.default
-    self.inputs.sops-nix.homeManagerModules.sops
-    self.inputs.safari.homeModules.default
   ];
-
-  sops = {
-    age.sshKeyPaths = ["${config.home.homeDirectory}/.ssh/id_ed25519"];
-
-    secrets = {
-      aws = {
-        sopsFile = ../../../secrets/aly.yaml;
-        key = "aws";
-      };
-
-      rclone-b2 = {
-        sopsFile = ../../../secrets/b2.yaml;
-        key = "rclone_config";
-      };
-    };
-  };
 
   home = {
     homeDirectory = "/home/aly";
-
-    packages = with pkgs; [
-      curl
-      rclone
-      restic
-    ];
-
     stateVersion = "25.11";
     username = "aly";
   };
 
   programs = {
-    awscli = {
-      enable = true;
-
-      credentials = {
-        "default" = {
-          "credential_process" = ''sh -c "${lib.getExe' pkgs.uutils-coreutils-noprefix "cat"} ${config.sops.secrets.aws.path}"'';
-        };
-      };
-    };
-
-    delta = {
-      enable = true;
-      enableGitIntegration = true;
-    };
-
     git = {
       enable = true;
       lfs.enable = true;
@@ -107,10 +65,5 @@
 
       package = pkgs.openssh;
     };
-  };
-
-  safari = {
-    enable = true;
-    fish.enable = true;
   };
 }
