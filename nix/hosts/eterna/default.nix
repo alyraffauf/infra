@@ -37,7 +37,17 @@
         dates = "05:00";
       };
 
-      backups.enable = true;
+      backups = {
+        enable = true;
+        extraJobs.syncthing-sync = {
+          paths = ["/home/aly/sync"];
+          repository = "rclone:b2:aly-backups/syncthing/sync";
+        };
+        extraJobs.syncthing-roms = {
+          paths = [config.myNixOS.services.syncthing.romsPath];
+          repository = "rclone:b2:aly-backups/syncthing/roms";
+        };
+      };
       btrfs.enable = true;
 
       b2-mounts = {

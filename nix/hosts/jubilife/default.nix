@@ -96,7 +96,13 @@ in {
         dates = "04:15";
       };
 
-      backups.enable = true;
+      backups = {
+        enable = true;
+        extraJobs.dizquetv = {
+          paths = ["/mnt/Data/dizquetv"];
+          repository = "rclone:b2:aly-backups/${config.networking.hostName}/dizquetv";
+        };
+      };
       btrfs.enable = true;
 
       b2-mounts = {
