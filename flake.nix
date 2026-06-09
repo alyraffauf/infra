@@ -27,11 +27,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -97,7 +92,6 @@
         inputs.actions-nix.flakeModules.default
         inputs.files.flakeModules.default
         inputs.git-hooks-nix.flakeModule
-        inputs.home-manager.flakeModules.home-manager
         inputs.treefmt-nix.flakeModule
       ];
     };

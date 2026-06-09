@@ -33,7 +33,6 @@
             modules = [
               (inputs.import-tree ../../hosts/${host})
               inputs.disko.nixosModules.disko
-              inputs.home-manager.nixosModules.home-manager
               inputs.lanzaboote.nixosModules.lanzaboote
               inputs.snippets.nixosModules.snippets
               inputs.sops-nix.nixosModules.sops
@@ -42,13 +41,6 @@
               modules.users
 
               {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-                  extraSpecialArgs = {inherit self;};
-                  backupFileExtension = "backup";
-                };
-
                 nixpkgs = {
                   overlays = [
                     self.overlays.default

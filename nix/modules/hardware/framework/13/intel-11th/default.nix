@@ -18,18 +18,6 @@
     };
 
     hardware.acpilight.enable = true;
-
-    home-manager.sharedModules = [
-      {
-        services.easyeffects = {
-          enable = true;
-          preset = "fw13-11thgen.json";
-        };
-
-        xdg.configFile."easyeffects/output/fw13-11thgen.json".source = ./easyeffects.json;
-      }
-    ];
-
     powerManagement.powertop.enable = lib.mkForce false;
 
     services.udev.extraRules = ''

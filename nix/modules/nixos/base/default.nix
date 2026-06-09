@@ -28,8 +28,6 @@
     };
 
     programs = {
-      dconf.enable = true; # Needed for home-manager
-
       direnv = {
         enable = true;
         nix-direnv.enable = true;

@@ -2,7 +2,7 @@
 
 Welcome to **cute.haus**!
 
-This repository contains NixOS and home-manager configurations, along with whatever custom modules and packages required for [cute.haus](https://cute.haus), my production infrasture running on NixOS and Kubernetes.
+This repository contains NixOS configurations, along with whatever custom modules and packages required for [cute.haus](https://cute.haus), my production infrasture running on NixOS and Kubernetes.
 
 ---
 
@@ -23,10 +23,9 @@ This repository contains NixOS and home-manager configurations, along with whate
 ```plaintext
 .
 ├── flake.nix                # Flake entry point
-├── nix/                     # NixOS + home-manager + flake modules
-│   ├── homes/               # home-manager configurations
+├── nix/                     # NixOS + flake modules
 │   ├── hosts/               # NixOS host configurations
-│   └── modules/             # NixOS / home-manager / flake modules
+│   └── modules/             # NixOS / flake modules
 ├── k8s/                     # k3s: helmfile + in-tree charts + vals overlays
 │   ├── helmfile.yaml        # release graph (helmfile + helm + vals)
 │   ├── charts/              # In-tree helm charts (see k8s/charts/README.md)

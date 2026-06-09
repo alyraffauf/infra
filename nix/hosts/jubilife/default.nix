@@ -19,15 +19,25 @@ in {
 
   environment.systemPackages = with pkgs; [
     abcde
+    chezmoi
+    claude-code
     curl
+    eza
     ffmpeg-full
     flac
+    fzf
+    gh
     handbrake
+    lazygit
     makemkv
     mediainfo
     mkvtoolnix
+    opencode
     rclone
     restic
+    ripgrep
+    starship
+    zoxide
   ];
 
   fileSystems = {
