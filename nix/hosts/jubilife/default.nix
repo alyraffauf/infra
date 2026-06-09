@@ -22,6 +22,7 @@ in {
     chezmoi
     claude-code
     curl
+    delta
     eza
     ffmpeg-full
     flac
