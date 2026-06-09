@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: {
   options.myNixOS.profiles.autoUpgrade = {
@@ -43,21 +42,6 @@
       rebootWindow = {
         lower = "02:00";
         upper = "06:00";
-      };
-    };
-
-    # Allow nixos-upgrade to restart on failure (e.g. when laptop wakes up before network connection is set)
-    systemd.services.nixos-upgrade = {
-      preStart = "${pkgs.host}/bin/host google.com"; # Check network connectivity
-
-      serviceConfig = {
-        Restart = "on-failure";
-        RestartSec = "120";
-      };
-
-      unitConfig = {
-        StartLimitIntervalSec = 600;
-        StartLimitBurst = 2;
       };
     };
   };
