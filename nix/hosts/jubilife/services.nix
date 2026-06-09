@@ -220,7 +220,5 @@ in {
       enable = true;
       settings.dynamic_tuning = true;
     };
-
-    xserver.xkb.options = "ctrl:nocaps";
   };
 }
