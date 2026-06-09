@@ -39,9 +39,19 @@
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.11";
 
-  sops.secrets.navidrome = {
-    sopsFile = "${self}/secrets/navidrome.yaml";
-    key = "env";
+  sops.secrets = {
+    navidrome = {
+      sopsFile = "${self}/secrets/navidrome.yaml";
+      key = "env";
+    };
+    syncthingCert = {
+      sopsFile = ../../../secrets/syncthing.yaml;
+      key = "snowpoint_cert";
+    };
+    syncthingKey = {
+      sopsFile = ../../../secrets/syncthing.yaml;
+      key = "snowpoint_key";
+    };
   };
 
   services = {
