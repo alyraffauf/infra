@@ -307,6 +307,12 @@
               backupPrepareCommand = stop "jellyfin";
               paths = [config.services.jellyfin.dataDir];
             };
+
+            postgresql = {
+              backupCleanupCommand = start "postgresql";
+              backupPrepareCommand = stop "postgresql";
+              paths = [config.services.postgresql.dataDir];
+            };
           };
 
           sops = {
