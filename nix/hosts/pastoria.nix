@@ -37,27 +37,15 @@
             "${modulesPath}/profiles/qemu-guest.nix"
           ];
 
-          boot = {
-            initrd.availableKernelModules = [
-              "ahci"
-              "sd_mod"
-              "sr_mod"
-              "virtio_pci"
-              "virtio_scsi"
-              "xhci_pci"
-            ];
-
-            loader.grub = {
-              efiSupport = true;
-              efiInstallAsRemovable = true;
-            };
+          boot.loader.grub = {
+            efiSupport = true;
+            efiInstallAsRemovable = true;
           };
 
           networking.hostName = "pastoria";
           nixpkgs.hostPlatform = "x86_64-linux";
           system.stateVersion = "26.05";
           myDisko.installDrive = "/dev/sda";
-
           myAutoUpgrade.dates = "01:45";
 
           myK3s = {

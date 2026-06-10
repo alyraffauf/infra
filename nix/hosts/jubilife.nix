@@ -53,7 +53,7 @@
           dataDirectory = "/mnt/Data";
         in {
           boot = {
-            initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" "r8169"];
+            initrd.availableKernelModules = ["r8169"];
             kernelModules = ["sg"];
           };
 

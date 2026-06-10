@@ -41,20 +41,9 @@
             "${modulesPath}/profiles/qemu-guest.nix"
           ];
 
-          boot = {
-            initrd.availableKernelModules = [
-              "ahci"
-              "sd_mod"
-              "sr_mod"
-              "virtio_pci"
-              "virtio_scsi"
-              "xhci_pci"
-            ];
-
-            loader.grub = {
-              efiSupport = true;
-              efiInstallAsRemovable = true;
-            };
+          boot.loader.grub = {
+            efiSupport = true;
+            efiInstallAsRemovable = true;
           };
 
           networking = {

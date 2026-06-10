@@ -36,35 +36,21 @@
       inputs.sops-nix.nixosModules.sops
       config.flake.diskoConfigurations.lvm-ext4
       (
-        {config, ...}: {
-          boot = {
-            initrd = {
-              availableKernelModules = [
-                "virtio_net"
-                "virtio_pci"
-                "virtio_mmio"
-                "virtio_blk"
-                "virtio_scsi"
-                "9p"
-                "9pnet_virtio"
-              ];
+        {
+          modulesPath,
+          config,
+          ...
+        }: {
+          imports = [
+            "${modulesPath}/profiles/qemu-guest.nix"
+          ];
 
-              kernelModules = [
-                "virtio_balloon"
-                "virtio_console"
-                "virtio_rng"
-                "virtio_gpu"
-              ];
-            };
-
-            loader.grub = {
-              efiSupport = true;
-              efiInstallAsRemovable = true;
-            };
+          boot.loader.grub = {
+            efiSupport = true;
+            efiInstallAsRemovable = true;
           };
 
           fileSystems = {};
-
           networking.hostName = "snowpoint";
           nixpkgs.hostPlatform = "x86_64-linux";
           system.stateVersion = "25.11";

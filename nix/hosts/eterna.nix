@@ -21,7 +21,6 @@
       auto-upgrade
       b2-mounts
       backups
-      beelink-mini-s12pro
       btrfs
       caddy
       cachefilesd
