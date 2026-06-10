@@ -122,6 +122,7 @@
           myUsers.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
+
       # disk layout
       {
         disko.devices = {
@@ -197,6 +198,7 @@
           };
         };
       }
+
       # observability
       {
         services = {
@@ -375,6 +377,7 @@
           };
         };
       }
+
       # services
       (let
         tnet = "narwhal-snapper.ts.net";

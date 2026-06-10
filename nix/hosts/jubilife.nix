@@ -166,6 +166,7 @@
           myUsers.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
+
       # containers
       {
         myBackups.jobs.dizquetv.paths = ["/mnt/Data/dizquetv"];
@@ -212,6 +213,7 @@
           };
         };
       }
+
       # prometheus exporters
       (
         {config, ...}: {
@@ -278,6 +280,7 @@
           };
         }
       )
+
       # services
       (
         {

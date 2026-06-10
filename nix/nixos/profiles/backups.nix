@@ -6,21 +6,26 @@
   }: let
     backupDestination = "rclone:b2:aly-backups/${config.networking.hostName}";
     mkRepo = service: "${backupDestination}/${service}";
+
     restic = {
       extraBackupArgs = [
         "--cleanup-cache"
         "--compression max"
         "--no-scan"
       ];
+
       inhibitsSleep = true;
       initialize = true;
       passwordFile = config.sops.secrets.restic-passwd.path;
+
       pruneOpts = [
         "--keep-daily 7"
         "--keep-weekly 4"
         "--keep-monthly 3"
       ];
+
       rcloneConfigFile = config.sops.secrets.rclone-b2.path;
+
       timerConfig = {
         OnCalendar = "daily";
         Persistent = true;
@@ -31,25 +36,30 @@
     options.myBackups.jobs = lib.mkOption {
       description = "Restic backup jobs rendered with the shared defaults.";
       default = {};
+
       type = lib.types.attrsOf (lib.types.submodule ({name, ...}: {
         options = {
           paths = lib.mkOption {
             type = lib.types.listOf lib.types.path;
             description = "Paths to back up.";
           };
+
           repository = lib.mkOption {
             type = lib.types.str;
             default = mkRepo name;
             description = "Restic repository URL.";
           };
+
           backupPrepareCommand = lib.mkOption {
             type = lib.types.nullOr lib.types.str;
             default = null;
           };
+
           backupCleanupCommand = lib.mkOption {
             type = lib.types.nullOr lib.types.str;
             default = null;
           };
+
           exclude = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [];
