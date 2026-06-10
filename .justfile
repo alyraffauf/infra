@@ -165,14 +165,12 @@ bump TARGET:
 bump-tranquil:
     #!/usr/bin/env bash
     set -euo pipefail
-    VALUES=k8s/charts/tranquil-pds/values.yaml
-    REPO=$(awk '/^image:/{f=1;next} f&&/repository:/{print $2;exit}' "$VALUES")
-    TAG=$(awk '/^image:/{f=1;next} f&&/tag:/{print $2;exit}' "$VALUES")
-    FLOAT_TAG="${TAG%@sha256:*}"
-    CURRENT_DIGEST=""
-    if [[ "$TAG" == *@sha256:* ]]; then
-        CURRENT_DIGEST="sha256:${TAG#*@sha256:}"
-    fi
+    TEMPLATE=k8s/charts/tranquil-pds/templates/deployment.yaml
+    FULL=$(grep 'image:.*@sha256:' "$TEMPLATE" | awk '{print $2}')
+    REPO="${FULL%%:*}"
+    TAG_WITH_DIGEST="${FULL#*:}"
+    FLOAT_TAG="${TAG_WITH_DIGEST%%@*}"
+    CURRENT_DIGEST="${TAG_WITH_DIGEST#*@}"
     USERNAME=$(sops -d --extract '["username"]' secrets/atcr.yaml)
     PASSWORD=$(sops -d --extract '["password"]' secrets/atcr.yaml)
     UPSTREAM=$(skopeo inspect --creds "$USERNAME:$PASSWORD" \
@@ -182,7 +180,7 @@ bump-tranquil:
         exit 0
     fi
     echo "tranquil-pds: ${CURRENT_DIGEST:0:19} → ${UPSTREAM:0:19}"
-    sed -i "s|tag: ${TAG}|tag: ${FLOAT_TAG}@${UPSTREAM}|" "$VALUES"
+    sed -i "s|@${CURRENT_DIGEST}|@${UPSTREAM}|" "$TEMPLATE"
 
 # Scaffold a new app chart under k8s/charts/<name>. After running, edit the
 # values.yaml and add a release block to k8s/helmfile.yaml. See k8s/charts/README.md.
