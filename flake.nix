@@ -71,6 +71,7 @@
       imports = [
         (inputs.import-tree ./nix/modules/flake)
         inputs.files.flakeModules.default
+        inputs.flake-parts.flakeModules.modules
         inputs.treefmt-nix.flakeModule
       ];
     };

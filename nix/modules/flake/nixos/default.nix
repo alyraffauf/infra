@@ -1,16 +1,17 @@
 {
+  config,
   self,
   inputs,
   ...
 }: {
   flake = {
-    nixosModules = {
+    modules.nixos = {
       hardware = inputs.import-tree ../../hardware;
       nixos = inputs.import-tree ../../nixos;
     };
 
     nixosConfigurations = let
-      modules = self.nixosModules;
+      modules = config.flake.modules.nixos;
     in
       inputs.nixpkgs.lib.genAttrs [
         "eterna"

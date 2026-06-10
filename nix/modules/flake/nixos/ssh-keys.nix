@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.sshKeys = {
+  flake.modules.nixos.sshKeys = {
     lib,
     self,
     ...

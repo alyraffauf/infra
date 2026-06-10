@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.users = {
+  flake.modules.nixos.users = {
     config,
     lib,
     pkgs,
