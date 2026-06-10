@@ -69,7 +69,7 @@
       systems = ["aarch64-darwin" "x86_64-linux"];
 
       imports = [
-        (inputs.import-tree ./nix/modules/flake)
+        (inputs.import-tree ./nix)
         inputs.files.flakeModules.default
         inputs.flake-parts.flakeModules.modules
         inputs.treefmt-nix.flakeModule

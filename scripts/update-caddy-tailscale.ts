@@ -10,7 +10,7 @@
 
 import { $ } from "bun";
 
-const CADDY_FILE = "nix/modules/nixos/services/caddy/default.nix";
+const CADDY_FILE = "nix/nixos/services/caddy.nix";
 const GITHUB_REPO = "tailscale/caddy-tailscale";
 const NIX_BUILD_TARGET =
   ".#nixosConfigurations.jubilife.config.services.caddy.package";

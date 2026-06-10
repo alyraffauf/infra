@@ -89,7 +89,7 @@ what you need:
 If we lose enough nodes to break etcd quorum, the cluster has to be rebuilt
 from scratch:
 
-1. NixOS + k3s on replacement hardware (see [`nix/hosts/README.md`](nix/hosts/README.md)).
+1. NixOS + k3s on replacement hardware (see host definitions in [`nix/hosts`](nix/hosts)).
 2. `helmfile sync` infra + `cluster-tls` + `pg-shared` (the `needs:` chains
    resolve in correct order).
 3. Restore `pg-shared` from B2 — same as the recipe above, but use
