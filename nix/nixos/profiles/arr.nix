@@ -56,45 +56,23 @@ _: {
   flake.modules.nixos.backups = {
     config,
     lib,
-    options,
     pkgs,
     ...
   }: let
     stop = service: "${pkgs.systemd}/bin/systemctl stop ${service}";
     start = service: "${pkgs.systemd}/bin/systemctl start ${service}";
-  in {
-    config = lib.mkIf (options ? myArr) {
-      myBackups.jobs = {
-        bazarr = {
-          backupCleanupCommand = start "bazarr";
-          backupPrepareCommand = stop "bazarr";
-          paths = [config.services.bazarr.dataDir];
-        };
-
-        lidarr = {
-          backupCleanupCommand = start "lidarr";
-          backupPrepareCommand = stop "lidarr";
-          paths = [config.services.lidarr.dataDir];
-        };
-
-        prowlarr = {
-          backupCleanupCommand = start "prowlarr";
-          backupPrepareCommand = stop "prowlarr";
-          paths = [config.services.prowlarr.dataDir];
-        };
-
-        radarr = {
-          backupCleanupCommand = start "radarr";
-          backupPrepareCommand = stop "radarr";
-          paths = [config.services.radarr.dataDir];
-        };
-
-        sonarr = {
-          backupCleanupCommand = start "sonarr";
-          backupPrepareCommand = stop "sonarr";
-          paths = [config.services.sonarr.dataDir];
-        };
-      };
+    mkJob = service: {
+      backupCleanupCommand = start service;
+      backupPrepareCommand = stop service;
+      paths = [config.services.${service}.dataDir];
     };
+  in {
+    config.myBackups.jobs = lib.mkMerge [
+      (lib.mkIf config.services.bazarr.enable {bazarr = mkJob "bazarr";})
+      (lib.mkIf config.services.lidarr.enable {lidarr = mkJob "lidarr";})
+      (lib.mkIf config.services.prowlarr.enable {prowlarr = mkJob "prowlarr";})
+      (lib.mkIf config.services.radarr.enable {radarr = mkJob "radarr";})
+      (lib.mkIf config.services.sonarr.enable {sonarr = mkJob "sonarr";})
+    ];
   };
 }

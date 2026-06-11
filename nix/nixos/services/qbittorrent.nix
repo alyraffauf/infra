@@ -17,14 +17,17 @@ _: {
         type = lib.types.str;
         default = "qbittorrent";
       };
+
       group = lib.mkOption {
         type = lib.types.str;
         default = "qbittorrent";
       };
+
       port = lib.mkOption {
         type = lib.types.port;
         default = 8080;
       };
+
       openFirewall = lib.mkOption {
         type = lib.types.bool;
         default = false;
@@ -52,19 +55,16 @@ _: {
   flake.modules.nixos.backups = {
     config,
     lib,
-    options,
     pkgs,
     ...
   }: let
     stop = service: "${pkgs.systemd}/bin/systemctl stop ${service}";
     start = service: "${pkgs.systemd}/bin/systemctl start ${service}";
   in {
-    config = lib.mkIf (options ? myQbittorrent) {
-      myBackups.jobs.qbittorrent = {
-        backupCleanupCommand = start "qbittorrent";
-        backupPrepareCommand = stop "qbittorrent";
-        paths = [config.services.qbittorrent.profileDir];
-      };
+    config.myBackups.jobs.qbittorrent = lib.mkIf config.services.qbittorrent.enable {
+      backupCleanupCommand = start "qbittorrent";
+      backupPrepareCommand = stop "qbittorrent";
+      paths = [config.services.qbittorrent.profileDir];
     };
   };
 }

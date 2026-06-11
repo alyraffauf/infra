@@ -52,16 +52,15 @@
   flake.modules.nixos.backups = {
     config,
     lib,
-    options,
     pkgs,
     ...
   }: let
     stop = service: "${pkgs.systemd}/bin/systemctl stop ${service}";
     start = service: "${pkgs.systemd}/bin/systemctl start ${service}";
   in {
-    config = lib.mkMerge [
-      (lib.mkIf (options ? myPlex) {
-        myBackups.jobs.plex = {
+    config.myBackups.jobs = lib.mkMerge [
+      (lib.mkIf config.services.plex.enable {
+        plex = {
           backupCleanupCommand = start "plex";
           backupPrepareCommand = stop "plex";
           exclude = ["${config.services.plex.dataDir}/Plex Media Server/Plug-in Support/Databases"];
@@ -70,7 +69,7 @@
       })
 
       (lib.mkIf config.services.tautulli.enable {
-        myBackups.jobs.tautulli = {
+        tautulli = {
           backupCleanupCommand = start "tautulli";
           backupPrepareCommand = stop "tautulli";
           paths = [config.services.tautulli.dataDir];
