@@ -3,7 +3,9 @@
   inputs,
   self,
   ...
-}: {
+}: let
+  tnet = "narwhal-snapper.ts.net";
+in {
   flake.nixosConfigurations.eterna = inputs.nixpkgs.lib.nixosSystem {
     modules = with config.flake.modules.nixos; [
       base
@@ -209,7 +211,7 @@
               server = {
                 http_addr = "0.0.0.0";
                 http_port = 3010;
-                domain = "grafana.narwhal-snapper.ts.net";
+                domain = "grafana.${tnet}";
               };
             };
 
@@ -221,13 +223,13 @@
                   name = "Prometheus";
                   type = "prometheus";
                   access = "proxy";
-                  url = "https://prometheus.narwhal-snapper.ts.net";
+                  url = "https://prometheus.${tnet}";
                 }
                 {
                   name = "Loki";
                   type = "loki";
                   access = "proxy";
-                  url = "https://loki.narwhal-snapper.ts.net";
+                  url = "https://loki.${tnet}";
                 }
               ];
             };
@@ -377,9 +379,7 @@
       }
 
       # services
-      (let
-        tnet = "narwhal-snapper.ts.net";
-      in {
+      {
         services = {
           caddy = {
             email = "alyraffauf@fastmail.com";
@@ -426,7 +426,7 @@
 
           meilisearch.settings.experimental_dumpless_upgrade = true;
         };
-      })
+      }
 
       {
         nixpkgs = {

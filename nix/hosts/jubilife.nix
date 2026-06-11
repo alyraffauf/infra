@@ -3,7 +3,10 @@
   inputs,
   self,
   ...
-}: {
+}: let
+  tnet = "narwhal-snapper.ts.net";
+  dataDirectory = "/mnt/Data";
+in {
   flake.nixosConfigurations.jubilife = inputs.nixpkgs.lib.nixosSystem {
     modules = with config.flake.modules.nixos; [
       base
@@ -48,9 +51,7 @@
           config,
           pkgs,
           ...
-        }: let
-          dataDirectory = "/mnt/Data";
-        in {
+        }: {
           boot = {
             initrd.availableKernelModules = ["r8169"];
             kernelModules = ["sg"];
@@ -243,35 +244,35 @@
               enable = true;
               apiKeyFile = config.sops.secrets.bazarrApiKey.path;
               port = 9708;
-              url = "https://bazarr.narwhal-snapper.ts.net";
+              url = "https://bazarr.${tnet}";
             };
 
             exportarr-lidarr = {
               enable = true;
               apiKeyFile = config.sops.secrets.lidarrApiKey.path;
               port = 9709;
-              url = "https://lidarr.narwhal-snapper.ts.net";
+              url = "https://lidarr.${tnet}";
             };
 
             exportarr-prowlarr = {
               enable = true;
               apiKeyFile = config.sops.secrets.prowlarrApiKey.path;
               port = 9710;
-              url = "https://prowlarr.narwhal-snapper.ts.net";
+              url = "https://prowlarr.${tnet}";
             };
 
             exportarr-radarr = {
               enable = true;
               apiKeyFile = config.sops.secrets.radarrApiKey.path;
               port = 9711;
-              url = "https://radarr.narwhal-snapper.ts.net";
+              url = "https://radarr.${tnet}";
             };
 
             exportarr-sonarr = {
               enable = true;
               apiKeyFile = config.sops.secrets.sonarrApiKey.path;
               port = 9712;
-              url = "https://sonarr.narwhal-snapper.ts.net";
+              url = "https://sonarr.${tnet}";
             };
 
             smartctl.enable = true;
@@ -286,8 +287,6 @@
           pkgs,
           ...
         }: let
-          dataDirectory = "/mnt/Data";
-          tnet = "narwhal-snapper.ts.net";
           stop = service: "${pkgs.systemd}/bin/systemctl stop ${service}";
           start = service: "${pkgs.systemd}/bin/systemctl start ${service}";
         in {
