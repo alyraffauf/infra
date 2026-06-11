@@ -1,4 +1,4 @@
-{self, ...}: {
+{inputs, ...}: {
   flake.modules.nixos.plex = {
     config,
     lib,
@@ -19,18 +19,18 @@
           extraPlugins = [
             (builtins.path {
               name = "Audnexus.bundle";
-              path = self.inputs.audnexus;
+              path = inputs.audnexus;
             })
             (builtins.path {
               name = "Hama.bundle";
-              path = self.inputs.hama;
+              path = inputs.hama;
             })
           ];
 
           extraScanners = [
             (builtins.path {
               name = "Absolute-Series-Scanner";
-              path = self.inputs.absolute;
+              path = inputs.absolute;
             })
           ];
 
