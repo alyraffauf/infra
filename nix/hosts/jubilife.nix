@@ -27,12 +27,11 @@ in {
       podman
       prometheus-node
       qbittorrent
-      ssh-keys
       swap
       syncthing
       tailscale
       tautulli
-      users
+      users-aly
       vps
 
       inputs.disko.nixosModules.disko

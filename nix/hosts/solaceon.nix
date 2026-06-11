@@ -14,10 +14,8 @@
       locale-en-us
       podman
       prometheus-node
-      ssh-keys
       swap
       tailscale
-      users
       vps
 
       inputs.disko.nixosModules.disko

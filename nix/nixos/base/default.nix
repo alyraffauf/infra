@@ -42,6 +42,7 @@
           silent = true;
         };
 
+        fish.enable = true;
         git.enable = true;
         htop.enable = true;
         nh.enable = true;

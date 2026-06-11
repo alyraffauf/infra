@@ -18,11 +18,10 @@
       media-share
       plex
       prometheus-node
-      ssh-keys
       swap
       syncthing
       tailscale
-      users
+      users-aly
       vps
 
       inputs.disko.nixosModules.disko
