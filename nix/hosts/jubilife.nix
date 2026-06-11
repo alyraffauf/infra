@@ -6,6 +6,7 @@
 }: let
   tnet = "narwhal-snapper.ts.net";
   dataDirectory = "/mnt/Data";
+  k3sPodCidr = "10.42.0.0/16";
 in {
   flake.nixosConfigurations.jubilife = inputs.nixpkgs.lib.nixosSystem {
     modules = with config.flake.modules.nixos; [
@@ -343,7 +344,13 @@ in {
             };
           };
 
-          networking.firewall.allowedTCPPorts = [6881];
+          networking.firewall = {
+            allowedTCPPorts = [6881];
+            extraInputRules = ''
+              -s ${k3sPodCidr} -p tcp --dport 2049 -j ACCEPT
+              -s ${k3sPodCidr} -p udp --dport 2049 -j ACCEPT
+            '';
+          };
 
           services = {
             caddy.virtualHosts = {
@@ -428,8 +435,8 @@ in {
             nfs.server = {
               enable = true;
               exports = ''
-                /mnt/Data 100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,fsid=0)
-                /mnt/Media 100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,fsid=1)
+                /mnt/Data 100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,fsid=0) ${k3sPodCidr}(rw,sync,no_subtree_check,no_root_squash,fsid=0)
+                /mnt/Media 100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,fsid=1) ${k3sPodCidr}(rw,sync,no_subtree_check,no_root_squash,fsid=1)
               '';
             };
 
