@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.njust = {
     config,
     lib,

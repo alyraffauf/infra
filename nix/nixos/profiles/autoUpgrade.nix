@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.auto-upgrade = {
     config,
     lib,

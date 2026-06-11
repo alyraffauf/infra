@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.systemd-boot = {lib, ...}: {
     boot = {
       initrd.systemd.enable = lib.mkDefault true;

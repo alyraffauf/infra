@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.flake-url = {lib, ...}: {
     options.myFlakeUrl = lib.mkOption {
       type = lib.types.str;

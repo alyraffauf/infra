@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.syncthing = {
     config,
     lib,

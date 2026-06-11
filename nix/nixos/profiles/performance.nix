@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.performance = {lib, ...}: {
     boot.kernel.sysctl = {
       "fs.file-max" = lib.mkDefault 2097152;

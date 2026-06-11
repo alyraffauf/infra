@@ -1,4 +1,4 @@
-_: {
+{
   flake.diskoConfigurations = {
     btrfs-subvolumes = {
       config,

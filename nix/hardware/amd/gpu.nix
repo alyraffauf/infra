@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.amd-gpu = {
     environment.variables = {
       DPAU_DRIVER = "radeonsi";

@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.amd-cpu = {
     config,
     lib,

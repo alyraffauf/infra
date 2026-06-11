@@ -1,4 +1,4 @@
-_: {
+{
   flake.overlays = {
     default = _final: prev: {
       navidrome = prev.navidrome.overrideAttrs (old: {

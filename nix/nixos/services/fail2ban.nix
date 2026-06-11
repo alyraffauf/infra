@@ -1,4 +1,4 @@
-_: {
+{
   flake.modules.nixos.fail2ban = {config, ...}: {
     environment.etc = {
       "fail2ban/filter.d/audiobookshelf.conf".text = ''
