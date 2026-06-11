@@ -7,7 +7,6 @@
   flake.nixosConfigurations.snowpoint = inputs.nixpkgs.lib.nixosSystem {
     modules = with config.flake.modules.nixos; [
       alloy
-      b2-mounts
       backups
       base
       cachefilesd
@@ -48,61 +47,20 @@
           system.stateVersion = "25.11";
 
           sops.secrets = {
-            navidrome = {
-              sopsFile = ../../secrets/navidrome.yaml;
-              key = "env";
-            };
             syncthingCert = {
               sopsFile = ../../secrets/syncthing.yaml;
               key = "snowpoint_cert";
             };
+
             syncthingKey = {
               sopsFile = ../../secrets/syncthing.yaml;
               key = "snowpoint_key";
             };
           };
 
-          services = {
-            qemuGuest.enable = true;
-
-            navidrome = {
-              enable = true;
-              environmentFile = config.sops.secrets.navidrome.path;
-
-              settings = {
-                Address = "0.0.0.0";
-                DefaultTheme = "Auto";
-                EnableUserEditing = false;
-                MusicFolder = "/mnt/Media/Music";
-                Port = 4533;
-                SubsonicArtistParticipations = true;
-                UIWelcomeMessage = "Welcome to Navidrome @ ${config.networking.hostName}";
-
-                # SSO via traefik-forward-auth in the cluster (auth.cute.haus).
-                # TrustedSources is checked against the immediate TCP source — the
-                # traefik pod inside the k3s pod CIDR — not against X-Forwarded-For.
-                # Subsonic mobile clients hit caddy directly from the tailnet and
-                # don't send the header; they fall back to local username/password.
-                ExtAuth = {
-                  UserHeader = "X-Forwarded-User";
-                  TrustedSources = builtins.concatStringsSep "," [
-                    "100.64.0.0/10"
-                    "10.42.0.0/16"
-                  ];
-                };
-              };
-            };
-          };
-
-          systemd.services.navidrome.serviceConfig = {
-            Restart = "on-failure";
-            RestartSec = "30s";
-          };
+          services.qemuGuest.enable = true;
           myDisko.installDrive = "/dev/vda";
-
           system.autoUpgrade.dates = "03:30";
-
-          myB2Mounts.cacheDir = "/mnt/Backblaze/.rclone-cache";
 
           myK3s = {
             role = "agent";
