@@ -14,7 +14,6 @@
       known-hosts
       locale-en-us
       njust
-      performance
       podman
       prometheus-node
       recipes

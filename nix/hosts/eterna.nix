@@ -26,7 +26,6 @@ in {
       locale-en-us
       media-share
       njust
-      performance
       podman
       prometheus-node
       recipes

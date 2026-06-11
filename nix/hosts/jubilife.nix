@@ -25,7 +25,6 @@ in {
       lanzaboote
       locale-en-us
       njust
-      performance
       plex
       podman
       prometheus-node

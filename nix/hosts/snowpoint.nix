@@ -18,7 +18,6 @@
       locale-en-us
       media-share
       njust
-      performance
       plex
       prometheus-node
       recipes
