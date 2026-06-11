@@ -42,12 +42,10 @@
     ];
   };
 
-  flake.modules.nixos.tautulli = _: {
-    config = {
-      services.tautulli = {
-        enable = true;
-        openFirewall = true;
-      };
+  flake.modules.nixos.tautulli = {
+    services.tautulli = {
+      enable = true;
+      openFirewall = true;
     };
   };
 

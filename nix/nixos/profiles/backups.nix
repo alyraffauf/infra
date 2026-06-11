@@ -81,14 +81,16 @@
         };
       };
 
-      services.restic.backups = lib.mapAttrs (_: job:
-        restic
-        // {
-          inherit (job) paths repository exclude;
-          backupPrepareCommand = lib.mkIf (job.backupPrepareCommand != null) job.backupPrepareCommand;
-          backupCleanupCommand = lib.mkIf (job.backupCleanupCommand != null) job.backupCleanupCommand;
-        })
-      config.myBackups.jobs;
+      services.restic.backups = let
+        mkRestic = _: job:
+          restic
+          // {
+            inherit (job) paths repository exclude;
+            backupPrepareCommand = lib.mkIf (job.backupPrepareCommand != null) job.backupPrepareCommand;
+            backupCleanupCommand = lib.mkIf (job.backupCleanupCommand != null) job.backupCleanupCommand;
+          };
+      in
+        lib.mapAttrs mkRestic config.myBackups.jobs;
     };
   };
 }
