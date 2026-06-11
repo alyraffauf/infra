@@ -23,12 +23,10 @@ in {
       k3s-node
       lanzaboote
       locale-en-us
-      njust
       plex
       podman
       prometheus-node
       qbittorrent
-      recipes
       ssh-keys
       swap
       syncthing

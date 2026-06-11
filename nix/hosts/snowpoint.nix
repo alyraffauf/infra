@@ -16,10 +16,8 @@
       k3s-node
       locale-en-us
       media-share
-      njust
       plex
       prometheus-node
-      recipes
       ssh-keys
       swap
       syncthing

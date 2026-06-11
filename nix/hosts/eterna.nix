@@ -21,10 +21,8 @@ in {
       k3s-node
       lanzaboote
       locale-en-us
-      njust
       podman
       prometheus-node
-      recipes
       ssh-keys
       swap
       syncthing

@@ -12,10 +12,8 @@
       fail2ban
       k3s-node
       locale-en-us
-      njust
       podman
       prometheus-node
-      recipes
       ssh-keys
       swap
       tailscale

@@ -70,19 +70,6 @@
           persistentTimer = true;
         };
       };
-
-      myRecipes.btrfs = lib.mkIf (btrfsFSDevices != []) ''
-        # List snapper snapshots
-        [group('btrfs')]
-        snapshots config="home":
-            snapper -c {{config}} list
-
-        # Create a manual snapshot
-        [group('btrfs')]
-        create-snapshot config="home" desc="manual":
-            @echo "Creating snapshot '{{desc}}' for config {{config}}"
-            snapper -c {{config}} create --description "{{desc}}"
-      '';
     };
   };
 }
