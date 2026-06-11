@@ -40,16 +40,12 @@
       };
     };
 
-    config = lib.mkMerge [
-      {
-        services.qbittorrent = {
-          inherit (cfg) openFirewall user group package;
-          enable = true;
-          profileDir = cfg.dataDir;
-          webuiPort = cfg.port;
-        };
-      }
-    ];
+    config.services.qbittorrent = {
+      inherit (cfg) openFirewall user group package;
+      enable = true;
+      profileDir = cfg.dataDir;
+      webuiPort = cfg.port;
+    };
   };
 
   flake.modules.nixos.backups = {

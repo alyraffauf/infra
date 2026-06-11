@@ -10,47 +10,45 @@
       description = "The directory where *arr stores its data files.";
     };
 
-    config = lib.mkMerge [
-      {
-        services = {
-          bazarr = {
-            enable = true;
-            dataDir = "${config.myArr.dataDir}/bazarr";
-            openFirewall = true;
-          };
-
-          lidarr = {
-            enable = true;
-            dataDir = "${config.myArr.dataDir}/lidarr/.config/Lidarr";
-            openFirewall = true;
-          };
-
-          prowlarr = {
-            enable = true;
-            openFirewall = true;
-          };
-
-          radarr = {
-            enable = true;
-            dataDir = "${config.myArr.dataDir}/radarr/.config/Radarr/";
-            openFirewall = true;
-          };
-
-          sonarr = {
-            enable = true;
-            dataDir = "${config.myArr.dataDir}/sonarr/.config/NzbDrone/";
-            openFirewall = true;
-          };
+    config = {
+      services = {
+        bazarr = {
+          enable = true;
+          dataDir = "${config.myArr.dataDir}/bazarr";
+          openFirewall = true;
         };
 
-        systemd.tmpfiles.rules = [
-          "d ${config.services.lidarr.dataDir} 0755 lidarr lidarr"
-          "d ${config.services.radarr.dataDir} 0755 radarr radarr"
-          "d ${config.services.readarr.dataDir} 0755 readarr readarr"
-          "d ${config.services.sonarr.dataDir} 0755 sonarr sonarr"
-        ];
-      }
-    ];
+        lidarr = {
+          enable = true;
+          dataDir = "${config.myArr.dataDir}/lidarr/.config/Lidarr";
+          openFirewall = true;
+        };
+
+        prowlarr = {
+          enable = true;
+          openFirewall = true;
+        };
+
+        radarr = {
+          enable = true;
+          dataDir = "${config.myArr.dataDir}/radarr/.config/Radarr/";
+          openFirewall = true;
+        };
+
+        sonarr = {
+          enable = true;
+          dataDir = "${config.myArr.dataDir}/sonarr/.config/NzbDrone/";
+          openFirewall = true;
+        };
+      };
+
+      systemd.tmpfiles.rules = [
+        "d ${config.services.lidarr.dataDir} 0755 lidarr lidarr"
+        "d ${config.services.radarr.dataDir} 0755 radarr radarr"
+        "d ${config.services.readarr.dataDir} 0755 readarr readarr"
+        "d ${config.services.sonarr.dataDir} 0755 sonarr sonarr"
+      ];
+    };
   };
 
   flake.modules.nixos.backups = {

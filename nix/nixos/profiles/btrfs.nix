@@ -34,59 +34,55 @@
   in {
     options.myBtrfs.deduplicate = lib.mkEnableOption "deduplicate btrfs filesystems";
 
-    config = lib.mkMerge [
-      {
-        boot.supportedFilesystems = ["btrfs"];
-        environment.systemPackages = lib.optionals config.services.xserver.enable [pkgs.snapper-gui];
+    config = {
+      boot.supportedFilesystems = ["btrfs"];
+      environment.systemPackages = lib.optionals config.services.xserver.enable [pkgs.snapper-gui];
 
-        services = lib.mkIf (btrfsFSDevices != []) {
-          beesd.filesystems = lib.mkIf config.myBtrfs.deduplicate beesdConfig;
-          btrfs.autoScrub.enable = true;
+      services = lib.mkIf (btrfsFSDevices != []) {
+        beesd.filesystems = lib.mkIf config.myBtrfs.deduplicate beesdConfig;
+        btrfs.autoScrub.enable = true;
 
-          snapper = {
-            configs.home = lib.mkIf hasHomeSubvolume {
-              ALLOW_GROUPS = ["users"];
-              FSTYPE = "btrfs";
-              SUBVOLUME = "/home";
-              TIMELINE_CLEANUP = true;
-              TIMELINE_CREATE = true;
-            };
-
-            filters = ''
-              -.bash_profile
-              -.bashrc
-              -.cache
-              -.config
-              -.librewolf
-              -.local
-              -.mozilla
-              -.nix-profile
-              -.pki
-              -.share
-              -.snapshots
-              -.thunderbird
-              -.zshrc
-            '';
-
-            persistentTimer = true;
+        snapper = {
+          configs.home = lib.mkIf hasHomeSubvolume {
+            ALLOW_GROUPS = ["users"];
+            FSTYPE = "btrfs";
+            SUBVOLUME = "/home";
+            TIMELINE_CLEANUP = true;
+            TIMELINE_CREATE = true;
           };
+
+          filters = ''
+            -.bash_profile
+            -.bashrc
+            -.cache
+            -.config
+            -.librewolf
+            -.local
+            -.mozilla
+            -.nix-profile
+            -.pki
+            -.share
+            -.snapshots
+            -.thunderbird
+            -.zshrc
+          '';
+
+          persistentTimer = true;
         };
-      }
+      };
 
-      {
-        myRecipes.btrfs = lib.mkIf (btrfsFSDevices != []) ''
-          # List snapper snapshots
-          [group('btrfs')]
-          snapshots config="home":
-              snapper -c {{config}} list
+      myRecipes.btrfs = lib.mkIf (btrfsFSDevices != []) ''
+        # List snapper snapshots
+        [group('btrfs')]
+        snapshots config="home":
+            snapper -c {{config}} list
 
-          # Create a manual snapshot
-          [group('btrfs')]
-          create-snapshot config="home" desc="manual":
-              @echo "Creating snapshot '{{desc}}' for config {{config}}"
-              snapper -c {{config}} create --description "{{desc}}"
-        '';
-      }
-    ];
+        # Create a manual snapshot
+        [group('btrfs')]
+        create-snapshot config="home" desc="manual":
+            @echo "Creating snapshot '{{desc}}' for config {{config}}"
+            snapper -c {{config}} create --description "{{desc}}"
+      '';
+    };
   };
 }

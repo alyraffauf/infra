@@ -42,90 +42,88 @@
       ingress = lib.mkEnableOption "cute.haus/ingress=true node label";
     };
 
-    config = lib.mkMerge [
-      {
-        sops.secrets.k3s = {
-          sopsFile = "${self}/secrets/k3s.yaml";
-          key = "TOKEN";
+    config = {
+      sops.secrets.k3s = {
+        sopsFile = "${self}/secrets/k3s.yaml";
+        key = "TOKEN";
+      };
+
+      # systemd-oomd fights kubelet's eviction manager
+      systemd.oomd.enable = lib.mkForce false;
+
+      networking.firewall.allowedTCPPorts = lib.mkIf cfg.ingress [80 443 2222];
+
+      services = {
+        k3s = {
+          enable = true;
+          inherit (cfg) role clusterInit;
+          serverAddr = lib.mkIf (cfg.serverAddr != null) cfg.serverAddr;
+          tokenFile = config.sops.secrets.k3s.path;
+          extraFlags =
+            ["--flannel-iface=tailscale0"]
+            ++ lib.optionals (cfg.role == "server") (
+              [
+                "--service-node-port-range=8000-32767"
+                "--disable=traefik"
+                "--disable=servicelb"
+              ]
+              ++ map (san: "--tls-san=${san}") cfg.tlsSans
+            )
+            ++ lib.optionals cfg.clusterInit ["--write-kubeconfig-mode=644"]
+            ++ lib.optionals (cfg.zone != null) ["--node-label=topology.kubernetes.io/zone=${cfg.zone}"]
+            ++ lib.optionals cfg.ingress ["--node-label=cute.haus/ingress=true"];
         };
 
-        # systemd-oomd fights kubelet's eviction manager
-        systemd.oomd.enable = lib.mkForce false;
-
-        networking.firewall.allowedTCPPorts = lib.mkIf cfg.ingress [80 443 2222];
-
-        services = {
-          k3s = {
-            enable = true;
-            inherit (cfg) role clusterInit;
-            serverAddr = lib.mkIf (cfg.serverAddr != null) cfg.serverAddr;
-            tokenFile = config.sops.secrets.k3s.path;
-            extraFlags =
-              ["--flannel-iface=tailscale0"]
-              ++ lib.optionals (cfg.role == "server") (
-                [
-                  "--service-node-port-range=8000-32767"
-                  "--disable=traefik"
-                  "--disable=servicelb"
-                ]
-                ++ map (san: "--tls-san=${san}") cfg.tlsSans
-              )
-              ++ lib.optionals cfg.clusterInit ["--write-kubeconfig-mode=644"]
-              ++ lib.optionals (cfg.zone != null) ["--node-label=topology.kubernetes.io/zone=${cfg.zone}"]
-              ++ lib.optionals cfg.ingress ["--node-label=cute.haus/ingress=true"];
-          };
-
-          openiscsi = {
-            enable = true;
-            name = "iqn.2026-05.haus.cute:${config.networking.hostName}";
-          };
+        openiscsi = {
+          enable = true;
+          name = "iqn.2026-05.haus.cute:${config.networking.hostName}";
         };
+      };
 
-        environment.systemPackages = with pkgs; [
-          helmfile
-          kubernetes-helm
-          nfs-utils
+      environment.systemPackages = with pkgs; [
+        helmfile
+        kubernetes-helm
+        nfs-utils
+      ];
+
+      systemd = {
+        # Longhorn instance-manager looks for binaries in /usr/local/bin
+        tmpfiles.rules = [
+          "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
         ];
 
-        systemd = {
-          # Longhorn instance-manager looks for binaries in /usr/local/bin
-          tmpfiles.rules = [
-            "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
-          ];
+        services = {
+          # Block k3s startup until tailscale0 has its IP — flannel-iface=tailscale0
+          # otherwise races and etcd peer setup fails on cold boot.
+          k3s = {
+            after = ["tailscaled.service"];
+            wants = ["tailscaled.service"];
+            serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
+              until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
+                ${pkgs.coreutils}/bin/sleep 1
+              done
+            '';
+          };
 
-          services = {
-            # Block k3s startup until tailscale0 has its IP — flannel-iface=tailscale0
-            # otherwise races and etcd peer setup fails on cold boot.
-            k3s = {
-              after = ["tailscaled.service"];
-              wants = ["tailscaled.service"];
-              serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
-                until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
-                  ${pkgs.coreutils}/bin/sleep 1
-                done
-              '';
-            };
-
-            # Cleanly log out iSCSI sessions at shutdown so reboots don't hang
-            # waiting for udev scsi_id timeouts against dead longhorn devices.
-            iscsi-logout = {
-              description = "Log out iSCSI sessions cleanly at shutdown";
-              after = ["iscsid.service"];
-              before = ["k3s.service"];
-              requires = ["iscsid.service"];
-              wantedBy = ["multi-user.target"];
-              serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-                ExecStart = "${pkgs.coreutils}/bin/true";
-                ExecStop = "-${pkgs.openiscsi}/bin/iscsiadm -m node -u";
-                TimeoutStopSec = "30s";
-              };
+          # Cleanly log out iSCSI sessions at shutdown so reboots don't hang
+          # waiting for udev scsi_id timeouts against dead longhorn devices.
+          iscsi-logout = {
+            description = "Log out iSCSI sessions cleanly at shutdown";
+            after = ["iscsid.service"];
+            before = ["k3s.service"];
+            requires = ["iscsid.service"];
+            wantedBy = ["multi-user.target"];
+            serviceConfig = {
+              Type = "oneshot";
+              RemainAfterExit = true;
+              ExecStart = "${pkgs.coreutils}/bin/true";
+              ExecStop = "-${pkgs.openiscsi}/bin/iscsiadm -m node -u";
+              TimeoutStopSec = "30s";
             };
           };
         };
-      }
-    ];
+      };
+    };
   };
 
   flake.modules.nixos.backups = {

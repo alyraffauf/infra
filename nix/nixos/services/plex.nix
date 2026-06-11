@@ -10,36 +10,34 @@
       type = lib.types.str;
     };
 
-    config = lib.mkMerge [
-      {
-        services.plex = {
-          enable = true;
-          dataDir = "${config.myPlex.dataDir}/plex";
+    config = {
+      services.plex = {
+        enable = true;
+        dataDir = "${config.myPlex.dataDir}/plex";
 
-          extraPlugins = [
-            (builtins.path {
-              name = "Audnexus.bundle";
-              path = inputs.audnexus;
-            })
-            (builtins.path {
-              name = "Hama.bundle";
-              path = inputs.hama;
-            })
-          ];
+        extraPlugins = [
+          (builtins.path {
+            name = "Audnexus.bundle";
+            path = inputs.audnexus;
+          })
+          (builtins.path {
+            name = "Hama.bundle";
+            path = inputs.hama;
+          })
+        ];
 
-          extraScanners = [
-            (builtins.path {
-              name = "Absolute-Series-Scanner";
-              path = inputs.absolute;
-            })
-          ];
+        extraScanners = [
+          (builtins.path {
+            name = "Absolute-Series-Scanner";
+            path = inputs.absolute;
+          })
+        ];
 
-          openFirewall = true;
-        };
+        openFirewall = true;
+      };
 
-        systemd.services.plex.serviceConfig.TimeoutStopSec = 15;
-      }
-    ];
+      systemd.services.plex.serviceConfig.TimeoutStopSec = 15;
+    };
   };
 
   flake.modules.nixos.tautulli = {
