@@ -27,6 +27,13 @@ spec:
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
+  mountOptions:
+    - nfsvers=3
+    - hard
+    - rsize=1048576
+    - wsize=1048576
+    - noatime
+    - nodiratime
   nfs:
     server: 100.81.61.31
     path: /mnt/Media
