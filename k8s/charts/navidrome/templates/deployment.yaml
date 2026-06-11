@@ -17,6 +17,8 @@ spec:
         app: {{ .Chart.Name }}
     spec:
       terminationGracePeriodSeconds: 30
+      nodeSelector:
+        kubernetes.io/hostname: jubilife
       securityContext:
         fsGroup: 1000
       tolerations:
