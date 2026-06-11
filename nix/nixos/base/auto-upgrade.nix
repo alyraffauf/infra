@@ -1,0 +1,36 @@
+{
+  flake.modules.nixos.base = {
+    config,
+    lib,
+    ...
+  }: {
+    options.myFlakeUrl = lib.mkOption {
+      type = lib.types.str;
+      default = "github:alyraffauf/cute.haus";
+      description = "Default flake URL for this NixOS configuration.";
+    };
+
+    config = {
+      environment.variables = {
+        FLAKE = config.myFlakeUrl;
+        NH_FLAKE = config.myFlakeUrl;
+      };
+
+      system.autoUpgrade = {
+        enable = true;
+        allowReboot = true;
+        flags = ["--accept-flake-config"];
+        flake = config.myFlakeUrl;
+        operation = lib.mkDefault "switch";
+        dates = lib.mkDefault "02:00";
+        randomizedDelaySec = lib.mkDefault "0";
+        persistent = true;
+
+        rebootWindow = {
+          lower = "02:00";
+          upper = "06:00";
+        };
+      };
+    };
+  };
+}
