@@ -19,14 +19,13 @@
 
       authorizedUsers = lib.mkOption {
         type = lib.types.attrsOf (lib.types.listOf lib.types.str);
-        default = {
-          root = ["aly"];
-        };
+        default = {};
       };
     };
 
     config = lib.mkMerge [
       {
+        mySshKeys.authorizedUsers.root = lib.mkDefault ["aly"];
         users.users.root.openssh.authorizedKeys.keyFiles = filesFor (config.mySshKeys.authorizedUsers.root or []);
       }
       (lib.mkIf (config.mySshKeys.authorizedUsers ? aly) {
