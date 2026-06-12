@@ -17,7 +17,6 @@
     devShells.default = pkgs.mkShell {
       packages =
         (with pkgs; [
-          (lib.hiPrio uutils-coreutils-noprefix)
           age
           ansibleWithK8s
           bun
