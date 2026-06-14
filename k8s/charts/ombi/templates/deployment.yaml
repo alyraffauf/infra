@@ -30,7 +30,7 @@ spec:
           tolerationSeconds: 60
       containers:
         - name: {{ .Chart.Name }}
-          image: lscr.io/linuxserver/ombi:latest@sha256:db3642d3fd492c399e1c879fe38fe77b59db6ca2e966b0d3df2aad7d376489da
+          image: lscr.io/linuxserver/ombi:latest@sha256:8b4b1e9aad2e7768396b30ccea4fca446f59abca5530d3d1ad41ab5a13fd19d4
           imagePullPolicy: IfNotPresent
           env:
             - name: PUID
