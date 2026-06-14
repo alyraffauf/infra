@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/tarampampam/error-pages:4@sha256:96855caa28e08a96bb9ff746a7c094b43235351bad79806c2210f9e7677abce9
+          image: ghcr.io/tarampampam/error-pages:4@sha256:978c1f83e8f26742743ec3b565214ed9f2296cb5171b592071a6569dceac8c26
           imagePullPolicy: IfNotPresent
           env:
             - name: TEMPLATE_NAME
