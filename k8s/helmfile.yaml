@@ -100,9 +100,7 @@ releases:
           replicaSoftAntiAffinity: false
           replicaZoneSoftAntiAffinity: true
           replicaAutoBalance: best-effort
-          # Serialize rebuilds — concurrent rebuilds saturate disk/network
-          # and make kubectl unresponsive on cloud nodes.
-          concurrentReplicaRebuildPerNodeLimit: 1
+          concurrentReplicaRebuildPerNodeLimit: 3
           # When a node goes NotReady, allow Longhorn to force-delete the
           # stuck pod so the volume can detach + reattach to the rescheduled
           # pod on a healthy node. Cuts failover from ~5min to ~2min.
