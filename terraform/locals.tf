@@ -1,7 +1,6 @@
 locals {
   hosts = {
     pastoria  = "51.81.87.134"
-    solaceon  = hcloud_server.solaceon.ipv4_address
     snowpoint = "152.53.90.225"
   }
 

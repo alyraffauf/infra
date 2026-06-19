@@ -10,10 +10,6 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5.0"
     }
-    hcloud = {
-      source  = "hetznercloud/hcloud"
-      version = "~> 1.48"
-    }
   }
 
   # State in B2 alongside CNPG + Longhorn backups. Auth via AWS_ACCESS_KEY_ID /
@@ -49,8 +45,4 @@ provider "cloudflare" {
 
 provider "b2" {
   # Reads B2_APPLICATION_KEY_ID and B2_APPLICATION_KEY from the environment.
-}
-
-provider "hcloud" {
-  # Reads HCLOUD_TOKEN from the environment.
 }
