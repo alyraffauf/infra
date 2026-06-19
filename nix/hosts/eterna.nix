@@ -346,10 +346,6 @@ in {
                     targets = ["eterna:3021"];
                     labels.instance = "eterna";
                   }
-                  {
-                    targets = ["solaceon:3021"];
-                    labels.instance = "solaceon";
-                  }
                 ];
               }
             ];
