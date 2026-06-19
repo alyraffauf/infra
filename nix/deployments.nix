@@ -11,8 +11,5 @@
 
     snowpoint.output = self.nixosConfigurations.snowpoint.config.system.build.toplevel;
     snowpoint.user = "root";
-
-    solaceon.output = self.nixosConfigurations.solaceon.config.system.build.toplevel;
-    solaceon.user = "root";
   };
 }
