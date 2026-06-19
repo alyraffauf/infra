@@ -30,7 +30,7 @@
 
       tlsSans = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = ["solaceon" "eterna" "pastoria"];
+        default = ["snowpoint" "eterna" "pastoria"];
       };
 
       zone = lib.mkOption {
