@@ -17,7 +17,7 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: {{ .Values.cluster.topologyKey }}
-    # Soft preference: ovhcloud/netcup (100) > home (50) > hetzner (0, last resort).
+    # Soft preference: ovhcloud/netcup (100) > home (50, default).
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100

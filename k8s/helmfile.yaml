@@ -94,9 +94,8 @@ releases:
     values:
       - defaultSettings:
           defaultDataPath: /var/lib/longhorn
-          # One replica per zone (cloud-ovhcloud, cloud-netcup, home,
-          # cloud-hetzner last resort); soft zone affinity spreads across
-          # providers.
+          # One replica per zone (cloud-ovhcloud, cloud-netcup, home); soft
+          # zone affinity spreads across providers.
           defaultReplicaCount: 3
           replicaSoftAntiAffinity: false
           replicaZoneSoftAntiAffinity: true
