@@ -25,7 +25,6 @@ keys:
   - &host_rustboro age1sukfru07msq8fm5ddgym23yal9lfm99090p999p09mxgrrwh9aqs6zp4fy
   - &host_slateport age1ephzrpgftmvq4cul9766q2r3mss38xu6un74ryfmw0729afysghsh0a3qg
   - &host_snowpoint age1stsuakfyj3gkee4sm328ky2crmymyuzwjjmxrpvnm754sdt2zvnshf68jx
-  - &host_solaceon age1n66v74s70rma853sdhf7q9tn2wj85v25hh6qvyvxrf42hca284esqr26wa
   - &host_sootopolis age1s7ecrfntus8rvyprzhffjpqk2tmrc259knf9xqajlrqvewfp8d6svwp9pp
 
 creation_rules:
@@ -53,5 +52,4 @@ creation_rules:
           - *host_rustboro
           - *host_slateport
           - *host_snowpoint
-          - *host_solaceon
           - *host_sootopolis
