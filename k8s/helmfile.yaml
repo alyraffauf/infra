@@ -27,7 +27,7 @@ releases:
   - name: traefik
     namespace: kube-system
     chart: traefik/traefik
-    version: 40.3.0
+    version: 41.0.0
     values:
       - deployment:
           kind: DaemonSet
