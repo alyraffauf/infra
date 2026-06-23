@@ -88,21 +88,37 @@ function label(image: PinnedImage): string {
   return `${image.chartName} (${short})`;
 }
 
-async function bumpImage(image: PinnedImage, write: boolean): Promise<boolean> {
+function shortDigest(digest: string): string {
+  return digest.slice(7, 19);
+}
+
+async function bumpImage(
+  image: PinnedImage,
+  write: boolean,
+  commitEach: boolean,
+): Promise<boolean> {
   const upstream = await fetchUpstreamDigest(image.repository, image.floatTag);
   if (upstream === image.currentDigest) {
     console.log(`${label(image)}: ✓ up to date`);
     return false;
   }
 
-  console.log(
-    `${label(image)}: ${image.currentDigest.slice(7, 19)} → ${upstream.slice(7, 19)}`,
-  );
+  const before = shortDigest(image.currentDigest);
+  const after = shortDigest(upstream);
+
+  console.log(`${label(image)}: ${before} → ${after}`);
 
   if (write) {
     const text = await Bun.file(image.templatePath).text();
     const updated = text.replace(image.currentDigest, upstream);
     await Bun.write(image.templatePath, updated);
+
+    if (commitEach) {
+      const short = image.repository.split("/").slice(-1)[0];
+      const msg = `k8s/${image.chartName} (${short}): ${image.floatTag}@${before} → ${image.floatTag}@${after}`;
+      await $`git add ${image.templatePath}`;
+      await $`git commit -m ${msg}`;
+    }
   }
   return true;
 }
@@ -139,13 +155,19 @@ if (arg === "--all") {
   }
 }
 
+const commitEach = shouldWrite;
+
 let staleCount = 0;
 for (const image of imagesToBump) {
-  const wasStale = await bumpImage(image, shouldWrite);
+  const wasStale = await bumpImage(image, shouldWrite, commitEach);
   if (wasStale) staleCount++;
 }
 
-if (arg === "--check" && staleCount > 0) {
-  console.error(`\n${staleCount} image(s) stale`);
-  process.exit(1);
+if (staleCount > 0) {
+  if (arg === "--check") {
+    console.error(`\n${staleCount} image(s) stale`);
+    process.exit(1);
+  } else {
+    console.log(`\n${staleCount} image(s) bumped`);
+  }
 }

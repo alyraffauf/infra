@@ -179,8 +179,10 @@ bump-tranquil:
         echo "tranquil-pds: ✓ up to date"
         exit 0
     fi
-    echo "tranquil-pds: ${CURRENT_DIGEST:0:19} → ${UPSTREAM:0:19}"
+    echo "tranquil-pds: ${CURRENT_DIGEST:7:12} → ${UPSTREAM:7:12}"
     sed -i "s|@${CURRENT_DIGEST}|@${UPSTREAM}|" "$TEMPLATE"
+    git add "$TEMPLATE"
+    git commit -m "k8s/tranquil-pds: ${FLOAT_TAG}@${CURRENT_DIGEST:7:12} → ${FLOAT_TAG}@${UPSTREAM:7:12}"
 
 # Scaffold a new app chart under k8s/charts/<name>. After running, edit the
 # values.yaml and add a release block to k8s/helmfile.yaml. See k8s/charts/README.md.
