@@ -35,7 +35,7 @@ spec:
           tolerationSeconds: 60
       containers:
         - name: {{ .Chart.Name }}
-          image: atcr.io/tranquil.farm/tranquil-pds:latest@sha256:058dd00976b379006a6913617257cb1c9900ac2a769647c3c233d4170bc85a3b
+          image: atcr.io/tranquil.farm/tranquil-pds:latest@sha256:58b5bd2c29f49b2e735f13c957ace78c318551c4f982e653021e1b100a208716
           imagePullPolicy: IfNotPresent
           env:
             - name: AWS_REGION
