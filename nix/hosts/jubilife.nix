@@ -53,6 +53,7 @@ in {
             abcde
             chezmoi
             claude-code
+            codex
             curl
             delta
             eza

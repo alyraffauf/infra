@@ -21,7 +21,7 @@ charts/
 ├── forgejo/                # Git hosting (git.aly.codes)
 ├── longhorn-creds/         # B2 backup-target Secret + recurring backup job + UI ingress
 ├── morsels/                # atproto pastebin (morsels.blue)
-├── pg-shared/              # CloudNativePG cluster + longhorn-pg StorageClass
+├── pg-shared/              # CloudNativePG cluster using local-path replicas
 ├── tranquil-pds/           # TRanquil atproto Personal Data Server
 ├── uptime-kuma/            # Uptime monitoring + status pages
 ├── vaultwarden/            # Bitwarden-compatible vault
@@ -100,9 +100,12 @@ These have unique enough shape that the library wouldn't help:
 
 - **`cluster-tls`** — renders one `kubernetes.io/tls` Secret per entry in
   `.Values.secret`, sourced from `secrets/cluster-tls.yaml`.
-- **`pg-shared`** — a CNPG `Cluster` + a Longhorn `StorageClass`. Apps that
-  need a database get a role + database created manually in this cluster;
-  there's no per-app provisioning yet.
+- **`pg-shared`** — a CNPG `Cluster` using `local-path` volumes for Postgres
+  data. CNPG provides HA with streaming replication across instances; B2
+  backups and WAL archiving cover recovery. A `longhorn-pg` StorageClass is
+  rendered for experiments or a future migration, but the live cluster does not
+  use it. Apps that need a database get a role + database created manually in
+  this cluster; there's no per-app provisioning yet.
 - **`external-routes`** — for each entry in `.Values.routes`, renders a
   `Service` + `EndpointSlice` + `Ingress` pointing at an external IP
   (typically a Tailscale IP for a service running on jubilife or eterna).

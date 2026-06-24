@@ -173,7 +173,8 @@ releases:
 
   # ─── Shared platform services ───────────────────────────────────────────
 
-  # CNPG Cluster (3-instance HA postgres) + longhorn-pg StorageClass.
+  # CNPG Cluster (3-instance HA postgres). Uses local-path for Postgres data;
+  # CNPG handles HA via streaming replication, while B2 backups cover recovery.
   # Apps that need a database get a role + db here; see charts/pg-shared.
   # Backup config (B2) lives in values/secrets/pg-shared.yaml.
   - name: pg-shared

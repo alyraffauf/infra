@@ -25,8 +25,7 @@ This repository contains NixOS configurations, along with whatever custom module
 ├── secrets/                 # SOPS-encrypted yaml (multi-recipient age)
 ├── keys/                    # Per-host + per-user age recipients
 ├── terraform/               # Cloudflare DNS, etc.
-├── ansible/                 # Server playbooks (deploy-offline, reboots)
-└── BACKUPS.md               # B2 backup + restore runbook (CNPG + Longhorn)
+└── ansible/                 # Server playbooks (deploy-offline, reboots)
 ```
 
 ---
