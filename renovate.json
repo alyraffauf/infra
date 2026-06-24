@@ -18,12 +18,11 @@
     "managerFilePatterns": ["/k8s/helmfile\\.yaml$/"]
   },
 
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["^k8s/charts/.*/templates/deployment\\.yaml$"],
-      "matchStrings": [
-        "image:\\s+(?<depName>\\S+?):(?<currentValue>[^\\s@]+)@(?<currentDigest>sha256:[a-f0-9]+)"
-      ],
+      "customType": "regex",
+      "managerFilePatterns": ["/^k8s/charts/.*/templates/deployment\\.yaml$/"],
+      "matchStrings": ["image:\\s+(?<depName>\\S+?):(?<currentValue>[^\\s@]+)@(?<currentDigest>sha256:[a-f0-9]+)"],
       "datasourceTemplate": "docker"
     }
   ],
