@@ -40,7 +40,7 @@ jobs:
             [[ "$name" == "common" ]] && continue
             echo "::group::$name"
             helm dependency update "$chart" >/dev/null
-            helm template "$chart" >/dev/null
+            helm template "$chart" -f k8s/values/global.yaml >/dev/null
             echo "::endgroup::"
           done
 
