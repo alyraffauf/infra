@@ -33,9 +33,6 @@ spec:
           env:
             - name: TZ
               value: "America/New_York"
-          envFrom:
-            - secretRef:
-                name: audiobookshelf-rclone
           ports:
             - name: http
               containerPort: 80

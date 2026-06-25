@@ -169,7 +169,7 @@ spec:
             privileged: true
           envFrom:
             - secretRef:
-                name: paperless-env
+                name: paperless-rclone
           volumeMounts:
             - name: rclone-media
               mountPath: /paperless/media
