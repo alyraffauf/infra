@@ -3,4 +3,3 @@ name: error-pages
 description: Custom error pages served by Traefik on 5xx responses
 type: application
 version: 0.1.0
-appVersion: "4"

@@ -3,4 +3,3 @@ name: nextcloud
 description: Nextcloud
 type: application
 version: 0.1.0
-appVersion: "33"

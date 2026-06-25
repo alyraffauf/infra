@@ -170,6 +170,8 @@ releases:
     version: 0.36.0
     needs:
       - intel-device-plugin/intel-device-plugins-operator
+    values:
+      - sharedDevNum: 2
 
   # ─── Shared platform services ───────────────────────────────────────────
 
@@ -279,6 +281,12 @@ releases:
       - default/valkey
     values:
       - values/secrets/immich.yaml
+
+  - name: jellyfin
+    namespace: default
+    chart: ./charts/jellyfin
+    needs:
+      - default/cluster-tls
 
   - name: navidrome
     namespace: default

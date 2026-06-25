@@ -166,6 +166,7 @@ in {
           "d /mnt/Data/arm/home 0755 1000 1000 - -"
           "d /mnt/Data/arm/config 0755 1000 1000 - -"
           "d /mnt/Data/arm 0755 1000 1000 - -"
+          "d /mnt/Data/jellyfin 0700 1000 1000 - -"
         ];
 
         virtualisation.oci-containers.containers = {
@@ -273,14 +274,7 @@ in {
 
       # services
       (
-        {
-          config,
-          pkgs,
-          ...
-        }: let
-          stop = service: "${pkgs.systemd}/bin/systemctl stop ${service}";
-          start = service: "${pkgs.systemd}/bin/systemctl start ${service}";
-        in {
+        {config, ...}: {
           myBackups.jobs = {
             immich = {
               paths = [
@@ -292,9 +286,7 @@ in {
             };
 
             jellyfin = {
-              backupCleanupCommand = start "jellyfin";
-              backupPrepareCommand = stop "jellyfin";
-              paths = [config.services.jellyfin.dataDir];
+              paths = ["${dataDirectory}/jellyfin"];
             };
           };
 
@@ -321,14 +313,6 @@ in {
                 bind tailscale/bazarr
                 encode zstd gzip
                 reverse_proxy jubilife:6767
-              '';
-
-              "jellyfin.${tnet}".extraConfig = ''
-                bind tailscale/jellyfin
-                encode zstd gzip
-                reverse_proxy jubilife:8096 {
-                  flush_interval -1
-                }
               '';
 
               "lidarr.${tnet}".extraConfig = ''
@@ -372,12 +356,6 @@ in {
                 encode zstd gzip
                 reverse_proxy jubilife:8181
               '';
-            };
-
-            jellyfin = {
-              enable = true;
-              openFirewall = true;
-              dataDir = "${dataDirectory}/jellyfin";
             };
 
             nfs.server = {

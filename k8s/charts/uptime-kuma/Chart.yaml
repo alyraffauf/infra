@@ -3,4 +3,3 @@ name: uptime-kuma
 description: Uptime monitoring + status pages
 type: application
 version: 0.1.0
-appVersion: "2"

@@ -3,4 +3,3 @@ name: pocket-id
 description: Pocket ID passkey-only OIDC provider
 type: application
 version: 0.1.0
-appVersion: "v1"

@@ -3,4 +3,3 @@ name: forgejo
 description: Forgejo (gitea fork) — git hosting
 type: application
 version: 0.1.0
-appVersion: "15"

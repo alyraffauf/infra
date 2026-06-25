@@ -3,4 +3,3 @@ name: forward-auth
 description: traefik-forward-auth (thomseddon) for SSO-gating apps, one TFA per app
 type: application
 version: 0.2.0
-appVersion: "2"

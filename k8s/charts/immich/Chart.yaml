@@ -3,4 +3,3 @@ name: immich
 description: Immich photo library
 type: application
 version: 0.1.0
-appVersion: "2.7.5"

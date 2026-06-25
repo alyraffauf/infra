@@ -3,4 +3,3 @@ name: valkey
 description: Shared Valkey instance used as cache/queue/session/broker backend by other apps
 type: application
 version: 0.1.0
-appVersion: "9"

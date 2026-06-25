@@ -3,4 +3,3 @@ name: ombi
 description: Ombi media request management
 type: application
 version: 0.1.0
-appVersion: "latest"

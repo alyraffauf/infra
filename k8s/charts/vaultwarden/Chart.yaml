@@ -3,4 +3,3 @@ name: vaultwarden
 description: Vaultwarden (Bitwarden-compatible) password vault
 type: application
 version: 0.1.0
-appVersion: "latest"

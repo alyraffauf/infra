@@ -3,4 +3,3 @@ name: navidrome
 description: Navidrome music server
 type: application
 version: 0.1.0
-appVersion: "0.62.0"

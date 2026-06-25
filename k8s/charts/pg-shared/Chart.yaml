@@ -3,4 +3,3 @@ name: pg-shared
 description: Shared CNPG postgres cluster (operator-managed)
 type: application
 version: 0.1.0
-appVersion: "17"
