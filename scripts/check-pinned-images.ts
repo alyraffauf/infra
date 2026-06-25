@@ -4,10 +4,8 @@
 // push-and-redeploy loop.
 
 const HELMFILE = "k8s/helmfile.yaml";
-const GLOB = "k8s/charts/*/templates/deployment.yaml";
+const GLOB = "k8s/charts/*/**/*.yaml";
 const ALLOW_FLOATING = new Set<string>();
-
-const DIGEST_RE = /image:\s+\S+?:\S+?@(sha256:[0-9a-f]{64})/;
 
 type Release = { chart: string };
 type Helmfile = { releases: Release[] };
@@ -27,21 +25,6 @@ async function deployedChartNames(): Promise<Set<string>> {
   return names;
 }
 
-async function findImageRefs(
-  templatePath: string,
-): Promise<Array<{ tag: string }>> {
-  const text = await Bun.file(templatePath).text();
-  const refs: Array<{ tag: string }> = [];
-
-  for (const match of text.matchAll(
-    /image:\s+(\S+?):(\S+?)@(sha256:[a-f0-9]*)/g,
-  )) {
-    refs.push({ tag: `${match[2]}@${match[3]}` });
-  }
-
-  return refs;
-}
-
 export async function checkPinnedImages(): Promise<string[]> {
   const deployed = await deployedChartNames();
   const errors: string[] = [];
@@ -53,14 +36,20 @@ export async function checkPinnedImages(): Promise<string[]> {
     if (ALLOW_FLOATING.has(chartName)) continue;
 
     const text = await Bun.file(templatePath).text();
-    // Find all image: lines and check whether they contain @sha256:
-    const imageLines = [...text.matchAll(/image:\s+(\S+):(\S+)/g)];
+    // Find concrete image refs in our local chart YAML. Template-composed refs
+    // are checked where their concrete tag is defined in values.yaml.
+    const imageLines = [
+      ...text.matchAll(
+        /^\s*(?:image|imageName):\s+["']?([^"'\s{}]+:[^"'\s{}]+)["']?\s*$/gm,
+      ),
+    ];
     for (const match of imageLines) {
-      const fullRef = `${match[1]}:${match[2]}`;
+      const fullRef = match[1];
       if (!fullRef.includes("@sha256:")) {
-        const shortRepo = match[1].split("/").slice(-1)[0];
+        const [repo, tag] = fullRef.split(":");
+        const shortRepo = repo.split("/").slice(-1)[0];
         errors.push(
-          `${chartName}: ${shortRepo} '${match[2]}' is not pinned to a sha256 digest`,
+          `${chartName}: ${shortRepo} '${tag}' is not pinned to a sha256 digest`,
         );
       }
     }

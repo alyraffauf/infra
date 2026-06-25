@@ -21,9 +21,17 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^k8s/charts/.*/templates/deployment\\.yaml$/"],
+      "managerFilePatterns": ["/^k8s/charts/.*\\.ya?ml$/"],
       "matchStrings": [
-        "image:\\s+(?<depName>\\S+?):(?<currentValue>[^\\s@]+)@(?<currentDigest>sha256:[a-f0-9]+)"
+        "^\\s*(?:image|imageName):\\s+[\"']?(?<depName>[^\\s\"'{}]+?):(?<currentValue>[^\\s\"'@{}]+)@(?<currentDigest>sha256:[a-f0-9]{64})[\"']?\\s*$"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^k8s/charts/.*\\.ya?ml$/"],
+      "matchStrings": [
+        "repository:\\s+[\"']?(?<depName>[^\\s\"']+)[\"']?\\s+tag:\\s+[\"']?(?<currentValue>[^\\s\"'@]+)@(?<currentDigest>sha256:[a-f0-9]{64})[\"']?"
       ],
       "datasourceTemplate": "docker"
     }
