@@ -79,7 +79,7 @@ spec:
             periodSeconds: 5
             failureThreshold: 3
         - name: rclone
-          image: rclone/rclone:1.74@sha256:623378ad0ff3ebd5cebf77720843c0e02edfe46e2d5b5ac6bed54c6371780dfb
+          image: {{ .Values.global.images.rclone }}
           imagePullPolicy: IfNotPresent
           args:
             - mount

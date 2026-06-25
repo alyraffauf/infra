@@ -342,6 +342,7 @@ releases:
     needs:
       - default/cluster-tls
     values:
+      - values/global.yaml
       - values/secrets/audiobookshelf.yaml
 
   - name: watsup
@@ -399,6 +400,8 @@ releases:
     chart: ./charts/plex
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: navidrome
     namespace: default
@@ -419,6 +422,7 @@ releases:
       - default/tika
       - default/gotenberg
     values:
+      - values/global.yaml
       - values/secrets/paperless.yaml
 
   - name: nextcloud

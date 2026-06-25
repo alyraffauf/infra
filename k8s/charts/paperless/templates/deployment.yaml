@@ -32,7 +32,7 @@ spec:
           tolerationSeconds: 60
       initContainers:
         - name: wait-deps
-          image: docker.io/library/alpine:3.24@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+          image: {{ .Values.global.images.alpine }}
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 1000
@@ -154,7 +154,7 @@ spec:
             timeoutSeconds: 10
             failureThreshold: 3
         - name: rclone
-          image: rclone/rclone:1.74@sha256:623378ad0ff3ebd5cebf77720843c0e02edfe46e2d5b5ac6bed54c6371780dfb
+          image: {{ .Values.global.images.rclone }}
           imagePullPolicy: IfNotPresent
           args:
             - mount
