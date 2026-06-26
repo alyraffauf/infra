@@ -54,6 +54,14 @@
       "matchPackageNames": ["/tranquil/"]
     },
     {
+      "description": "Skip Forgejo (Forgejo registries resolve with skopeo but return no-result in Renovate)",
+      "enabled": false,
+      "matchPackageNames": [
+        "codeberg.org/forgejo/forgejo",
+        "data.forgejo.org/forgejo/forgejo"
+      ]
+    },
+    {
       "description": "Auto-merge routine updates after CI passes",
       "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
       "automerge": true
