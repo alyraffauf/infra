@@ -12,7 +12,19 @@
         drv = (pkgs.formats.json {}).generate "zed-setting.json" {
           auto_install_extensions = {
             basher = true;
+            helm = true;
             nix = true;
+          };
+
+          file_types = {
+            Helm = [
+              "**/templates/**/*.tpl"
+              "**/templates/**/*.yaml"
+              "**/templates/**/*.yml"
+              "**/helmfile.d/**/*.yaml"
+              "**/helmfile.d/**/*.yml"
+              "**/values*.yaml"
+            ];
           };
 
           languages = {
