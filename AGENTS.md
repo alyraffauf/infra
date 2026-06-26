@@ -1,6 +1,6 @@
 # AGENTS.md
 
-NixOS homelab + k3s cluster IaC for cute.haus. Single operator. Flake-parts
+NixOS + k3s cluster IaC for cute.haus. Single operator. Flake-parts
 NixOS configs on bare-metal/VPS hosts; an in-tree helm chart per app on k3s;
 SOPS+age secrets; Cloudflare/B2 via Terraform.
 
@@ -71,8 +71,18 @@ treefmt-nix). Enforced via `nix flake check` in `just check`.
   recipients. Add/remove a `.pub` then `just sops-rekey`.
 - `terraform/` — Cloudflare DNS + B2 buckets. Remote state in B2 with **no
   locking** (don't run from two places at once).
-- `ansible/` — `inventory.ini` (the 4 deployable hosts).
-  `playbooks/vars/oidc-clients.yml` is the OIDC client source of truth.
+- `ansible/` — `inventory.ini` (the 4 deployable hosts). Playbooks live in
+  `playbooks/`. `playbooks/pocket-id-bootstrap.yml` reconciles Pocket ID app
+  config, OIDC clients, and per‑app SSO integrations. Client declarations are
+  the source of truth in `playbooks/vars/oidc-clients.yml`; add a client there,
+  and optionally point `integration:` at a file under
+  `playbooks/tasks/integrations/` for apps that consume the creds in k3s.
+  Shared OIDC helpers are in `playbooks/tasks/oidc/`. Run playbooks inside the
+  flake dev shell:
+
+  ```bash
+  direnv exec . ansible-playbook -i ansible/inventory.ini ansible/playbooks/pocket-id-bootstrap.yml --check --diff
+  ```
 
 ## Conventions & gotchas
 
