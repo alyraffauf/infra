@@ -26,21 +26,17 @@ spec:
         - key: node.kubernetes.io/not-ready
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
         - key: node.kubernetes.io/unreachable
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
           image: valkey/valkey:9-alpine@sha256:a35428eba9043cc0b79dbe54100f0c92784f2de00ad09b01182bfb1c5c83d1bd
           imagePullPolicy: IfNotPresent
           args:
-            - valkey-server
-            - --maxmemory
-            - 1gb
-            - --maxmemory-policy
-            - volatile-lru
+            {{- toYaml .Values.args | nindent 12 }}
           ports:
             - name: valkey
               containerPort: 6379

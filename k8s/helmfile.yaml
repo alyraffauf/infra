@@ -86,6 +86,7 @@ releases:
     createNamespace: true
     chart: ./charts/longhorn-creds
     values:
+      - values/global.yaml
       - values/secrets/longhorn-creds.yaml
 
   - name: longhorn
@@ -144,6 +145,7 @@ releases:
     needs:
       - cert-manager/cert-manager
     values:
+      - values/global.yaml
       - values/secrets/cert-manager.yaml
 
   - name: tailscale-operator
@@ -291,22 +293,29 @@ releases:
     needs:
       - cnpg-system/cnpg
     values:
+      - values/global.yaml
       - values/secrets/pg-shared.yaml
 
   # Shared cache/queue/broker backend; apps pick their own logical DB number.
   - name: valkey
     namespace: default
     chart: ./charts/valkey
+    values:
+      - values/global.yaml
 
   # Apache Tika (document parsing + OCR) and Gotenberg (doc-to-PDF).
   # Paperless offloads OCR and conversion to these.
   - name: tika
     namespace: default
     chart: ./charts/tika
+    values:
+      - values/global.yaml
 
   - name: gotenberg
     namespace: default
     chart: ./charts/gotenberg
+    values:
+      - values/global.yaml
 
   # Cloudflare Origin TLS Secrets per domain (morsels-blue). Apps reference
   # these by name in ingress.routes.
@@ -314,6 +323,7 @@ releases:
     namespace: default
     chart: ./charts/cluster-tls
     values:
+      - values/global.yaml
       - values/secrets/cluster-tls.yaml
 
   # ─── Apps ───────────────────────────────────────────────────────────────
@@ -323,18 +333,24 @@ releases:
     chart: ./charts/error-pages
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: aly-codes
     namespace: default
     chart: ./charts/aly-codes
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: switchyard
     namespace: default
     chart: ./charts/switchyard
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: audiobookshelf
     namespace: default
@@ -350,18 +366,24 @@ releases:
     chart: ./charts/watsup
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: morsels
     namespace: default
     chart: ./charts/morsels
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: ombi
     namespace: default
     chart: ./charts/ombi
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: pocket-id
     namespace: default
@@ -370,6 +392,7 @@ releases:
       - default/cluster-tls
       - cnpg-system/pg-shared
     values:
+      - values/global.yaml
       - values/secrets/pocket-id.yaml
 
   - name: forward-auth
@@ -378,6 +401,7 @@ releases:
     needs:
       - default/cluster-tls
     values:
+      - values/global.yaml
       - values/secrets/forward-auth.yaml
 
   - name: immich
@@ -387,6 +411,7 @@ releases:
       - default/cluster-tls
       - default/valkey
     values:
+      - values/global.yaml
       - values/secrets/immich.yaml
 
   - name: jellyfin
@@ -394,6 +419,8 @@ releases:
     chart: ./charts/jellyfin
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: plex
     namespace: default
@@ -410,6 +437,7 @@ releases:
       - default/cluster-tls
       - default/forward-auth
     values:
+      - values/global.yaml
       - values/secrets/navidrome.yaml
 
   - name: paperless
@@ -433,6 +461,7 @@ releases:
       - cnpg-system/pg-shared
       - default/valkey
     values:
+      - values/global.yaml
       - values/secrets/nextcloud.yaml
 
   - name: collabora
@@ -440,12 +469,16 @@ releases:
     chart: ./charts/collabora
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: uptime-kuma
     namespace: default
     chart: ./charts/uptime-kuma
     needs:
       - default/cluster-tls
+    values:
+      - values/global.yaml
 
   - name: vaultwarden
     namespace: default
@@ -453,6 +486,7 @@ releases:
     needs:
       - default/cluster-tls
     values:
+      - values/global.yaml
       - values/secrets/vaultwarden.yaml
 
   # Postgres role + database managed declaratively by pg-shared.
@@ -464,6 +498,7 @@ releases:
       - cnpg-system/pg-shared
       - default/valkey
     values:
+      - values/global.yaml
       - values/secrets/forgejo.yaml
 
   - name: tranquil-pds
@@ -473,6 +508,7 @@ releases:
       - default/cluster-tls
       - cnpg-system/pg-shared
     values:
+      - values/global.yaml
       - values/secrets/tranquil-pds.yaml
 
   # Ingress + Service + EndpointSlice for services that live OUTSIDE the
@@ -484,3 +520,5 @@ releases:
     needs:
       - default/cluster-tls
       - tailscale/tailscale-operator
+    values:
+      - values/global.yaml

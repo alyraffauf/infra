@@ -26,11 +26,11 @@ spec:
         - key: node.kubernetes.io/not-ready
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
         - key: node.kubernetes.io/unreachable
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
           image: louislam/uptime-kuma:2@sha256:91e963bfda569ba115206e843febb446f473ab525add4e08b2b9e3beffa16985

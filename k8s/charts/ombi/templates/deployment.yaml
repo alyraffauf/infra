@@ -27,11 +27,11 @@ spec:
         - key: node.kubernetes.io/not-ready
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
         - key: node.kubernetes.io/unreachable
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
           image: lscr.io/linuxserver/ombi:latest@sha256:aa44c36e0c79a8c53dcf6c7f03559c8fcead701cece03a2ee1d08a3e6f13b4d5

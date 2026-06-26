@@ -26,11 +26,11 @@ spec:
         - key: node.kubernetes.io/not-ready
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
         - key: node.kubernetes.io/unreachable
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
           image: ghcr.io/bluesky-social/pds:latest@sha256:1fa8bbceabb65d8e1710749b1ea92c1c20a7489ca38da4a0a5f64c0c10a70c29

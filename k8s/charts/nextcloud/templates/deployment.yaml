@@ -27,11 +27,11 @@ spec:
         - key: node.kubernetes.io/not-ready
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
         - key: node.kubernetes.io/unreachable
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: 60
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
           image: docker.io/library/nextcloud:34-apache@sha256:4d4a6b5ed15a7eb4537538c848eb78833f53bed62f93e7d5af144f360cd53ff2

@@ -1,6 +1,4 @@
-# Plex plugins/scanners are provisioned into the config volume by an initContainer
-# on every pod start, pinned to exact commits via GitHub archive tarballs.
-# initContainer image comes from values/global.yaml → .Values.global.images.alpine
+# Plugins and scanners provisioned by initContainer on every pod start.
 plugins:
   # Cloned wholesale into "Plug-ins/<name>".
   bundles:

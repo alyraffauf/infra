@@ -32,19 +32,15 @@ spec:
               - key: topology.kubernetes.io/zone
                 operator: In
                 values: [home]
-    {{- with .Values.failover }}
-    {{- if .fastTolerationSeconds }}
     tolerations:
       - key: node.kubernetes.io/not-ready
         operator: Exists
         effect: NoExecute
-        tolerationSeconds: {{ .fastTolerationSeconds }}
+        tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       - key: node.kubernetes.io/unreachable
         operator: Exists
         effect: NoExecute
-        tolerationSeconds: {{ .fastTolerationSeconds }}
-    {{- end }}
-    {{- end }}
+        tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
 
   topologySpreadConstraints:
     - maxSkew: 1
@@ -55,14 +51,7 @@ spec:
           cnpg.io/cluster: {{ .Values.cluster.name }}
 
   postgresql:
-    parameters:
-      max_connections: "200"
-      shared_buffers: 1GB
-      effective_cache_size: 2GB
-      work_mem: 16MB
-      maintenance_work_mem: 128MB
-      random_page_cost: "1.1"
-      effective_io_concurrency: "200"
+    {{- toYaml .Values.postgresql | nindent 4 }}
 
   monitoring:
     enablePodMonitor: false

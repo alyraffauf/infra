@@ -22,26 +22,23 @@ cluster:
   # Spread instances across control-plane nodes
   topologyKey: kubernetes.io/hostname
 
-# Shorten the per-pod toleration for not-ready/unreachable taints so CNPG
-# fails over to a healthy replica sooner when a node dies. Default would be
-# 300s; mirroring the 60s we use for app pods cuts forgejo etc. recovery
-# time from ~6min to ~2min.
-failover:
-  fastTolerationSeconds: 60
+# Tuned for a small shared cluster; bump if individual apps need more
+# connections or heavier analytical workloads.
+postgresql:
+  parameters:
+    max_connections: "200"
+    shared_buffers: 1GB
+    effective_cache_size: 2GB
+    work_mem: 16MB
+    maintenance_work_mem: 128MB
+    random_page_cost: "1.1"
+    effective_io_concurrency: "200"
 
-# Declarative role + database management. Each entry produces:
-#   - kubernetes.io/basic-auth Secret (<name>-pg-creds) consumed by CNPG
-#   - entry under Cluster.spec.managed.roles[] (CNPG creates/maintains role)
-#   - Database CRD owned by the role (defaults to role name; override via
-#     `database: <name>`).
-# Passwords come from values/secrets/pg-shared.yaml via vals + sops.
-# Apps consume their connection string via DATABASE_URL refs into
-# secrets/pg-roles.yaml.
+# Declarative CNPG roles + databases. Passwords come from
+# values/secrets/pg-shared.yaml via vals + sops.
 roles: {}
 
-# B2 (S3-compatible) backup of the cnpg cluster. WAL archiving is continuous;
-# base backup runs on the schedule below. WAL retention is implicit — CNPG
-# keeps enough WAL to PITR from the oldest base backup within retentionPolicy.
+# B2 backup target for CNPG base backups + WAL archiving.
 # Filled by values/secrets/pg-shared.yaml.
 backup:
   enabled: false

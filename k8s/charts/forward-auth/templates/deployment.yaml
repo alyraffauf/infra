@@ -24,17 +24,15 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
-      {{- with $.Values.failover }}
       tolerations:
         - key: node.kubernetes.io/not-ready
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: {{ .fastTolerationSeconds }}
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
         - key: node.kubernetes.io/unreachable
           operator: Exists
           effect: NoExecute
-          tolerationSeconds: {{ .fastTolerationSeconds }}
-      {{- end }}
+          tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: forward-auth
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
