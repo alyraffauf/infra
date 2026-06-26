@@ -1,21 +1,31 @@
 ---
-- name: "[{{ client_spec.slug }}] Check K8s secret"
+# Orchestrate the lifecycle of one OIDC client:
+#   1. Resolve the current K8s + Pocket ID state.
+#   2. Create the client if it does not exist.
+#   3. Sync any configuration drift.
+#   4. Ensure a K8s Secret exists with valid credentials.
+#   5. Upload the app logo if provided.
+
+# -----------------------------------------------------------------------------
+# Phase 1: Resolve current state
+# -----------------------------------------------------------------------------
+- name: "[{{ client_spec.slug }}] Look up K8s Secret"
   kubernetes.core.k8s_info:
     api_version: v1
     kind: Secret
     namespace: "{{ k8s_namespace }}"
     name: "oidc-client-{{ client_spec.slug }}"
-  register: k8s_secret_lookup
+  register: kubernetes_secret_lookup
 
-- name: "[{{ client_spec.slug }}] Current state"
+- name: "[{{ client_spec.slug }}] Initialize state facts"
   ansible.builtin.set_fact:
-    pocket_id_client: "{{ existing_clients[client_spec.name] | default(none) }}"
-    k8s_secret_present: "{{ (k8s_secret_lookup.resources | length) > 0 }}"
+    oidc_client_record: "{{ existing_clients_by_name[client_spec.name] | default(none) }}"
+    kubernetes_secret_exists: "{{ (kubernetes_secret_lookup.resources | length) > 0 }}"
 
-- name: "[{{ client_spec.slug }}] Delete stale K8s secret"
+- name: "[{{ client_spec.slug }}] Delete stale K8s Secret"
   when:
-    - pocket_id_client is none
-    - k8s_secret_present
+    - oidc_client_record is none
+    - kubernetes_secret_exists
   kubernetes.core.k8s:
     state: absent
     api_version: v1
@@ -23,143 +33,42 @@
     namespace: "{{ k8s_namespace }}"
     name: "oidc-client-{{ client_spec.slug }}"
 
-# API rejects `launchURL: ""`, so build the payload in two steps.
-- name: "[{{ client_spec.slug }}] Build request payload"
-  ansible.builtin.set_fact:
-    client_payload:
-      name: "{{ client_spec.name }}"
-      callbackURLs: "{{ client_spec.callbackURLs }}"
-      logoutCallbackURLs: "{{ client_spec.logoutCallbackURLs | default([]) }}"
-      isPublic: "{{ client_spec.isPublic | default(false) }}"
-      pkceEnabled: "{{ client_spec.pkceEnabled | default(true) }}"
-      requiresReauthentication: "{{ client_spec.requiresReauthentication | default(false) }}"
+# -----------------------------------------------------------------------------
+# Phase 2: Build payloads and create the client if missing
+# -----------------------------------------------------------------------------
+- name: "[{{ client_spec.slug }}] Build desired/current client payloads"
+  ansible.builtin.include_tasks: oidc/build-client-payloads.yml
 
-- name: "[{{ client_spec.slug }}] Add launchURL if set"
-  when: (client_spec.launchURL | default('')) | length > 0
-  ansible.builtin.set_fact:
-    client_payload: "{{ client_payload | combine({'launchURL': client_spec.launchURL}) }}"
+- name: "[{{ client_spec.slug }}] Create client if missing"
+  ansible.builtin.include_tasks: oidc/create-client.yml
 
-- name: "[{{ client_spec.slug }}] Create client"
-  when: pocket_id_client is none
+# -----------------------------------------------------------------------------
+# Phase 3: Sync configuration drift for existing clients
+# -----------------------------------------------------------------------------
+- name: "[{{ client_spec.slug }}] Sync client configuration"
+  when:
+    - existing_clients_by_name[client_spec.name] is defined
+    - (desired_oidc_client | to_json) != (current_oidc_client | default({}) | to_json)
   ansible.builtin.uri:
-    url: "{{ pocket_id_url }}/api/oidc/clients"
-    method: POST
-    headers:
-      X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
-    body_format: json
-    body: "{{ client_payload }}"
-    status_code: [200, 201]
-  register: created_client
-
-- name: "[{{ client_spec.slug }}] Adopt created client"
-  when: pocket_id_client is none
-  ansible.builtin.set_fact:
-    pocket_id_client: "{{ created_client.json }}"
-
-- name: "[{{ client_spec.slug }}] Sync metadata"
-  when: k8s_secret_present and (existing_clients[client_spec.name] is defined)
-  ansible.builtin.uri:
-    url: "{{ pocket_id_url }}/api/oidc/clients/{{ pocket_id_client.id }}"
+    url: "{{ pocket_id_url }}/api/oidc/clients/{{ oidc_client_record.id }}"
     method: PUT
     headers:
       X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
     body_format: json
-    body: "{{ client_payload }}"
+    body: "{{ desired_oidc_client }}"
     status_code: [200, 204]
 
-- name: "[{{ client_spec.slug }}] Warn: rotating secret"
-  when:
-    - not k8s_secret_present
-    - existing_clients[client_spec.name] is defined
-  ansible.builtin.debug:
-    msg: >-
-      Client existed in Pocket ID but K8s Secret was missing — rotating
-      client_secret. Apps using the old value will break until they pick
-      up the new K8s Secret.
+# -----------------------------------------------------------------------------
+# Phase 4: Ensure credentials are available in K8s
+# -----------------------------------------------------------------------------
+- name: "[{{ client_spec.slug }}] Ensure credentials Secret"
+  ansible.builtin.include_tasks: oidc/ensure-credentials-secret.yml
 
-- name: "[{{ client_spec.slug }}] Generate client_secret"
-  when: not k8s_secret_present
-  ansible.builtin.uri:
-    url: "{{ pocket_id_url }}/api/oidc/clients/{{ pocket_id_client.id }}/secret"
-    method: POST
-    headers:
-      X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
-    status_code: [200, 201]
-  register: secret_response
-  no_log: true
-
-- name: "[{{ client_spec.slug }}] Write K8s Secret"
-  when: not k8s_secret_present
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: v1
-      kind: Secret
-      metadata:
-        name: "oidc-client-{{ client_spec.slug }}"
-        namespace: "{{ k8s_namespace }}"
-        labels:
-          app.kubernetes.io/managed-by: ansible-oidc-bootstrap
-          app.kubernetes.io/component: oidc-client
-        annotations:
-          helm.sh/resource-policy: keep
-          oidc.cute.haus/client-name: "{{ client_spec.name }}"
-          oidc.cute.haus/client-id: "{{ pocket_id_client.id }}"
-      type: Opaque
-      stringData:
-        client_id: "{{ pocket_id_client.id }}"
-        client_secret: "{{ secret_response.json.secret }}"
-  no_log: true
-
-- name: "[{{ client_spec.slug }}] Read back creds"
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Secret
-    namespace: "{{ k8s_namespace }}"
-    name: "oidc-client-{{ client_spec.slug }}"
-  register: k8s_secret_final
-  no_log: true
-
-- name: "[{{ client_spec.slug }}] Stash for integration tasks"
-  ansible.builtin.set_fact:
-    client_credentials_by_slug: >-
-      {{
-        (client_credentials_by_slug | default({})) | combine({
-          client_spec.slug: {
-            'client_id':     k8s_secret_final.resources[0].data.client_id     | b64decode,
-            'client_secret': k8s_secret_final.resources[0].data.client_secret | b64decode,
-          }
-        })
-      }}
-  no_log: true
-
+# -----------------------------------------------------------------------------
+# Phase 5: Upload app logo
+# -----------------------------------------------------------------------------
 - name: "[{{ client_spec.slug }}] Upload logo"
   when:
     - client_spec.logoUrl is defined
-    - not (pocket_id_client.hasLogo | default(false))
-  block:
-    - name: "[{{ client_spec.slug }}] Download logo"
-      ansible.builtin.get_url:
-        url: "{{ client_spec.logoUrl }}"
-        # Pocket ID rejects uploads without a file extension.
-        dest: "/tmp/oidc-logo-{{ client_spec.slug }}.{{ client_spec.logoUrl | split('.') | last }}"
-        mode: "0644"
-      register: logo_download
-
-    # ansible.builtin.uri's form-multipart can't handle binary file content
-    # (treats it as a UTF-8 string), so shell out to curl.
-    - name: "[{{ client_spec.slug }}] POST logo to Pocket ID"
-      ansible.builtin.command:
-        argv:
-          - curl
-          - --silent
-          - --show-error
-          - --fail
-          - -X
-          - POST
-          - -H
-          - "X-API-KEY: {{ pocket_id_secrets.admin_api_key }}"
-          - -F
-          - "file=@{{ logo_download.dest }}"
-          - "{{ pocket_id_url }}/api/oidc/clients/{{ pocket_id_client.id }}/logo"
-      no_log: true
+    - not (oidc_client_record.hasLogo | default(false))
+  ansible.builtin.include_tasks: oidc/upload-logo.yml

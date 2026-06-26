@@ -1,0 +1,35 @@
+---
+# Central mapping between our client spec and Pocket ID's client API shape.
+# When adding/removing client fields, update only this file.
+- name: "[{{ client_spec.slug }}] Build desired OIDC client payload"
+  ansible.builtin.set_fact:
+    desired_oidc_client:
+      name: "{{ client_spec.name }}"
+      callbackURLs: "{{ client_spec.callbackURLs }}"
+      logoutCallbackURLs: "{{ client_spec.logoutCallbackURLs | default([]) }}"
+      isPublic: "{{ client_spec.isPublic | default(false) }}"
+      pkceEnabled: "{{ client_spec.pkceEnabled | default(true) }}"
+      requiresReauthentication: "{{ client_spec.requiresReauthentication | default(false) }}"
+
+- name: "[{{ client_spec.slug }}] Add optional launchURL to desired payload"
+  when: (client_spec.launchURL | default('')) | length > 0
+  ansible.builtin.set_fact:
+    desired_oidc_client: "{{ desired_oidc_client | combine({'launchURL': client_spec.launchURL}) }}"
+
+- name: "[{{ client_spec.slug }}] Build current OIDC client payload from API"
+  when: existing_clients_by_name[client_spec.name] is defined
+  ansible.builtin.set_fact:
+    current_oidc_client:
+      name: "{{ oidc_client_record.name }}"
+      callbackURLs: "{{ oidc_client_record.callbackURLs }}"
+      logoutCallbackURLs: "{{ oidc_client_record.logoutCallbackURLs | default([]) }}"
+      isPublic: "{{ oidc_client_record.isPublic | default(false) }}"
+      pkceEnabled: "{{ oidc_client_record.pkceEnabled | default(true) }}"
+      requiresReauthentication: "{{ oidc_client_record.requiresReauthentication | default(false) }}"
+
+- name: "[{{ client_spec.slug }}] Add optional launchURL to current payload"
+  when:
+    - existing_clients_by_name[client_spec.name] is defined
+    - (client_spec.launchURL | default('')) | length > 0
+  ansible.builtin.set_fact:
+    current_oidc_client: "{{ current_oidc_client | combine({'launchURL': oidc_client_record.launchURL | default('')}) }}"

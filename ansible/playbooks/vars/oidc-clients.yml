@@ -5,7 +5,6 @@ oidc_clients:
     launchURL: https://git.aly.codes/
     callbackURLs:
       - https://git.aly.codes/user/oauth2/cute.haus/callback
-    logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
     integration: forgejo
@@ -15,7 +14,6 @@ oidc_clients:
     launchURL: https://pds.cute.haus/
     callbackURLs:
       - https://pds.cute.haus/oauth/sso/callback
-    logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
     integration: tranquil
@@ -27,7 +25,6 @@ oidc_clients:
     launchURL: https://navidrome.cute.haus/
     callbackURLs:
       - https://auth-navidrome.cute.haus/_oauth
-    logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: false
     integration: forward-auth
@@ -42,10 +39,12 @@ oidc_clients:
     callbackURLs:
       - https://immich.cute.haus/auth/login
       - app.immich:/
-    logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
 
+  # In k3s, but OIDC is configured in the audiobookshelf admin UI (not env),
+  # so no integration task runs. The oidc-client-audiobookshelf K8s Secret
+  # holds creds for manual entry.
   - slug: audiobookshelf
     name: Audiobookshelf
     logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/audiobookshelf.png
@@ -53,7 +52,6 @@ oidc_clients:
     callbackURLs:
       - https://audiobookshelf.cute.haus/audiobookshelf/auth/openid/callback
       - https://audiobookshelf.cute.haus/audiobookshelf/auth/openid/mobile-redirect
-    logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
 
@@ -63,7 +61,6 @@ oidc_clients:
     launchURL: https://paperless.cute.haus/
     callbackURLs:
       - https://paperless.cute.haus/accounts/oidc/pocket-id/login/callback/
-    logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
     integration: paperless
@@ -74,7 +71,6 @@ oidc_clients:
     launchURL: https://nextcloud.cute.haus/
     callbackURLs:
       - https://nextcloud.cute.haus/apps/user_oidc/code
-    logoutCallbackURLs: []
     isPublic: false
     pkceEnabled: true
     integration: nextcloud

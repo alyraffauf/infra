@@ -5,6 +5,8 @@
 
   vars:
     drain_timeout: 600
+    ready_timeout: 600
+    systemctl_path: /run/current-system/sw/bin/systemctl
 
   tasks:
     - name: Cordon node
@@ -12,30 +14,51 @@
       delegate_to: localhost
       changed_when: true
 
-    # --disable-eviction bypasses PDBs (Longhorn instance-manager blocks otherwise).
-    - name: Drain node
-      ansible.builtin.command: >-
-        kubectl drain {{ inventory_hostname }}
-        --ignore-daemonsets
-        --delete-emptydir-data
-        --force
-        --disable-eviction
-        --timeout={{ drain_timeout }}s
-      delegate_to: localhost
-      changed_when: true
+    - block:
+        # --disable-eviction bypasses PDBs (Longhorn instance-manager blocks otherwise).
+        - name: Drain node
+          ansible.builtin.command: >-
+            kubectl drain {{ inventory_hostname }}
+            --ignore-daemonsets
+            --delete-emptydir-data
+            --force
+            --disable-eviction
+            --timeout={{ drain_timeout }}s
+          delegate_to: localhost
+          changed_when: true
 
-    - name: Reboot host
-      ansible.builtin.reboot:
-        reboot_command: /run/current-system/sw/bin/systemctl reboot
+        - name: Reboot host
+          ansible.builtin.reboot:
+            reboot_command: "{{ systemctl_path }} reboot"
 
-    - name: Wait for node to be Ready
-      ansible.builtin.command: >-
-        kubectl wait --for=condition=Ready node/{{ inventory_hostname }}
-        --timeout={{ drain_timeout }}s
-      delegate_to: localhost
-      changed_when: false
+        - name: Wait for node to be Ready
+          ansible.builtin.command: >-
+            kubectl wait --for=condition=Ready node/{{ inventory_hostname }}
+            --timeout={{ ready_timeout }}s
+          delegate_to: localhost
+          changed_when: false
 
-    - name: Uncordon node
-      ansible.builtin.command: kubectl uncordon {{ inventory_hostname }}
-      delegate_to: localhost
-      changed_when: true
+        - name: Mark node as ready
+          ansible.builtin.set_fact:
+            node_ready: true
+
+        - name: Uncordon node
+          ansible.builtin.command: kubectl uncordon {{ inventory_hostname }}
+          delegate_to: localhost
+          changed_when: true
+
+      rescue:
+        # Restore scheduling capacity so the cluster isn't left with a cordoned
+        # node. The operator should still verify node health before re-running.
+        # Only uncordon if the block failed before the normal uncordon ran.
+        - name: Uncordon node on failure
+          when: not (node_ready | default(false))
+          ansible.builtin.command: kubectl uncordon {{ inventory_hostname }}
+          delegate_to: localhost
+          changed_when: true
+
+        - name: Abort reboot sequence
+          ansible.builtin.fail:
+            msg: >-
+              Reboot sequence failed for {{ inventory_hostname }}. Node has
+              been uncordoned; verify its health before re-running.

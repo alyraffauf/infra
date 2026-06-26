@@ -1,0 +1,26 @@
+---
+- name: "[{{ client_spec.slug }}] Download logo"
+  ansible.builtin.get_url:
+    url: "{{ client_spec.logoUrl }}"
+    # Pocket ID rejects uploads without a file extension.
+    dest: "/tmp/oidc-logo-{{ client_spec.slug }}.{{ client_spec.logoUrl | split('.') | last }}"
+    mode: "0644"
+  register: logo_download_result
+
+# ansible.builtin.uri's form-multipart can't handle binary file content
+# (treats it as a UTF-8 string), so shell out to curl.
+- name: "[{{ client_spec.slug }}] POST logo to Pocket ID"
+  ansible.builtin.command:
+    argv:
+      - curl
+      - --silent
+      - --show-error
+      - --fail
+      - -X
+      - POST
+      - -H
+      - "X-API-KEY: {{ pocket_id_secrets.admin_api_key }}"
+      - -F
+      - "file=@{{ logo_download_result.dest }}"
+      - "{{ pocket_id_url }}/api/oidc/clients/{{ oidc_client_record.id }}/logo"
+  no_log: true

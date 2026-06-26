@@ -1,0 +1,17 @@
+---
+- name: "[{{ client_spec.slug }}] Create client in Pocket ID"
+  when: oidc_client_record is none
+  ansible.builtin.uri:
+    url: "{{ pocket_id_url }}/api/oidc/clients"
+    method: POST
+    headers:
+      X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
+    body_format: json
+    body: "{{ desired_oidc_client }}"
+    status_code: [200, 201]
+  register: created_oidc_client
+
+- name: "[{{ client_spec.slug }}] Adopt newly created client"
+  when: created_oidc_client is changed
+  ansible.builtin.set_fact:
+    oidc_client_record: "{{ created_oidc_client.json }}"

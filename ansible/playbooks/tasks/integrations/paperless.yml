@@ -6,8 +6,8 @@
         APPS:
           - provider_id: pocket-id
             name: cute.haus
-            client_id: "{{ client_credentials_by_slug[client_spec.slug].client_id }}"
-            secret: "{{ client_credentials_by_slug[client_spec.slug].client_secret }}"
+            client_id: "{{ oidc_client_credentials.client_id }}"
+            secret: "{{ oidc_client_credentials.client_secret }}"
             settings:
               server_url: "{{ pocket_id_url }}/.well-known/openid-configuration"
         OAUTH_PKCE_ENABLED: true

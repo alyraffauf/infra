@@ -19,7 +19,8 @@
 
 - name: "[forgejo] Pick a pod"
   ansible.builtin.set_fact:
-    forgejo_pod: "{{ forgejo_pods.resources[0].metadata.name }}"
+    forgejo_pod: >-
+      {{ (forgejo_pods.resources | map(attribute='metadata') | map(attribute='name') | list | sort)[0] }}
 
 - name: "[forgejo] List auth sources"
   kubernetes.core.k8s_exec:
@@ -29,15 +30,25 @@
   register: forgejo_auth_list
 
 # Output is a whitespace-aligned table: `<id> <name> <type> <enabled>`.
-# Find the row whose name is cute.haus and take its first column (the ID).
+# cute.haus only appears in the name column; the ID is that row's first token.
+- name: "[forgejo] Find cute.haus auth source rows"
+  ansible.builtin.set_fact:
+    forgejo_matching_rows: >-
+      {{ forgejo_auth_list.stdout_lines | select('search', '^\s*\d+\s+cute\.haus\s') | list }}
+
+- name: "[forgejo] Fail on duplicate cute.haus auth sources"
+  when: (forgejo_matching_rows | length) > 1
+  ansible.builtin.fail:
+    msg: >-
+      Found {{ forgejo_matching_rows | length }} auth sources named cute.haus
+      in forgejo — expected at most one. Resolve duplicates manually.
+
 - name: "[forgejo] Extract cute.haus auth source ID (empty if absent)"
   ansible.builtin.set_fact:
     forgejo_source_id: >-
       {{
-        (forgejo_auth_list.stdout_lines
-          | select('search', '\scute\.haus\s')
+        (forgejo_matching_rows | first | default('')).split()
           | first | default('')
-        ).split() | first | default('')
       }}
 
 # Explicit empty strings clear fields that update-oauth's cli.IsSet semantics
@@ -47,8 +58,8 @@
     forgejo_oauth_flags: >-
       --name 'cute.haus'
       --provider 'openidConnect'
-      --key '{{ client_credentials_by_slug[client_spec.slug].client_id }}'
-      --secret '{{ client_credentials_by_slug[client_spec.slug].client_secret }}'
+      --key '{{ oidc_client_credentials.client_id }}'
+      --secret '{{ oidc_client_credentials.client_secret }}'
       --auto-discover-url '{{ pocket_id_url }}/.well-known/openid-configuration'
       --scopes 'openid profile email'
       --group-claim-name ''

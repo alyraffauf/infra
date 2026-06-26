@@ -6,6 +6,7 @@
       X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
     return_content: true
   register: app_config_response
+  check_mode: false
 
 - name: Flatten current config (list → dict)
   ansible.builtin.set_fact:

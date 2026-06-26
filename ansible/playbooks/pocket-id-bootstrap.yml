@@ -1,5 +1,13 @@
 ---
-# Reconciles Pocket ID app config + OIDC clients + per-app integrations.
+# Reconciles Pocket ID application config + OIDC clients + per-app integrations.
+#
+# To add a new OIDC client:
+#   1. Append an entry to vars/oidc-clients.yml.
+#   2. If the app runs in k3s and needs its credentials wired in, add a task
+#      file under tasks/integrations/<integration>.yml and set
+#      `integration: <integration>` on the client.
+#   3. If the app is configured elsewhere (NixOS, manual UI), omit
+#      `integration`; the oidc-client-<slug> K8s Secret still holds the creds.
 # Requires an admin API key in secrets/pocket-id.yaml.
 - name: Bootstrap Pocket ID
   hosts: localhost
@@ -9,6 +17,7 @@
   vars:
     pocket_id_url: https://id.cute.haus
     k8s_namespace: default
+    oidc_client_list_limit: 200
 
   vars_files:
     - vars/pocket-id.yml
@@ -25,20 +34,21 @@
 
     - name: List existing OIDC clients
       ansible.builtin.uri:
-        url: "{{ pocket_id_url }}/api/oidc/clients?pagination[limit]=200"
+        url: "{{ pocket_id_url }}/api/oidc/clients?pagination[limit]={{ oidc_client_list_limit }}"
         headers:
           X-API-KEY: "{{ pocket_id_secrets.admin_api_key }}"
         return_content: true
-      register: existing_response
+      register: existing_clients_response
+      check_mode: false
 
     - name: Index existing clients by name
       ansible.builtin.set_fact:
-        existing_clients: >-
+        existing_clients_by_name: >-
           {{
             dict(
-              (existing_response.json.data | default([]))
+              (existing_clients_response.json.data | default([]))
               | map(attribute='name')
-              | zip(existing_response.json.data | default([]))
+              | zip(existing_clients_response.json.data | default([]))
             )
           }}
 
@@ -55,3 +65,5 @@
       loop_control:
         loop_var: client_spec
         label: "{{ client_spec.integration }}"
+      vars:
+        oidc_client_credentials: "{{ oidc_client_credentials_by_slug[client_spec.slug] }}"
