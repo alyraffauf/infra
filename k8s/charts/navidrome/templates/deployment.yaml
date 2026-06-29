@@ -56,6 +56,8 @@ spec:
               value: "/data"
             - name: ND_MUSICFOLDER
               value: "/mnt/Media/Music"
+            - name: ND_LYRICSPRIORITY
+              value: ".lrc,nd-lyrics,.txt,embedded"
             - name: ND_DEFAULTTHEME
               value: "Auto"
             - name: ND_ENABLEUSEREDITING
