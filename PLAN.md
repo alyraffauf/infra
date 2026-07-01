@@ -175,6 +175,7 @@
       ```bash
       kustomize build k8s/flux/system
       kustomize build k8s/flux/sources
+      kustomize build k8s/flux/secrets
       kustomize build k8s/flux/infra-crds
       kustomize build k8s/flux/infra-core
       kustomize build k8s/flux/platform

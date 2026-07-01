@@ -1,0 +1,23 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager-issuers
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cert-manager
+  interval: 15m
+  releaseName: cert-manager-issuers
+  targetNamespace: cert-manager
+  chart:
+    spec:
+      chart: ./k8s/charts/cert-manager-issuers
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml

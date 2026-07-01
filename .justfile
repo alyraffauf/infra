@@ -178,7 +178,7 @@ sops-edit FILE:
 [group('kubes')]
 check:
     bun scripts/check.ts
-    for dir in k8s/flux/system k8s/flux/sources k8s/flux/infra-crds k8s/flux/infra-core k8s/flux/platform k8s/flux/apps k8s/flux/external-routes; do kubectl kustomize "$dir" >/dev/null; done
+    for dir in k8s/flux/system k8s/flux/sources k8s/flux/secrets k8s/flux/infra-crds k8s/flux/infra-core k8s/flux/platform k8s/flux/apps k8s/flux/external-routes; do kubectl kustomize "$dir" >/dev/null; done
     nix flake check --impure
 
 # Bump a digest-pinned chart image to its current upstream digest.

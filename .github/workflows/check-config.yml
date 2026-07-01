@@ -57,6 +57,7 @@ jobs:
           for dir in \
             k8s/flux/system \
             k8s/flux/sources \
+            k8s/flux/secrets \
             k8s/flux/infra-crds \
             k8s/flux/infra-core \
             k8s/flux/platform \

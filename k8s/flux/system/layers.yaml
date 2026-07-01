@@ -14,11 +14,30 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-crds
+  name: secrets
   namespace: flux-system
 spec:
   dependsOn:
     - name: sources
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  interval: 15m
+  path: ./k8s/flux/secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-crds
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: secrets
   interval: 15m
   path: ./k8s/flux/infra-crds
   prune: true
