@@ -30,7 +30,7 @@ spec:
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: docker.io/collabora/code:latest@sha256:75859dc9f9084d1877ce36cf96ec86600f495bade33289c9cbc27e0a0ee23b81
+          image: docker.io/collabora/code:latest@sha256:fece3a479b4ca57e7186d0c715155526170e337deef55bbbbbc79ee93b0e72e1
           imagePullPolicy: IfNotPresent
           # MKNOD is required for Collabora's per-document chroot jails.
           securityContext:
