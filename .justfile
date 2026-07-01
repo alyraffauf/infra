@@ -181,6 +181,13 @@ check:
     for dir in k8s/flux/system k8s/flux/sources k8s/flux/secrets k8s/flux/infra-crds k8s/flux/infra-core k8s/flux/platform k8s/flux/apps k8s/flux/external-routes; do kubectl kustomize "$dir" >/dev/null; done
     nix flake check --impure
 
+# Render every HelmRelease the way Flux does (resolving valuesFrom), like CI.
+# flux-local isn't packaged in nixpkgs; run it via uv (uses the devShell's
+# kustomize/helm/flux binaries).
+[group('kubes')]
+flux-test:
+    uvx flux-local@8.3.0 test --enable-helm --path k8s/flux
+
 # Bump a digest-pinned chart image to its current upstream digest.
 # Usage: just bump <chart> | just bump --all | just bump --check
 [group('kubes')]
@@ -203,23 +210,35 @@ k8s action release namespace='default' hr_namespace='flux-system':
       fi
     }
 
+    # Render the cute-haus-global values to a temp file — the same ConfigMap
+    # Flux feeds every chart via valuesFrom, so local apply/diff match runtime.
+    global_values() {
+      local out; out="$(mktemp)"
+      kubectl kustomize k8s/flux/sources \
+        | yq e 'select(.kind == "ConfigMap" and .metadata.name == "cute-haus-global") | .data["values.yaml"]' - \
+        > "$out"
+      echo "$out"
+    }
+
     case "{{action}}" in
       apply)
         if [[ ! -f "$chart/Chart.yaml" ]]; then
           echo "just k8s apply supports local charts only: $chart/Chart.yaml not found" >&2
           exit 2
         fi
+        values="$(global_values)"; trap 'rm -f "$values"' EXIT
         flux_cmd suspend helmrelease "{{release}}" -n "{{hr_namespace}}" || true
         helm upgrade --install "{{release}}" "$chart" \
-          -n "{{namespace}}" -f k8s/values/global.yaml
+          -n "{{namespace}}" -f "$values"
         ;;
       diff)
         if [[ ! -f "$chart/Chart.yaml" ]]; then
           echo "just k8s diff supports local charts only: $chart/Chart.yaml not found" >&2
           exit 2
         fi
+        values="$(global_values)"; trap 'rm -f "$values"' EXIT
         helm diff upgrade --allow-unreleased "{{release}}" "$chart" \
-          -n "{{namespace}}" -f k8s/values/global.yaml
+          -n "{{namespace}}" -f "$values"
         ;;
       suspend)
         flux_cmd suspend helmrelease "{{release}}" -n "{{hr_namespace}}"

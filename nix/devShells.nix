@@ -35,6 +35,8 @@
           sops
           ssh-to-age
           opentofu
+          uv # runs flux-local (not packaged in nixpkgs) via `just flux-test`
+          yq-go # extracts cute-haus-global values for `just k8s apply/diff`
         ])
         # ++ lib.attrValues config.treefmt.build.programs
         ++ [

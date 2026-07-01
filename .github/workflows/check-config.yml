@@ -32,15 +32,25 @@ jobs:
       - uses: actions/checkout@v7
         with: { fetch-depth: 1 }
       - uses: azure/setup-helm@v5
-      - name: helm template each local chart
+      - uses: azure/setup-kubectl@v4
+      - name: helm template each local chart with the generated global values
         run: |
-          set -e
+          set -euo pipefail
+          # Source the same cute-haus-global values Flux feeds charts via
+          # valuesFrom, straight from the generated ConfigMap — no plain values
+          # file to drift. Full valuesFrom-resolving render lives in local
+          # `just flux-test`; it can't run in public CI because decrypting the
+          # SOPS secrets layer risks leaking plaintext into public logs.
+          values="$(mktemp)"
+          kubectl kustomize k8s/flux/sources \
+            | yq e 'select(.kind == "ConfigMap" and .metadata.name == "cute-haus-global") | .data["values.yaml"]' - \
+            > "$values"
           for chart in k8s/charts/*/; do
             name="$(basename "$chart")"
             [[ "$name" == "common" ]] && continue
             echo "::group::$name"
             helm dependency update "$chart" >/dev/null
-            helm template "$chart" -f k8s/values/global.yaml >/dev/null
+            helm template "$chart" -f "$values" >/dev/null
             echo "::endgroup::"
           done
 
