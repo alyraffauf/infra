@@ -38,9 +38,7 @@
     {
       "description": "Shared image pins in the global values file (the cute-haus-global ConfigMap is generated from it)",
       "customType": "regex",
-      "managerFilePatterns": [
-        "/^k8s/flux/sources/global\\.values\\.ya?ml$/"
-      ],
+      "managerFilePatterns": ["/^k8s/flux/sources/global\\.values\\.ya?ml$/"],
       "matchStrings": [
         "\\s+\\w+:\\s+(?<depName>[^:\\s]+(?:/[^:\\s]+)*):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
       ],
