@@ -11,6 +11,7 @@ spec:
     spec:
       chart: ./k8s/charts/error-pages
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -33,6 +34,7 @@ spec:
     spec:
       chart: ./k8s/charts/aly-codes
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -55,6 +57,7 @@ spec:
     spec:
       chart: ./k8s/charts/switchyard
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -77,6 +80,7 @@ spec:
     spec:
       chart: ./k8s/charts/audiobookshelf
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -99,6 +103,7 @@ spec:
     spec:
       chart: ./k8s/charts/morsels
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -121,6 +126,7 @@ spec:
     spec:
       chart: ./k8s/charts/ombi
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -143,6 +149,7 @@ spec:
     spec:
       chart: ./k8s/charts/pocket-id
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -165,6 +172,7 @@ spec:
     spec:
       chart: ./k8s/charts/forward-auth
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -190,6 +198,7 @@ spec:
     spec:
       chart: ./k8s/charts/immich
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -212,6 +221,7 @@ spec:
     spec:
       chart: ./k8s/charts/jellyfin
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -234,6 +244,7 @@ spec:
     spec:
       chart: ./k8s/charts/plex
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -258,6 +269,7 @@ spec:
     spec:
       chart: ./k8s/charts/navidrome
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -280,6 +292,7 @@ spec:
     spec:
       chart: ./k8s/charts/paperless
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -302,6 +315,7 @@ spec:
     spec:
       chart: ./k8s/charts/nextcloud
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -324,6 +338,7 @@ spec:
     spec:
       chart: ./k8s/charts/collabora
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -346,6 +361,7 @@ spec:
     spec:
       chart: ./k8s/charts/uptime-kuma
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -368,6 +384,7 @@ spec:
     spec:
       chart: ./k8s/charts/vaultwarden
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -390,6 +407,7 @@ spec:
     spec:
       chart: ./k8s/charts/forgejo
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
@@ -412,6 +430,7 @@ spec:
     spec:
       chart: ./k8s/charts/tranquil-pds
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus

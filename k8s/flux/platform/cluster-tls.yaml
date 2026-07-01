@@ -11,6 +11,7 @@ spec:
     spec:
       chart: ./k8s/charts/cluster-tls
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus

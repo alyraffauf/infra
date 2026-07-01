@@ -13,6 +13,7 @@ spec:
     spec:
       chart: ./k8s/charts/cert-manager-issuers
       interval: 15m
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: cute-haus
