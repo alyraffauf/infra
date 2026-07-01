@@ -29,7 +29,7 @@ spec:
               app: {{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/alyraffauf/watsup:latest@sha256:b48a78756c7b56552cbba0424d98117e620fd209b57c0156c76295a1089f0a03
+          image: ghcr.io/alyraffauf/watsup:latest@sha256:5d9eb676ef70ff5efff29234e78c5b23df27cbeea434c155a369bbbfdc36f9cf
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
