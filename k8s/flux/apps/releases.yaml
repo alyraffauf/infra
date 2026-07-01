@@ -1,0 +1,422 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: error-pages
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: error-pages
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/error-pages
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: aly-codes
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: aly-codes
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/aly-codes
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: switchyard
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: switchyard
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/switchyard
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: audiobookshelf
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: audiobookshelf
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/audiobookshelf
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: morsels
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: morsels
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/morsels
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ombi
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: ombi
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/ombi
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pocket-id
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: pocket-id
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/pocket-id
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forward-auth
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: forward-auth
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/forward-auth
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+  values:
+    apps:
+      navidrome: {}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: immich
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/immich
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: jellyfin
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: jellyfin
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/jellyfin
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: plex
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: plex
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/plex
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: navidrome
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: forward-auth
+  interval: 15m
+  releaseName: navidrome
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/navidrome
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: paperless
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: paperless
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/paperless
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nextcloud
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: nextcloud
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/nextcloud
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: collabora
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: collabora
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/collabora
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: uptime-kuma
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: uptime-kuma
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/uptime-kuma
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vaultwarden
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: vaultwarden
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/vaultwarden
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forgejo
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: forgejo
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/forgejo
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tranquil-pds
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: tranquil-pds
+  targetNamespace: default
+  chart:
+    spec:
+      chart: ./k8s/charts/tranquil-pds
+      interval: 15m
+      sourceRef:
+        kind: GitRepository
+        name: cute-haus
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml
