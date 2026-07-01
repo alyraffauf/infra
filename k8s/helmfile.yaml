@@ -185,7 +185,7 @@ releases:
     namespace: monitoring
     createNamespace: true
     chart: prometheus-community/prometheus
-    version: 29.13.0
+    version: 29.13.1
     needs:
       - longhorn-system/longhorn
     values:
