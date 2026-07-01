@@ -13,7 +13,7 @@ visible in the app chart.
 charts/
 ├── aly-codes/              # Static site (aly.codes)
 ├── audiobookshelf/         # Audiobook library with rclone-mounted media
-├── bluesky-pds/            # Reference atproto Personal Data Server
+├── tranquil-pds/           # Reference atproto Personal Data Server
 ├── cert-manager-issuers/   # Let's Encrypt ClusterIssuer + wildcard Certificates
 ├── cluster-tls/            # Cloudflare Origin TLS Secrets per domain
 ├── external-routes/        # Ingress + Service + EndpointSlice for off-cluster targets

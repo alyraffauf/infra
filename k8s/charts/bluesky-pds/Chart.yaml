@@ -1,5 +1,0 @@
-apiVersion: v2
-name: bluesky-pds
-description: Bluesky PDS — atproto Personal Data Server
-type: application
-version: 0.1.0
