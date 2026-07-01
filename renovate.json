@@ -9,13 +9,13 @@
     "enabled": true
   },
 
+  "helmrelease": {
+    "managerFilePatterns": ["/^k8s/flux/.*\\.ya?ml$/"]
+  },
+
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
-  },
-
-  "helmfile": {
-    "managerFilePatterns": ["/k8s/helmfile\\.yaml$/"]
   },
 
   "customManagers": [
@@ -32,6 +32,18 @@
       "managerFilePatterns": ["/^k8s/charts/.*\\.ya?ml$/"],
       "matchStrings": [
         "repository:\\s+[\"']?(?<depName>[^\\s\"']+)[\"']?\\s+tag:\\s+[\"']?(?<currentValue>[^\\s\"'@]+)@(?<currentDigest>sha256:[a-f0-9]{64})[\"']?"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Shared image pins in values/global.yaml and the Flux ConfigMap mirror",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^k8s/values/global\\.ya?ml$/",
+        "/^k8s/flux/sources/global-configmap\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "\\s+\\w+:\\s+(?<depName>[^:\\s]+(?:/[^:\\s]+)*):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
       ],
       "datasourceTemplate": "docker"
     },
