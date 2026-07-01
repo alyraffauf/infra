@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flux-layer-infra-core-placeholder
+  namespace: flux-system
+  labels:
+    cute.haus/flux-layer-placeholder: "true"
+data:
+  note: Remove this placeholder when infra-core has real resources.

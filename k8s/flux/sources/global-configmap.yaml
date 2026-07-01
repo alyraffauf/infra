@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cute-haus-global
+  annotations:
+    cute.haus/secret-policy: non-secret-values-only
+data:
+  values.yaml: |
+    # Shared operational constants and OCI image pins. Secret-like values must
+    # live in k8s/flux/secrets/*.sops.yaml, not this ConfigMap.
+    global:
+      images:
+        alpine: docker.io/library/alpine:3.24@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+        rclone: rclone/rclone:1.74@sha256:623378ad0ff3ebd5cebf77720843c0e02edfe46e2d5b5ac6bed54c6371780dfb
+
+      failover:
+        # Fast eviction when a node goes NotReady/Unreachable. Mirrors the
+        # app-pod toleration so CNPG and stateful workloads fail over quickly.
+        fastTolerationSeconds: 60

@@ -44,6 +44,29 @@ jobs:
             echo "::endgroup::"
           done
 
+  flux-kustomize:
+    name: flux kustomize build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 1 }
+      - uses: azure/setup-kubectl@v4
+      - name: kubectl kustomize each flux layer
+        run: |
+          set -e
+          for dir in \
+            k8s/flux/system \
+            k8s/flux/sources \
+            k8s/flux/infra-crds \
+            k8s/flux/infra-core \
+            k8s/flux/platform \
+            k8s/flux/apps \
+            k8s/flux/external-routes; do
+            echo "::group::$dir"
+            kubectl kustomize "$dir" >/dev/null
+            echo "::endgroup::"
+          done
+
   ansible-syntax:
     name: ansible playbook syntax
     runs-on: ubuntu-latest

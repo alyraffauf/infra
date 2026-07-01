@@ -1,0 +1,87 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: sources
+  namespace: flux-system
+spec:
+  interval: 15m
+  path: ./k8s/flux/sources
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-crds
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: sources
+  interval: 15m
+  path: ./k8s/flux/infra-crds
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-core
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: infra-crds
+  interval: 15m
+  path: ./k8s/flux/infra-core
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: platform
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: infra-core
+  interval: 15m
+  path: ./k8s/flux/platform
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: platform
+  interval: 15m
+  path: ./k8s/flux/apps
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: external-routes
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: apps
+  interval: 15m
+  path: ./k8s/flux/external-routes
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system

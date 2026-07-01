@@ -24,9 +24,11 @@
           age
           ansibleWithK8s
           bun
+          fluxcd
           git
           helmfile
           just
+          kustomize
           kubectl
           helmWithDiff
           nh

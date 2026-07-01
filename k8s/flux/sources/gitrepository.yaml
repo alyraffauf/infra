@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: cute-haus
+spec:
+  interval: 15m
+  ref:
+    branch: master
+  url: https://github.com/alyraffauf/cute.haus

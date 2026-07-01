@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flux-layer-external-routes-placeholder
+  namespace: flux-system
+  labels:
+    cute.haus/flux-layer-placeholder: "true"
+data:
+  note: Remove this placeholder when external-routes has real resources.
