@@ -18,3 +18,12 @@ wildcards:
   - name: aly-codes-tls
     namespace: default
     domain: aly.codes
+  - name: cute-haus-tls
+    namespace: websites
+    domain: cute.haus
+  - name: aly-codes-tls
+    namespace: websites
+    domain: aly.codes
+  - name: morsels-blue-tls
+    namespace: websites
+    domain: morsels.blue

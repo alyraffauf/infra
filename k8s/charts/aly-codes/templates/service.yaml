@@ -5,10 +5,9 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: {{ .Chart.Name }}
   ports:
     - name: http
       port: 80
-      nodePort: 8282

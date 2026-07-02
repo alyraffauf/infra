@@ -33,7 +33,7 @@ spec:
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/alyraffauf/morsels:latest@sha256:e58cd4de9fa605ce945ef184d729f288e5b2d4dafc7a7f4b495ddb12dd3610bf
+          image: ghcr.io/alyraffauf/morsels:latest@sha256:a16a51a3571deffe9c372aa604e78694c9bb1d75201ce903a4c8f19ec42a39a0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -43,8 +43,8 @@ spec:
               cpu: 10m
               memory: 128Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: "1"
+              memory: 1Gi
           volumeMounts:
             - name: data
               mountPath: /data
