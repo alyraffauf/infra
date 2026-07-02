@@ -55,7 +55,7 @@ spec:
               app: {{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/alyraffauf/slingshot:latest@sha256:5458987ef70f555d411cfba4ca66a606fe131f97af619327551f1aa3546dbaa4
+          image: ghcr.io/alyraffauf/slingshot:latest@sha256:b78c20871547cf738011c69e6d968993990a03e97c854f6f7540f300882a475d
           imagePullPolicy: IfNotPresent
           env:
             - name: SLINGSHOT_JETSTREAM
