@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-forward-auth-navidrome@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-forward-auth-navidrome@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
@@ -31,7 +31,7 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-{{ .Chart.Name }}-drop-auth-header@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Chart.Name }}-drop-auth-header@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:

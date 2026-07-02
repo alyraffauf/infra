@@ -2,7 +2,6 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: error-pages
-  namespace: default
 spec:
   errors:
     status:
