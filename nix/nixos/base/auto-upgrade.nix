@@ -19,12 +19,13 @@
       system.autoUpgrade = {
         enable = true;
         allowReboot = true;
+        dates = lib.mkDefault "02:00";
         flags = ["--accept-flake-config"];
         flake = config.myFlakeUrl;
         operation = lib.mkDefault "switch";
-        dates = lib.mkDefault "02:00";
-        randomizedDelaySec = lib.mkDefault "0";
         persistent = true;
+        randomizedDelaySec = lib.mkDefault "0";
+        runGarbageCollection = true;
 
         rebootWindow = {
           lower = "02:00";
