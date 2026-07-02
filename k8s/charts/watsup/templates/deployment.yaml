@@ -22,6 +22,12 @@ spec:
       dnsPolicy: Default
       topologySpreadConstraints:
         - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: {{ .Chart.Name }}
+        - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
