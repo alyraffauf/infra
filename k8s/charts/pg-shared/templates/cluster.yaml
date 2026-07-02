@@ -17,7 +17,7 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: {{ .Values.cluster.topologyKey }}
-    # Soft preference: cloud (100) > home (50, default).
+    # Soft preference: cloud providers (100) > home (50, default).
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
@@ -25,7 +25,7 @@ spec:
             matchExpressions:
               - key: topology.kubernetes.io/zone
                 operator: In
-                values: [cloud]
+                values: [cloud-ovhcloud, cloud-netcup]
         - weight: 50
           preference:
             matchExpressions:
