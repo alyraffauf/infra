@@ -60,6 +60,12 @@ spec:
               port: http
             periodSeconds: 5
             failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            failureThreshold: 5
       volumes:
         - name: data
           persistentVolumeClaim:

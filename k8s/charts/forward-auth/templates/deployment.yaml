@@ -67,4 +67,24 @@ spec:
                 name: forward-auth-{{ $key }}-oidc-env
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
+          # No dedicated health endpoint; unauthenticated GET / returns a 3xx
+          # redirect, which httpGet probes treat as success.
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            failureThreshold: 5
 {{- end }}
