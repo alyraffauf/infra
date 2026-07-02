@@ -7,3 +7,4 @@ resources:
   - pg-shared.yaml
   - tika.yaml
   - valkey.yaml
+  - valkey-nextcloud.yaml

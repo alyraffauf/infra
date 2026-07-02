@@ -12,6 +12,9 @@ wildcards:
   - name: cute-haus-tls
     namespace: default
     domain: cute.haus
+  - name: cute-haus-tls
+    namespace: nextcloud
+    domain: cute.haus
   - name: aly-social-tls
     namespace: default
     domain: aly.social
