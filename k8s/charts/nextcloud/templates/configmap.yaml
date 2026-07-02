@@ -19,7 +19,7 @@ data:
   POSTGRES_DB: "nextcloud"
   POSTGRES_USER: "nextcloud"
 
-  REDIS_HOST: "valkey.default.svc"
+  REDIS_HOST: "valkey.nextcloud.svc"
   REDIS_HOST_PORT: "6379"
 
   OBJECTSTORE_S3_BUCKET: "aly-nextcloud"

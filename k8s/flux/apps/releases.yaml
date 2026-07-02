@@ -388,7 +388,7 @@ metadata:
 spec:
   interval: 15m
   releaseName: nextcloud
-  targetNamespace: default
+  targetNamespace: nextcloud
   install:
     remediation:
       retries: 3

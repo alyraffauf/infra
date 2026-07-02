@@ -74,3 +74,6 @@ oidc_clients:
     isPublic: false
     pkceEnabled: true
     integration: nextcloud
+    # nextcloud runs in its own namespace; write the SSO env Secret and
+    # restart the Deployment there instead of the playbook default.
+    namespace: nextcloud
