@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 15m
-  releaseName: valkey
+  releaseName: valkey-nextcloud
   targetNamespace: nextcloud
   install:
     remediation:
