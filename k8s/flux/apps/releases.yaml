@@ -582,3 +582,32 @@ spec:
     - kind: ConfigMap
       name: cute-haus-global
       valuesKey: values.yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: slingshot
+  namespace: flux-system
+spec:
+  interval: 15m
+  releaseName: slingshot
+  targetNamespace: microcosm
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  chart:
+    spec:
+      chart: ./k8s/charts/slingshot
+      interval: 15m
+      reconcileStrategy: Revision
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: cute-haus-global
+      valuesKey: values.yaml

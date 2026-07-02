@@ -27,3 +27,6 @@ wildcards:
   - name: morsels-blue-tls
     namespace: websites
     domain: morsels.blue
+  - name: cute-haus-tls
+    namespace: microcosm
+    domain: cute.haus

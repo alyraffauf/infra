@@ -1,0 +1,5 @@
+apiVersion: v2
+name: slingshot
+description: Slingshot (atproto record edge cache, microcosm-rs)
+type: application
+version: 0.1.0
