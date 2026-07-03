@@ -35,7 +35,7 @@ spec:
         kubernetes.io/hostname: jubilife
       containers:
         - name: immich
-          image: ghcr.io/immich-app/immich-server:v3.0.0@sha256:685ba5c93337058ff8a189d3ed89f0ba470ef966b1c94d2eace1a3d991f9816e
+          image: ghcr.io/immich-app/immich-server:v3.0.1@sha256:46dedfc5848f7313bd6b584ea9f2648057430307aad6de56de968f6710a72cae
           imagePullPolicy: IfNotPresent
           env:
             - name: DB_HOSTNAME
