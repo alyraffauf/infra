@@ -47,6 +47,8 @@ spec:
               value: "us-east-005"
             - name: BLOB_STORAGE_BACKEND
               value: "s3"
+            - name: CACHE_BACKEND
+              value: "valkey"
             - name: CRAWLERS
               value: "https://bsky.network"
             # - name: DATABASE_ACQUIRE_TIMEOUT_SECS
@@ -89,6 +91,8 @@ spec:
               value: "true"
             - name: SSO_OIDC_ISSUER
               value: "https://id.cute.haus"
+            - name: VALKEY_URL
+              value: "redis://valkey.default.svc:6379/5"
           envFrom:
             - secretRef:
                 name: tranquil-pds-env
