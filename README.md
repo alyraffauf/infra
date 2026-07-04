@@ -2,7 +2,7 @@
 
 Welcome to **cute.haus**!
 
-This repository contains NixOS configurations, along with whatever custom modules and packages required for [cute.haus](https://cute.haus), my production infrasture running on NixOS and Kubernetes.
+This repository contains NixOS, K8s, and Ansible configurations, along with whatever custom modules and packages required for [cute.haus](https://cute.haus), my production infrastructure running NixOS+Kubernetes.
 
 ---
 
@@ -33,11 +33,5 @@ This repository contains NixOS configurations, along with whatever custom module
 ## 📜 License
 
 This repository is licensed under the **[GNU General Public License](LICENSE.md)**.
-
----
-
-## ⭐ Stargazers Over Time
-
-[![Stargazers over time](https://starchart.cc/alyraffauf/cute.haus.svg?variant=adaptive)](https://starchart.cc/alyraffauf/cute.haus)
 
 ---
