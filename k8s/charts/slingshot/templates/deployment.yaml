@@ -1,15 +1,13 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
   labels:
     app: {{ .Chart.Name }}
 spec:
-  replicas: 2
-  serviceName: {{ .Chart.Name }}-headless
-  # Cache replicas are independent (each keeps its own foyer cache + jetstream
-  # firehose), so start them together rather than one-at-a-time.
-  podManagementPolicy: Parallel
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
@@ -28,8 +26,6 @@ spec:
         runAsNonRoot: true
         runAsUser: 65532
         runAsGroup: 65532
-        # The PVC mounts over /cache as root; fsGroup makes it writable by the
-        # nonroot (65532) user the image runs as.
         fsGroup: 65532
       tolerations:
         - key: node.kubernetes.io/not-ready
@@ -40,19 +36,6 @@ spec:
           operator: Exists
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: topology.kubernetes.io/zone
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app: {{ .Chart.Name }}
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app: {{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
           image: ghcr.io/alyraffauf/slingshot:latest@sha256:4acbb9db9571a9a10d66aa6001120ce20eb0e0d67ed869b0829459558afbca72
@@ -83,7 +66,7 @@ spec:
           # No HTTP health route exists; --healthcheck is an outbound ping. A TCP
           # probe is the right readiness signal. The identity cache also needs a
           # high fd limit (~4096); containerd's default (~1048576) is plenty, but
-          # if a node were misconfigured low the pod crashes here — loudly — on
+          # if a node were misconfigured low the pod crashes here - loudly - on
           # "Too many open files", which is exactly what this startupProbe surfaces.
           startupProbe:
             tcpSocket:
@@ -101,14 +84,8 @@ spec:
           volumeMounts:
             - name: cache
               mountPath: /cache
-  volumeClaimTemplates:
-    - metadata:
-        name: cache
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: longhorn
-        resources:
-          requests:
+      volumes:
+        - name: cache
+          emptyDir:
             # Headroom over the 4+2 GB record/identity disk caches above.
-            storage: 8Gi
+            sizeLimit: 8Gi

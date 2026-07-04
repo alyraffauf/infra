@@ -12,20 +12,3 @@ spec:
     - name: http
       port: 80
       targetPort: http
----
-# Headless service backing the StatefulSet (stable per-pod DNS).
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Chart.Name }}-headless
-  labels:
-    app: {{ .Chart.Name }}
-spec:
-  type: ClusterIP
-  clusterIP: None
-  selector:
-    app: {{ .Chart.Name }}
-  ports:
-    - name: http
-      port: 8080
-      targetPort: http
