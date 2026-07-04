@@ -13,6 +13,9 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
