@@ -27,6 +27,13 @@ spec:
     alloy:
       clustering:
         enabled: true
+      resources:
+        requests:
+          cpu: 50m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 768Mi
       configMap:
         content: |
           discovery.kubernetes "pods" {
