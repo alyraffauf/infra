@@ -33,6 +33,7 @@ spec:
       concurrentReplicaRebuildPerNodeLimit: 3
       nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
       allowRecurringJobWhileVolumeDetached: true
+      nodeDrainPolicy: block-for-eviction
     defaultBackupStore:
       backupTarget: s3://aly-backups@us-east-005/cute.haus/longhorn
       backupTargetCredentialSecret: longhorn-b2
