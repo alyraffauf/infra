@@ -34,9 +34,9 @@ spec:
         evaluation_interval: 30s
       persistentVolume:
         storageClass: longhorn
-        size: 20Gi
+        size: 40Gi
       retention: 30d
-      retentionSize: 15GB
+      retentionSize: 18GB
       service:
         type: NodePort
         nodePort: 30220
