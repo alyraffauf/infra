@@ -10,6 +10,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5.0"
     }
+    tailscale = {
+      source  = "tailscale/tailscale"
+      version = "~> 0.29"
+    }
   }
 
   # State in B2 alongside CNPG + Longhorn backups. Auth via AWS_ACCESS_KEY_ID /
@@ -45,4 +49,9 @@ provider "cloudflare" {
 
 provider "b2" {
   # Reads B2_APPLICATION_KEY_ID and B2_APPLICATION_KEY from the environment.
+}
+
+provider "tailscale" {
+  # Reads TAILSCALE_API_KEY from the environment (API key in
+  # secrets/tailscale-api.yaml, decrypted by direnv).
 }
