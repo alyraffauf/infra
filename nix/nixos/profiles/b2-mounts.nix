@@ -42,9 +42,6 @@
         device = "b2:${remote}";
         fsType = "rclone";
         options = b2Options ++ b2ProfileOptions.${profile};
-        unitConfig = {
-          StartLimitIntervalSec = "0";
-        };
       };
     };
 
@@ -101,6 +98,16 @@
         })
         cfg.shares))
       allShares));
+
+      systemd.mounts =
+        builtins.foldl' (a: b: a // b) {}
+        (map (share: {
+          "/mnt/Backblaze/${share}" = {
+            unitConfig = {
+              StartLimitIntervalSec = "0";
+            };
+          };
+        }) cfg.shares);
 
       systemd.services.b2-mount-health = let
         healthScript = pkgs.writeShellScript "b2-mount-health" ''
