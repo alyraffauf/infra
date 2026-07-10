@@ -6,7 +6,7 @@
   }: {
     options.myFlakeUrl = lib.mkOption {
       type = lib.types.str;
-      default = "github:alyraffauf/cute.haus";
+      default = "github:alyraffauf/infra";
       description = "Default flake URL for this NixOS configuration.";
     };
 
