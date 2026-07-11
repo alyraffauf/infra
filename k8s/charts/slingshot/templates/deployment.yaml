@@ -38,7 +38,7 @@ spec:
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/alyraffauf/slingshot:latest@sha256:4acbb9db9571a9a10d66aa6001120ce20eb0e0d67ed869b0829459558afbca72
+          image: ghcr.io/alyraffauf/slingshot:latest@sha256:24d0777f1beedb946c4b2a06410a55cea75ff883430cc7629a18336207f212f7
           imagePullPolicy: IfNotPresent
           env:
             - name: SLINGSHOT_JETSTREAM
