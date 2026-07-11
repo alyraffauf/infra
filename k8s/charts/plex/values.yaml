@@ -9,7 +9,7 @@ plugins:
     - name: Hama.bundle
       repo: ZeroQI/Hama.bundle
       branch: master
-      rev: 81f72eb4bcc2d362ba6beea0f64abb976a30689c
+      rev: 2250fabb1dbc6d3209baa204e308b2d0fb239029
   # The repo's "Scanners/" subtree is merged into the Plex "Scanners/" dir.
   scanners:
     - repo: ZeroQI/Absolute-Series-Scanner
