@@ -35,7 +35,7 @@ spec:
         kubernetes.io/hostname: jubilife
       containers:
         - name: immich-ml
-          image: ghcr.io/immich-app/immich-machine-learning:v3.0.2-openvino@sha256:b817bc467a8f28a2b2150ae2f09845e80b5c9b59ea8832cef8f775c9ff77173c
+          image: ghcr.io/immich-app/immich-machine-learning:v3.0.3-openvino@sha256:d46dfbc0e190d22c6d8faa18ae2e51f2aa5e8ead942ea76f1bb0b420af9504fe
           imagePullPolicy: IfNotPresent
           env:
             - name: MACHINE_LEARNING_CACHE_FOLDER
