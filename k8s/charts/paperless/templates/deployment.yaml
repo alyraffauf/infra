@@ -21,6 +21,8 @@ spec:
       terminationGracePeriodSeconds: 30
       securityContext:
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       tolerations:
         - key: node.kubernetes.io/not-ready
           operator: Exists
