@@ -43,7 +43,7 @@ spec:
               app: {{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/alyraffauf/aly.codes:latest@sha256:87b5a31340c49b5f82d307959f375f5c8dbbc6f7cdd6736c039e1874a8ee5386
+          image: ghcr.io/alyraffauf/aly.codes:latest@sha256:28d6099439dd192afafe33e05746b3d52e933820fe238b0f57fb77433b4c9419
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
