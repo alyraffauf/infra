@@ -393,6 +393,7 @@ spec:
     remediation:
       retries: 3
   upgrade:
+    timeout: 30m
     remediation:
       retries: 3
   chart:
