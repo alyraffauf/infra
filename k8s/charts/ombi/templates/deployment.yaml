@@ -34,7 +34,7 @@ spec:
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: lscr.io/linuxserver/ombi:latest@sha256:a2885063ab868d944169f3c6bd9e601e6a4e6891b966bd628740508690e2dfb1
+          image: lscr.io/linuxserver/ombi:latest@sha256:be76ec2c9376186b37354e5e2bbe62d6d7776d509aeb00223eb5024e36a8615c
           imagePullPolicy: IfNotPresent
           env:
             - name: PUID
