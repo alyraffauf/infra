@@ -61,7 +61,7 @@ spec:
               memory: 64Mi
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:fef384c955d2ec2acf1bd0882ffc195ecc170266c803dfe28b79df6deabb3569
+          image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:17312f00bac06f8dad09d67c6c8c069fc5c076c0c22313241c673102dfaf8ee9
           imagePullPolicy: IfNotPresent
           env:
             - name: PAPERLESS_ACCOUNT_DEFAULT_GROUP
