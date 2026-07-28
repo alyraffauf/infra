@@ -226,7 +226,8 @@ k8s action release namespace='default' hr_namespace='flux-system':
           echo "just k8s apply supports local charts only: $chart/Chart.yaml not found" >&2
           exit 2
         fi
-        values="$(global_values)"; trap 'rm -f "$values"' EXIT
+        values="$(global_values)"
+        trap 'status=$?; rm -f "$values"; flux_cmd resume helmrelease "{{release}}" -n "{{hr_namespace}}" || true; exit "$status"' EXIT
         flux_cmd suspend helmrelease "{{release}}" -n "{{hr_namespace}}" || true
         helm upgrade --install "{{release}}" "$chart" \
           -n "{{namespace}}" -f "$values"
