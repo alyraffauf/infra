@@ -388,12 +388,6 @@ in {
                 encode zstd gzip
                 reverse_proxy petalburg:9119
               '';
-
-              "hermes.${tnet}:9119".extraConfig = ''
-                bind tailscale/hermes:9119
-                encode zstd gzip
-                reverse_proxy petalburg:9119
-              '';
             };
           };
 
