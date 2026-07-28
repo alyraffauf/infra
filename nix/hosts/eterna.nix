@@ -382,6 +382,12 @@ in {
                 encode zstd gzip
                 reverse_proxy eterna:3020
               '';
+
+              "hermes.${tnet}".extraConfig = ''
+                bind tailscale/hermes
+                encode zstd gzip
+                reverse_proxy petalburg:9119
+              '';
             };
           };
 
