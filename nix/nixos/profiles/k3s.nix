@@ -67,7 +67,12 @@
           serverAddr = lib.mkIf (cfg.serverAddr != null) cfg.serverAddr;
           tokenFile = config.sops.secrets.k3s.path;
           extraFlags =
-            ["--flannel-iface=tailscale0"]
+            [
+              "--flannel-iface=tailscale0"
+              # Keep image storage below Longhorn's 75% disk-use ceiling.
+              "--kubelet-arg=image-gc-high-threshold=70"
+              "--kubelet-arg=image-gc-low-threshold=65"
+            ]
             ++ lib.optionals (cfg.role == "server") (
               [
                 "--service-node-port-range=8000-32767"
