@@ -48,7 +48,16 @@
    sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 --wipe-slot=tpm2 /dev/nvme0n1p2
    ```
 
-   Replace `/dev/nvme0n1p2` with your root partition.
+   Replace `/dev/nvme0n1p2` with your root partition. This policy binds the LUKS key to:
+   - PCR 0: core platform firmware;
+   - PCR 2: UEFI drivers and option ROMs loaded by the firmware;
+   - PCR 7: the Secure Boot state and trust policy;
+   - PCR 12: initrd global credentials and other boot configuration measured by the platform.
+
+   PCR measurements are platform-dependent. Firmware or device changes can affect PCRs 0 and 2, Secure Boot key or policy changes can affect PCR 7, and NixOS or systemd updates that alter initrd global credentials can affect PCR 12. If any selected PCR differs, automatic unlock fails and the system falls back to the LUKS recovery passphrase. Always retain and test a recovery passphrase, especially on unattended systems.
+
+   PCR 4 measures the bootloader and selected Lanzaboote EFI image. It provides stronger binding to a specific boot image, but its literal value changes when a new image is installed. Do not add PCR 4 to a static `systemd-cryptenroll --tpm2-pcrs=` policy if boot-image updates must remain unattended; managing multiple approved boot measurements requires a managed PCR policy.
+
    Check the [Linux TPM PCR Registry](https://uapi-group.org/specifications/specs/linux_tpm_pcr_registry/) for more details.
 
-   **NOTE:** This requires a TPM2 module, devices with prior versions will not work.
+   **NOTE:** This requires a TPM2 module; devices with prior TPM versions will not work.
