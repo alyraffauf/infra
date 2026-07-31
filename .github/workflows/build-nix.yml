@@ -33,6 +33,10 @@ jobs:
 name: build-nix
 'on':
   pull_request:
+    paths:
+    - flake.lock
+    - flake.nix
+    - flake/
   push:
     branches:
     - master

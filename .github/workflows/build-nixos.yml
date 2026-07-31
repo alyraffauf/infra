@@ -77,10 +77,13 @@ jobs:
 name: build-nixos
 'on':
   pull_request:
+    paths-ignore:
+      - k8s/**
   push:
     branches:
     - master
     paths-ignore:
+    - k8s/**
     - '**/*.md'
     - .github/**
     - _img/**
