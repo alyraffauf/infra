@@ -7,7 +7,7 @@ spec:
   interval: 15m0s
   ref:
     branch: master
-  url: https://github.com/alyraffauf/cute.haus
+  url: https://github.com/alyraffauf/infra
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

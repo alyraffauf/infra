@@ -34,7 +34,7 @@ spec:
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: data.forgejo.org/forgejo/forgejo:15@sha256:55bb42bec9abef5223744804f164e37d37b20df7e8b8b4807ba213ad4f071d6d
+          image: data.forgejo.org/forgejo/forgejo:16.0.2@sha256:2fdfe28b5c68f82f49580e227b84e2afb43af0250e0631a54a386ef3b1d9b759
           imagePullPolicy: IfNotPresent
           env:
             - name: FORGEJO_CUSTOM
