@@ -3,7 +3,7 @@
 global:
   images:
     alpine: docker.io/library/alpine:3.24@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
-    rclone: rclone/rclone:1.74@sha256:c61954aaa32328a5486715dd063a81c7879f5195ad3505cd362deddd509dc4a1
+    rclone: rclone/rclone:1.75@sha256:b06aed988cf5967de7c25be5925240983981c757f4ed1ac9d2fa659d51d60548
 
   failover:
     # Fast eviction when a node goes NotReady/Unreachable. Mirrors the
