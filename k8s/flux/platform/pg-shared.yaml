@@ -30,8 +30,10 @@ spec:
     backup:
       enabled: true
     roles:
+      # Cleanup tombstone: remove after CNPG reports the database and role absent.
       forgejo:
         database: forgejo
+        ensure: absent
       tranquil:
         database: tranquil
       pocket-id:

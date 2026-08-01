@@ -35,7 +35,8 @@ postgresql:
     effective_io_concurrency: "200"
 
 # Declarative CNPG roles + databases. Password Secrets are first-class SOPS
-# manifests under k8s/flux/secrets and are referenced by role name.
+# manifests under k8s/flux/secrets and are referenced by roles that are present.
+# Set ensure: absent temporarily to delete a database and its role explicitly.
 roles: {}
 
 # B2 backup target for CNPG base backups + WAL archiving.

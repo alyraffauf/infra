@@ -8,6 +8,7 @@ metadata:
 spec:
   name: {{ $db }}
   owner: {{ $name }}
+  ensure: {{ $role.ensure | default "present" }}
   cluster:
     name: {{ $.Values.cluster.name }}
 {{- end }}

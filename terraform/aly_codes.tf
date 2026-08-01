@@ -1,7 +1,6 @@
 locals {
   aly_codes_ingress_hosts = toset([
     "aly.codes",
-    "git.aly.codes",
     "status.aly.codes",
     "switchyard.aly.codes",
     "vibes.aly.codes",
@@ -16,17 +15,6 @@ resource "cloudflare_dns_record" "aly_codes_a" {
   type     = "A"
   content  = local.hosts.pastoria
   proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "aly_codes_ssh_a" {
-  zone_id  = local.zones.aly_codes
-  name     = "ssh.aly.codes"
-  type     = "A"
-  content  = local.hosts.pastoria
-  proxied  = false
   ttl      = 1
   tags     = []
   settings = {}

@@ -6,14 +6,12 @@ locals {
     "cute.haus"                = true
     "id.cute.haus"             = true
     "immich.cute.haus"         = false
-    "jellyfin.cute.haus"       = false
     "kuma.cute.haus"           = true
     "navidrome.cute.haus"      = true
     "nextcloud.cute.haus"      = false
     "ombi.cute.haus"           = true
     "paperless.cute.haus"      = false
     "pds.cute.haus"            = false
-    "seerr.cute.haus"          = true
     "photoprism.cute.haus"     = false
     "plex.cute.haus"           = false
     "slingshot.cute.haus"      = true

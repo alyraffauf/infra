@@ -59,12 +59,15 @@ spec:
   {{- with .Values.roles }}
   managed:
     roles:
-      {{- range $name, $_ := . }}
+      {{- range $name, $role := . }}
+      {{- $ensure := $role.ensure | default "present" }}
       - name: {{ $name }}
-        ensure: present
+        ensure: {{ $ensure }}
+        {{- if ne $ensure "absent" }}
         login: true
         passwordSecret:
           name: {{ $name }}-pg-creds
+        {{- end }}
       {{- end }}
   {{- end }}
 

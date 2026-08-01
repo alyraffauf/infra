@@ -1,14 +1,4 @@
 oidc_clients:
-  - slug: forgejo
-    name: Forgejo
-    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/forgejo.png
-    launchURL: https://git.aly.codes/
-    callbackURLs:
-      - https://git.aly.codes/user/oauth2/cute.haus/callback
-    isPublic: false
-    pkceEnabled: true
-    integration: forgejo
-
   - slug: tranquil
     name: Tranquil
     launchURL: https://pds.cute.haus/

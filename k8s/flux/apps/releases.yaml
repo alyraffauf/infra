@@ -175,35 +175,6 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: seerr
-  namespace: flux-system
-spec:
-  interval: 15m
-  releaseName: seerr
-  targetNamespace: default
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
-  chart:
-    spec:
-      chart: ./k8s/charts/seerr
-      interval: 15m
-      reconcileStrategy: Revision
-      sourceRef:
-        kind: GitRepository
-        name: flux-system
-        namespace: flux-system
-  valuesFrom:
-    - kind: ConfigMap
-      name: cute-haus-global
-      valuesKey: values.yaml
----
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
   name: pocket-id
   namespace: flux-system
 spec:
@@ -280,35 +251,6 @@ spec:
   chart:
     spec:
       chart: ./k8s/charts/immich
-      interval: 15m
-      reconcileStrategy: Revision
-      sourceRef:
-        kind: GitRepository
-        name: flux-system
-        namespace: flux-system
-  valuesFrom:
-    - kind: ConfigMap
-      name: cute-haus-global
-      valuesKey: values.yaml
----
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
-  name: jellyfin
-  namespace: flux-system
-spec:
-  interval: 15m
-  releaseName: jellyfin
-  targetNamespace: default
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
-  chart:
-    spec:
-      chart: ./k8s/charts/jellyfin
       interval: 15m
       reconcileStrategy: Revision
       sourceRef:
@@ -515,35 +457,6 @@ spec:
   chart:
     spec:
       chart: ./k8s/charts/vaultwarden
-      interval: 15m
-      reconcileStrategy: Revision
-      sourceRef:
-        kind: GitRepository
-        name: flux-system
-        namespace: flux-system
-  valuesFrom:
-    - kind: ConfigMap
-      name: cute-haus-global
-      valuesKey: values.yaml
----
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
-  name: forgejo
-  namespace: flux-system
-spec:
-  interval: 15m
-  releaseName: forgejo
-  targetNamespace: default
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
-  chart:
-    spec:
-      chart: ./k8s/charts/forgejo
       interval: 15m
       reconcileStrategy: Revision
       sourceRef:
