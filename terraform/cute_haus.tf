@@ -1,6 +1,5 @@
 locals {
   cute_haus_ingress = {
-    "audiobookshelf.cute.haus" = true
     "auth-navidrome.cute.haus" = true
     "collabora.cute.haus"      = false
     "cute.haus"                = true

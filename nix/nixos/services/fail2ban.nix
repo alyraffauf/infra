@@ -1,13 +1,6 @@
 {
   flake.modules.nixos.fail2ban = {config, ...}: {
     environment.etc = {
-      "fail2ban/filter.d/audiobookshelf.conf".text = ''
-        [Definition]
-        failregex = \[.*\] ERROR: \[Auth\] Failed login attempt for username \".*\" from ip <HOST> \(User not found\)
-        ignoreregex =
-        journalmatch = _SYSTEMD_UNIT=audiobookshelf.service
-      '';
-
       "fail2ban/filter.d/forgejo.conf".text = ''
         [Definition]
         failregex =  .*(Failed authentication attempt|invalid credentials|Attempted access of unknown user).* from <HOST>
@@ -69,14 +62,6 @@
       bantime-increment.enable = true;
 
       jails = {
-        audiobookshelf = ''
-          enabled = true
-          backend = systemd
-          filter = audiobookshelf
-          maxretry = 2
-          port = 80,443,${toString config.services.audiobookshelf.port}
-        '';
-
         couchdb = ''
           enabled = true
           filter = couchdb

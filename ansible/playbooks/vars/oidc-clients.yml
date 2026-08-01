@@ -34,19 +34,6 @@ oidc_clients:
     isPublic: false
     pkceEnabled: true
 
-  # In k3s, but OIDC is configured in the audiobookshelf admin UI (not env),
-  # so no integration task runs. The oidc-client-audiobookshelf K8s Secret
-  # holds creds for manual entry.
-  - slug: audiobookshelf
-    name: Audiobookshelf
-    logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/audiobookshelf.png
-    launchURL: https://audiobookshelf.cute.haus/
-    callbackURLs:
-      - https://audiobookshelf.cute.haus/audiobookshelf/auth/openid/callback
-      - https://audiobookshelf.cute.haus/audiobookshelf/auth/openid/mobile-redirect
-    isPublic: false
-    pkceEnabled: true
-
   - slug: paperless
     name: Paperless
     logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/paperless-ngx.png
