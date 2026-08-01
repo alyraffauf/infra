@@ -46,10 +46,10 @@ resource "tailscale_acl" "tailnet" {
 
       "ssh": [
         {
-          "action": "accept",
-          "src":    ["autogroup:member"],
-          "dst":    ["autogroup:self"],
+          "src":    ["autogroup:member", "aly@passkey"],
+          "dst":    ["autogroup:self", "autogroup:tagged"],
           "users":  ["autogroup:nonroot", "root"],
+          "action": "accept",
         },
         {
           "action": "accept",
@@ -62,7 +62,10 @@ resource "tailscale_acl" "tailnet" {
       "tagOwners": {
         "tag:k8s":    ["autogroup:admin"],
         "tag:cypher": ["autogroup:owner"],
+        "tag:hermes": ["autogroup:admin"],
       },
+
+      "grants": [],
     }
   EOT
 }
