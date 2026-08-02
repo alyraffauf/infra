@@ -254,15 +254,6 @@ in {
             };
           };
 
-          sops = {
-            secrets = {
-              photoprismAdminPass = {
-                sopsFile = ../../secrets/photoprism.yaml;
-                key = "ADMIN_PASSWORD";
-              };
-            };
-          };
-
           networking.firewall = {
             allowedTCPPorts =
               [6881]
