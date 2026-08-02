@@ -361,36 +361,7 @@ in {
 
       # services
       {
-        services = {
-          caddy = {
-            email = "alyraffauf@fastmail.com";
-            virtualHosts = {
-              "grafana.${tnet}".extraConfig = ''
-                bind tailscale/grafana
-                encode zstd gzip
-                reverse_proxy eterna:3010
-              '';
-
-              "loki.${tnet}".extraConfig = ''
-                bind tailscale/loki
-                encode zstd gzip
-                reverse_proxy eterna:3030
-              '';
-
-              "prometheus.${tnet}".extraConfig = ''
-                bind tailscale/prometheus
-                encode zstd gzip
-                reverse_proxy eterna:3020
-              '';
-
-              "hermes.${tnet}".extraConfig = ''
-                bind tailscale/hermes
-                encode zstd gzip
-                reverse_proxy petalburg:9119
-              '';
-            };
-          };
-        };
+        services.caddy.email = "alyraffauf@fastmail.com";
       }
 
       {
