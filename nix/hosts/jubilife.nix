@@ -93,20 +93,6 @@ in {
             hostName = "jubilife";
           };
 
-          # services.udev.extraRules = let
-          #   mkRule = as: lib.concatStringsSep ", " as;
-          #   mkRules = rs: lib.concatStringsSep "\n" rs;
-          # in
-          #   mkRules [
-          #     (mkRule [
-          #       ''ACTION=="add|change"''
-          #       ''SUBSYSTEM=="block"''
-          #       ''KERNEL=="sd[a-z]"''
-          #       ''ATTR{queue/rotational}=="1"''
-          #       ''RUN+="${pkgs.hdparm}/bin/hdparm -B 90 -S 41 /dev/%k"''
-          #     ])
-          #   ];
-
           system.stateVersion = "25.11";
           myDisko.installDrive = "/dev/disk/by-id/nvme-PNY_CS2130_1TB_SSD_PNY211821050701050CC";
 
@@ -169,28 +155,6 @@ in {
         ];
 
         virtualisation.oci-containers.containers = {
-          # arm = {
-          #   autoStart = true;
-          #   image = "automaticrippingmachine/automatic-ripping-machine:latest";
-          #   ports = ["8181:8080"];
-
-          #   volumes = [
-          #     "/mnt/Data/arm/home:/home/arm"
-          #     "/mnt/Data/arm/config:/etc/arm/config"
-          #   ];
-
-          #   extraOptions = [
-          #     # Needed for ARM to work correctly - by default `CAP_SYS_ADMIN` is dropped
-          #     # which blocks `mount()` calls within the container
-          #     # This is needed in order to `mount /dev/sr0 /mnt/dev/sr0` for ripping, which may be avoidable by
-          #     # handling mounts outside of the container, and having `/mnt/dev` bind mounted into the container.
-          #     "--privileged"
-          #     # Pass the CD/Bluray/DVD drive to the container
-          #     "--device=/dev/sr0:/dev/sr0"
-          #     "--pull=always"
-          #   ];
-          # };
-
           dizquetv = {
             image = "vexorian/dizquetv:latest";
             extraOptions = ["--pull=always"];
@@ -282,10 +246,6 @@ in {
                 "${dataDirectory}/immich/upload"
                 "${dataDirectory}/immich/backups"
               ];
-            };
-
-            jellyfin = {
-              paths = ["${dataDirectory}/jellyfin"];
             };
 
             plex = {
@@ -383,19 +343,6 @@ in {
                 /mnt/Data 100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,fsid=0) ${k3sPodCidr}(rw,sync,no_subtree_check,no_root_squash,fsid=0)
                 /mnt/Media 100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,fsid=1) ${k3sPodCidr}(rw,sync,no_subtree_check,no_root_squash,fsid=1)
               '';
-            };
-
-            ollama = {
-              enable = true;
-              host = "0.0.0.0";
-
-              loadModels = [
-                "gemma3:12b"
-                "gemma3:4b"
-                "nomic-embed-text"
-              ];
-
-              openFirewall = true;
             };
 
             samba = {
