@@ -390,28 +390,6 @@ in {
               '';
             };
           };
-
-          karakeep = {
-            enable = false;
-
-            extraEnvironment = rec {
-              DISABLE_NEW_RELEASE_CHECK = "true";
-              DISABLE_SIGNUPS = "true";
-              INFERENCE_CONTEXT_LENGTH = "128000";
-              INFERENCE_EMBEDDING_MODEL = "nomic-embed-text";
-              INFERENCE_ENABLE_AUTO_SUMMARIZATION = "true";
-              INFERENCE_IMAGE_MODEL = "gemma3:4b";
-              INFERENCE_JOB_TIMEOUT_SEC = "600";
-              INFERENCE_LANG = "english";
-              INFERENCE_TEXT_MODEL = INFERENCE_IMAGE_MODEL;
-              NEXTAUTH_URL = "https://karakeep.cute.haus";
-              OLLAMA_BASE_URL = "https://ollama.${tnet}";
-              OLLAMA_KEEP_ALIVE = "5m";
-              PORT = "7020";
-            };
-          };
-
-          meilisearch.settings.experimental_dumpless_upgrade = true;
         };
       }
 
