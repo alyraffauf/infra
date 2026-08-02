@@ -287,56 +287,6 @@ in {
           };
 
           services = {
-            caddy.virtualHosts = {
-              "bazarr.${tnet}".extraConfig = ''
-                bind tailscale/bazarr
-                encode zstd gzip
-                reverse_proxy jubilife:6767
-              '';
-
-              "lidarr.${tnet}".extraConfig = ''
-                bind tailscale/lidarr
-                encode zstd gzip
-                reverse_proxy jubilife:8686
-              '';
-
-              "ollama.${tnet}".extraConfig = ''
-                bind tailscale/ollama
-                encode zstd gzip
-                reverse_proxy jubilife:11434
-              '';
-
-              "prowlarr.${tnet}".extraConfig = ''
-                bind tailscale/prowlarr
-                encode zstd gzip
-                reverse_proxy jubilife:9696
-              '';
-
-              "qbittorrent.${tnet}".extraConfig = ''
-                bind tailscale/qbittorrent
-                encode zstd gzip
-                reverse_proxy jubilife:8080
-              '';
-
-              "radarr.${tnet}".extraConfig = ''
-                bind tailscale/radarr
-                encode zstd gzip
-                reverse_proxy jubilife:7878
-              '';
-
-              "sonarr.${tnet}".extraConfig = ''
-                bind tailscale/sonarr
-                encode zstd gzip
-                reverse_proxy jubilife:8989
-              '';
-
-              "tautulli.${tnet}".extraConfig = ''
-                bind tailscale/tautulli
-                encode zstd gzip
-                reverse_proxy jubilife:8181
-              '';
-            };
-
             nfs.server = {
               enable = true;
               exports = ''
