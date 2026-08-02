@@ -51,21 +51,28 @@ resource "tailscale_acl" "tailnet" {
           "users":  ["autogroup:nonroot", "root"],
           "action": "accept",
         },
-        {
-          "action": "accept",
-          "src":    ["autogroup:member"],
-          "dst":    ["tag:cypher"],
-          "users":  ["root", "autogroup:nonroot"],
-        },
       ],
 
       "tagOwners": {
-        "tag:k8s":    ["autogroup:admin"],
-        "tag:cypher": ["autogroup:owner"],
-        "tag:hermes": ["autogroup:admin"],
+        "tag:k8s":            ["autogroup:admin"],
+        "tag:hermes":         ["autogroup:admin"],
+        "tag:safari-ingress": ["autogroup:admin"],
+        "tag:safari-service": ["autogroup:admin"],
       },
 
-      "grants": [],
+      "autoApprovers": {
+        "services": {
+          "tag:safari-service": ["tag:safari-ingress"],
+        },
+      },
+
+      "grants": [
+        {
+          "src": ["*"],
+          "dst": ["tag:safari-service"],
+          "ip":  ["443"],
+        },
+      ],
     }
   EOT
 }
