@@ -99,6 +99,7 @@ icon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/immich.png"
 [[sections.services]]
 name = "Navidrome"
 url = "https://navidrome.cute.haus"
+healthUrl = "http://navidrome.default.svc.cluster.local/"
 icon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/navidrome.png"
 
 [[sections.services]]
@@ -119,4 +120,5 @@ icon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/uptime-kuma.pn
 [[sections.services]]
 name = "Grafana"
 url = "https://grafana.narwhal-snapper.ts.net/"
+healthUrl = "http://10.254.0.4:3010/api/health"
 icon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/grafana.png"
