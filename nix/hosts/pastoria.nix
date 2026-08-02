@@ -17,6 +17,7 @@
       swap
       tailscale
       vps
+      wireguard-k3s
 
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
@@ -63,6 +64,8 @@
             zone = "cloud";
             ingress = true;
           };
+
+          myWireguardK3s.enable = true;
 
           mySwap.size = 4096;
         }

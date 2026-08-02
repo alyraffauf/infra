@@ -21,6 +21,7 @@
       tailscale
       users-aly
       vps
+      wireguard-k3s
 
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
@@ -67,6 +68,8 @@
             zone = "cloud";
             ingress = true;
           };
+
+          myWireguardK3s.enable = true;
 
           mySyncthing = {
             certFile = config.sops.secrets.syncthingCert.path;
