@@ -19,7 +19,7 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
-      dnsPolicy: Default
+      dnsPolicy: ClusterFirst
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
@@ -35,7 +35,7 @@ spec:
               app: {{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
-          image: ghcr.io/alyraffauf/watsup:latest@sha256:30d77d49816fe2b46246a3f776149d25239dae2683b8be642eed932f16a69b59
+          image: ghcr.io/alyraffauf/watsup:latest@sha256:f28824be43af70f7a163dfa8056b77fadd0fa59f95cad1d713e8cad35c529b18
           imagePullPolicy: IfNotPresent
           env:
             - name: WATSUP_CONFIG_PATH
