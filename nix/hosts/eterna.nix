@@ -77,7 +77,9 @@ in {
 
           myK3s = {
             role = "agent";
-            serverAddr = "https://pastoria:6443";
+            serverAddr = "https://pastoria.cute:6443";
+            transportInterface = "wg-k3s";
+            nodeIP = "10.254.0.4";
             zone = "home";
             ingress = true;
           };

@@ -64,7 +64,9 @@
 
           myK3s = {
             role = "server";
-            serverAddr = "https://pastoria:6443";
+            serverAddr = "https://pastoria.cute:6443";
+            transportInterface = "wg-k3s";
+            nodeIP = "10.254.0.3";
             zone = "cloud";
             ingress = true;
           };
