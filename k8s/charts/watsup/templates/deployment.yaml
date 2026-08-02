@@ -37,6 +37,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: ghcr.io/alyraffauf/watsup:latest@sha256:30d77d49816fe2b46246a3f776149d25239dae2683b8be642eed932f16a69b59
           imagePullPolicy: IfNotPresent
+          env:
+            - name: WATSUP_CONFIG_PATH
+              value: /run/configs/watsup.toml
           ports:
             - name: http
               containerPort: 3000
@@ -59,3 +62,12 @@ spec:
               port: http
             initialDelaySeconds: 2
             periodSeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /run/configs/watsup.toml
+              subPath: watsup.toml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Chart.Name }}-config
