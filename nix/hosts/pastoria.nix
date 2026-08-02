@@ -59,7 +59,7 @@
 
           myK3s = {
             role = "server";
-            serverAddr = "https://eterna:6443";
+            serverAddr = "https://snowpoint:6443";
             zone = "cloud";
             ingress = true;
           };

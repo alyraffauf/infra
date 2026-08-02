@@ -75,8 +75,8 @@ in {
           };
 
           myK3s = {
-            role = "server";
-            clusterInit = true;
+            role = "agent";
+            serverAddr = "https://pastoria:6443";
             zone = "home";
             ingress = true;
           };
