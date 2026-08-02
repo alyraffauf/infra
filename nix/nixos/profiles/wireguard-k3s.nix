@@ -43,7 +43,12 @@
       };
 
       networking = {
-        firewall.allowedUDPPorts = [node.listenPort];
+        firewall = {
+          allowedUDPPorts = [node.listenPort];
+          # k3s control-plane, Flannel, and kubelet traffic use this private
+          # mesh after the transport migration.
+          trustedInterfaces = ["wg-k3s"];
+        };
         hosts =
           lib.mapAttrs' (name: peer: {
             name = peer.address;
