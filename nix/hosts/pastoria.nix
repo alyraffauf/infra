@@ -60,9 +60,7 @@
 
           myK3s = {
             role = "server";
-            serverAddr = "https://snowpoint.cute:6443";
-            transportInterface = "wg-k3s";
-            nodeIP = "10.254.0.2";
+            serverAddr = "https://snowpoint:6443";
             zone = "cloud";
             ingress = true;
           };

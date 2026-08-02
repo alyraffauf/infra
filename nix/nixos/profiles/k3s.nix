@@ -6,10 +6,6 @@
     ...
   }: let
     cfg = config.myK3s;
-    transportService =
-      if cfg.transportInterface == "wg-k3s"
-      then "wireguard-wg-k3s.service"
-      else "tailscaled.service";
   in {
     options.myK3s = {
       role = lib.mkOption {
@@ -32,28 +28,9 @@
         example = "https://solaceon:6443";
       };
 
-      transportInterface = lib.mkOption {
-        type = lib.types.str;
-        default = "tailscale0";
-        description = "Network interface used for k3s node and Flannel traffic.";
-      };
-
-      nodeIP = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        description = "Address k3s advertises for the Kubernetes node.";
-      };
-
       tlsSans = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = [
-          "snowpoint"
-          "pastoria"
-          "jubilife"
-          "snowpoint.cute"
-          "pastoria.cute"
-          "jubilife.cute"
-        ];
+        default = ["snowpoint" "pastoria" "jubilife"];
       };
 
       zone = lib.mkOption {
@@ -91,19 +68,17 @@
           tokenFile = config.sops.secrets.k3s.path;
           extraFlags =
             [
-              "--flannel-iface=${cfg.transportInterface}"
+              "--flannel-iface=tailscale0"
               # Keep image storage below Longhorn's 75% disk-use ceiling.
               "--kubelet-arg=image-gc-high-threshold=70"
               "--kubelet-arg=image-gc-low-threshold=65"
             ]
-            ++ lib.optionals (cfg.nodeIP != null) ["--node-ip=${cfg.nodeIP}"]
             ++ lib.optionals (cfg.role == "server") (
               [
                 "--service-node-port-range=8000-32767"
                 "--disable=traefik"
                 "--disable=servicelb"
               ]
-              ++ lib.optionals (cfg.nodeIP != null) ["--advertise-address=${cfg.nodeIP}"]
               ++ map (san: "--tls-san=${san}") cfg.tlsSans
             )
             ++ lib.optionals cfg.clusterInit ["--write-kubeconfig-mode=644"]
@@ -129,13 +104,13 @@
         ];
 
         services = {
-          # Block k3s startup until its transport interface has an IP. This
-          # prevents Flannel and etcd peer setup from racing at cold boot.
+          # Block k3s startup until tailscale0 has its IP — flannel-iface=tailscale0
+          # otherwise races and etcd peer setup fails on cold boot.
           k3s = {
-            after = [transportService];
-            wants = [transportService];
-            serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-k3s-transport" ''
-              until ${pkgs.iproute2}/bin/ip -4 addr show ${cfg.transportInterface} | grep -q inet; do
+            after = ["tailscaled.service"];
+            wants = ["tailscaled.service"];
+            serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-tailscale0" ''
+              until ${pkgs.iproute2}/bin/ip -4 addr show tailscale0 | grep -q inet; do
                 ${pkgs.coreutils}/bin/sleep 1
               done
             '';
