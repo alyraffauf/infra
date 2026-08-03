@@ -42,6 +42,10 @@ resource "tailscale_acl" "tailnet" {
           "attr":   ["mullvad"],
           "target": ["100.100.102.26"],
         },
+        {
+          "attr":   ["funnel"],
+          "target": ["tag:safari-ingress"],
+        },
       ],
 
       "ssh": [

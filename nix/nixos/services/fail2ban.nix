@@ -57,7 +57,10 @@
 
     services.fail2ban = {
       enable = true;
-      ignoreIP = ["100.64.0.0/10"];
+      ignoreIP = [
+        "10.254.0.0/24"
+        "100.64.0.0/10"
+      ];
       bantime = "24h";
       bantime-increment.enable = true;
 
