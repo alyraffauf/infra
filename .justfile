@@ -41,10 +41,10 @@ update-caddy-tailscale:
 build host:
     nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel
 
-# Deploy hosts with nynx.
+# Deploy hosts with blzrd.
 [group('servers')]
 deploy jobs='':
-    nynx --operation switch {{ if jobs == "" { "" } else { "--jobs " + jobs } }}
+    blzrd switch {{ jobs }}
 
 # Reboot all servers.
 [group('servers')]
@@ -59,7 +59,7 @@ ping:
 # Queue offline deployment & reboot.
 [group('servers')]
 deploy-offline:
-    nynx --operation boot
+    blzrd boot
     just reboot
 
 ############################################################################

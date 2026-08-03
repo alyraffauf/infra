@@ -18,8 +18,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nynx = {
-      url = "github:alyraffauf/nynx";
+    blzrd = {
+      url = "github:alyraffauf/blzrd";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

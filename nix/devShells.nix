@@ -40,7 +40,7 @@
         ])
         # ++ lib.attrValues config.treefmt.build.programs
         ++ [
-          inputs'.nynx.packages.nynx
+          inputs'.blzrd.packages.blzrd
           self'.packages.gen-files
         ]
         ++ lib.optionals pkgs.stdenv.isLinux [
