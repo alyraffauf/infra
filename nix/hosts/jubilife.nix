@@ -151,12 +151,15 @@ in {
         myBackups.jobs.dizquetv.paths = ["/mnt/Data/dizquetv"];
 
         systemd.tmpfiles.rules = [
+          "z /mnt/Data 0755 root root - -"
           "d /mnt/Data/dizquetv 0755 root root"
           "d /mnt/Data/arm/home 0755 1000 1000 - -"
           "d /mnt/Data/arm/config 0755 1000 1000 - -"
           "d /mnt/Data/arm 0755 1000 1000 - -"
           "d /mnt/Data/jellyfin 0700 1000 1000 - -"
           "d /mnt/Data/plex 0755 1000 1000 - -"
+          "d /mnt/Data/nextcloud 0750 root 1000 - -"
+          "d /mnt/Data/nextcloud/objectstore 2770 root 1000 - -"
         ];
 
         virtualisation.oci-containers.containers = {
@@ -252,6 +255,8 @@ in {
                 "${dataDirectory}/immich/backups"
               ];
             };
+
+            nextcloud-objectstore.paths = ["${dataDirectory}/nextcloud/objectstore"];
 
             plex = {
               exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];
