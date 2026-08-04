@@ -33,6 +33,8 @@ spec:
           operator: Exists
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
+      nodeSelector:
+        kubernetes.io/hostname: jubilife
       initContainers:
         - name: wait-deps
           image: {{ .Values.global.images.alpine }}
@@ -140,9 +142,9 @@ spec:
             - name: data
               mountPath: /paperless/consume
               subPath: consume
-            - name: rclone-media
+            - name: data
               mountPath: /paperless/media
-              mountPropagation: HostToContainer
+              subPath: media
           startupProbe:
             httpGet:
               path: /api/
@@ -163,44 +165,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 10
             failureThreshold: 3
-        - name: rclone
-          image: {{ .Values.global.images.rclone }}
-          imagePullPolicy: IfNotPresent
-          args:
-            - mount
-            - "b2:aly-apps/paperless-ngx"
-            - "/paperless/media"
-            - --allow-non-empty
-            - --allow-other
-            - --vfs-cache-mode=full
-            - --vfs-cache-max-age=168h
-            - --vfs-cache-max-size=5G
-            - --dir-cache-time=24h
-            - --poll-interval=0
-            - --transfers=4
-            - --uid=1000
-            - --gid=1000
-            - --umask=022
-            - --log-level=INFO
-          securityContext:
-            privileged: true
-          envFrom:
-            - secretRef:
-                name: paperless-rclone
-          resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-            limits:
-              cpu: "1"
-              memory: 512Mi
-          volumeMounts:
-            - name: rclone-media
-              mountPath: /paperless/media
-              mountPropagation: Bidirectional
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-data
-        - name: rclone-media
-          emptyDir: {}
+            claimName: {{ .Chart.Name }}-local-data
