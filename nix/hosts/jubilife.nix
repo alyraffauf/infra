@@ -240,6 +240,7 @@ in {
           "d /mnt/Data/garage 0750 garage garage - -"
           "d /mnt/Data/garage/meta 0700 garage garage - -"
           "d /mnt/Data/garage/data 0700 garage garage - -"
+          "d /mnt/Data/immich/ml-cache 0755 root root - -"
           "d /mnt/Data/nextcloud/html 0750 33 33 - -"
         ];
 
