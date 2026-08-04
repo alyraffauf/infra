@@ -242,6 +242,10 @@ in {
           "d /mnt/Data/garage/data 0700 garage garage - -"
           "d /mnt/Data/immich/ml-cache 0755 root root - -"
           "d /mnt/Data/nextcloud/html 0750 33 33 - -"
+          "d /mnt/Data/paperless 0750 1000 1000 - -"
+          "d /mnt/Data/paperless/data 0750 1000 1000 - -"
+          "d /mnt/Data/paperless/consume 0750 1000 1000 - -"
+          "d /mnt/Data/paperless/media 0750 1000 1000 - -"
         ];
 
         virtualisation.oci-containers.containers = {
@@ -341,6 +345,8 @@ in {
             garage.paths = ["${dataDirectory}/garage"];
 
             nextcloud.paths = ["${dataDirectory}/nextcloud/html"];
+
+            paperless.paths = ["${dataDirectory}/paperless"];
 
             plex = {
               exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];
