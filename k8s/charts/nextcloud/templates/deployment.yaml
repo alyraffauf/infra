@@ -44,6 +44,8 @@ spec:
             - secretRef:
                 name: {{ .Chart.Name }}-env
             - secretRef:
+                name: {{ .Chart.Name }}-garage-env
+            - secretRef:
                 name: {{ .Chart.Name }}-sso-env
                 optional: true
           ports:
@@ -100,6 +102,8 @@ spec:
                 name: {{ .Chart.Name }}-config
             - secretRef:
                 name: {{ .Chart.Name }}-env
+            - secretRef:
+                name: {{ .Chart.Name }}-garage-env
           resources:
             requests:
               cpu: 50m
