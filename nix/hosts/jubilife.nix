@@ -240,6 +240,7 @@ in {
           "d /mnt/Data/garage 0750 garage garage - -"
           "d /mnt/Data/garage/meta 0700 garage garage - -"
           "d /mnt/Data/garage/data 0700 garage garage - -"
+          "d /mnt/Data/nextcloud/html 0750 33 33 - -"
         ];
 
         virtualisation.oci-containers.containers = {
@@ -337,6 +338,8 @@ in {
             };
 
             garage.paths = ["${dataDirectory}/garage"];
+
+            nextcloud.paths = ["${dataDirectory}/nextcloud/html"];
 
             plex = {
               exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];
