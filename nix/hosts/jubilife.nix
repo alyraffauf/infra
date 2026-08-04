@@ -132,6 +132,24 @@ in {
           };
 
           sops.secrets = {
+            garageNextcloudAccessKey = {
+              sopsFile = ../../secrets/garage.yaml;
+              key = "nextcloud_access_key";
+              owner = "garage";
+              group = "garage";
+            };
+            garageNextcloudSecretKey = {
+              sopsFile = ../../secrets/garage.yaml;
+              key = "nextcloud_secret_key";
+              owner = "garage";
+              group = "garage";
+            };
+            garageRpcSecret = {
+              sopsFile = ../../secrets/garage.yaml;
+              key = "rpc_secret";
+              owner = "garage";
+              group = "garage";
+            };
             syncthingCert = {
               sopsFile = ../../secrets/syncthing.yaml;
               key = "jubilife_cert";
@@ -139,6 +157,67 @@ in {
             syncthingKey = {
               sopsFile = ../../secrets/syncthing.yaml;
               key = "jubilife_key";
+            };
+          };
+
+          sops.templates = {
+            garage-config = {
+              owner = "garage";
+              group = "garage";
+              mode = "0400";
+              content = ''
+                metadata_dir = "${dataDirectory}/garage/meta"
+                data_dir = "${dataDirectory}/garage/data"
+                db_engine = "sqlite"
+                replication_factor = 1
+                rpc_bind_addr = "[::]:3901"
+                rpc_public_addr = "10.254.0.1:3901"
+                rpc_secret = "${config.sops.placeholder.garageRpcSecret}"
+
+                [s3_api]
+                api_bind_addr = "10.254.0.1:3900"
+                s3_region = "garage"
+              '';
+            };
+
+            garage-environment = {
+              owner = "garage";
+              group = "garage";
+              mode = "0400";
+              content = ''
+                GARAGE_CONFIG_FILE=${config.sops.templates.garage-config.path}
+                GARAGE_DEFAULT_ACCESS_KEY=${config.sops.placeholder.garageNextcloudAccessKey}
+                GARAGE_DEFAULT_SECRET_KEY=${config.sops.placeholder.garageNextcloudSecretKey}
+                GARAGE_DEFAULT_BUCKET=aly-nextcloud
+              '';
+            };
+          };
+
+          users = {
+            groups.garage = {};
+            users.garage = {
+              isSystemUser = true;
+              group = "garage";
+            };
+          };
+
+          services.garage = {
+            enable = true;
+            package = pkgs.garage_2;
+            environmentFile = config.sops.templates.garage-environment.path;
+            settings = {
+              metadata_dir = "${dataDirectory}/garage/meta";
+              data_dir = "${dataDirectory}/garage/data";
+            };
+          };
+
+          systemd.services.garage = {
+            after = ["mnt-Data.mount"];
+            requires = ["mnt-Data.mount"];
+            serviceConfig = {
+              DynamicUser = false;
+              User = "garage";
+              Group = "garage";
             };
           };
 
@@ -158,8 +237,9 @@ in {
           "d /mnt/Data/arm 0755 1000 1000 - -"
           "d /mnt/Data/jellyfin 0700 1000 1000 - -"
           "d /mnt/Data/plex 0755 1000 1000 - -"
-          "d /mnt/Data/nextcloud 0750 root 1000 - -"
-          "d /mnt/Data/nextcloud/objectstore 2770 root 1000 - -"
+          "d /mnt/Data/garage 0750 garage garage - -"
+          "d /mnt/Data/garage/meta 0700 garage garage - -"
+          "d /mnt/Data/garage/data 0700 garage garage - -"
         ];
 
         virtualisation.oci-containers.containers = {
@@ -256,7 +336,7 @@ in {
               ];
             };
 
-            nextcloud-objectstore.paths = ["${dataDirectory}/nextcloud/objectstore"];
+            garage.paths = ["${dataDirectory}/garage"];
 
             plex = {
               exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];
@@ -282,6 +362,7 @@ in {
               32414
             ];
             extraInputRules = ''
+              -s ${k3sPodCidr} -p tcp --dport 3900 -j ACCEPT
               -s ${k3sPodCidr} -p tcp --dport 2049 -j ACCEPT
               -s ${k3sPodCidr} -p udp --dport 2049 -j ACCEPT
             '';
