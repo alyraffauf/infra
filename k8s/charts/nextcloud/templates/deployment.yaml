@@ -117,7 +117,7 @@ spec:
       volumes:
         - name: html
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-data
+            claimName: {{ .Chart.Name }}-html
         - name: hooks
           configMap:
             name: {{ .Chart.Name }}-hooks
