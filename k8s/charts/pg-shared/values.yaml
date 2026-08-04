@@ -1,7 +1,7 @@
 cluster:
   name: pg-shared
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:18.4@sha256:2b124b4c9e9710a449b868fc72ae59bcb2907386d48ddb3e7a7f82491ac0d1e1
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.4@sha256:7af186660aead1b948d827ef1c52c20a8d2cb7b2a4089424b8f612e0a61dc2f9
   postgresVersion: 17
 
   # local-path: node-local SSD for low-latency fsync. CNPG handles HA via
