@@ -1,11 +1,15 @@
-{inputs, ...}: {
-  flake.modules.nixos.lanzaboote = {
-    lib,
-    pkgs,
-    ...
-  }: {
-    imports = [inputs.lanzaboote.nixosModules.lanzaboote];
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: {
+  imports = [inputs.lanzaboote.nixosModules.lanzaboote];
 
+  options.myNixOs.program.lanzaboote.enable = lib.mkEnableOption "Lanzaboote secure boot";
+
+  config = lib.mkIf config.myNixOs.program.lanzaboote.enable {
     boot = {
       initrd.systemd.enable = true;
 

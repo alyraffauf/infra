@@ -1,5 +1,4 @@
 {
-  config,
   inputs,
   self,
   ...
@@ -7,28 +6,49 @@
   tnet = "narwhal-snapper.ts.net";
 in {
   flake.nixosConfigurations.eterna = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; [
-      alloy
-      atbbs
-      backups
-      base
-      btrfs
-      caddy
-      data-share
-      fail2ban
-      intel-cpu
-      intel-gpu
-      k3s-node
-      lanzaboote
-      locale-en-us
-      podman
-      prometheus-node
-      swap
-      syncthing
-      tailscale
-      users-aly
-      vps
-      wireguard-k3s
+    specialArgs = {inherit inputs self;};
+
+    modules = [
+      self.nixosModules.myHw
+      self.nixosModules.myNixOs
+
+      {
+        myHw = {
+          intel.cpu.enable = true;
+          intel.gpu.enable = true;
+        };
+
+        myNixOs = {
+          profile = {
+            base.enable = true;
+            backups.enable = true;
+            btrfs.enable = true;
+            dataShare.enable = true;
+            k3s.enable = true;
+            localeEnUs.enable = true;
+            swap.enable = true;
+            vps.enable = true;
+            wireguardK3s.enable = true;
+          };
+
+          program = {
+            lanzaboote.enable = true;
+            podman.enable = true;
+          };
+
+          service = {
+            alloy.enable = true;
+            atbbs.enable = true;
+            caddy.enable = true;
+            fail2ban.enable = true;
+            prometheusNode.enable = true;
+            syncthing.enable = true;
+            tailscale.enable = true;
+          };
+
+          users.aly.enable = true;
+        };
+      }
 
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
@@ -63,19 +83,19 @@ in {
             stateVersion = "25.11";
           };
 
-          myBackups.jobs = {
+          myNixOs.profile.backups.jobs = {
             syncthing-sync = {
               paths = ["/home/aly/sync"];
               repository = "rclone:b2:aly-backups/syncthing/sync";
             };
 
             syncthing-roms = {
-              paths = [config.mySyncthing.romsPath];
+              paths = [config.myNixOs.service.syncthing.romsPath];
               repository = "rclone:b2:aly-backups/syncthing/roms";
             };
           };
 
-          myK3s = {
+          myNixOs.profile.k3s = {
             role = "agent";
             serverAddr = "https://pastoria.cute:6443";
             transportInterface = "wg-k3s";
@@ -84,9 +104,9 @@ in {
             ingress = true;
           };
 
-          myWireguardK3s.enable = true;
+          myNixOs.profile.wireguardK3s.enable = true;
 
-          mySyncthing = {
+          myNixOs.service.syncthing = {
             certFile = config.sops.secrets.syncthingCert.path;
             keyFile = config.sops.secrets.syncthingKey.path;
             user = "aly";
@@ -103,7 +123,7 @@ in {
             };
           };
 
-          myUsers.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
+          myNixOs.users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
 

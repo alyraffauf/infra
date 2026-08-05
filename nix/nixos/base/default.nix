@@ -1,5 +1,12 @@
-{self, ...}: {
-  flake.modules.nixos.base = {
+{
+  config,
+  lib,
+  self,
+  ...
+}: {
+  options.myNixOs.profile.base.enable = lib.mkEnableOption "base system configuration";
+
+  config = lib.mkIf config.myNixOs.profile.base.enable {
     environment.etc."nixos".source = self;
 
     hardware.enableAllFirmware = true;

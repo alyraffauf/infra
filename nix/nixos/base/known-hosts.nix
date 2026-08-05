@@ -1,8 +1,13 @@
-{self, ...}: let
+{
+  config,
+  lib,
+  self,
+  ...
+}: let
   tnet = "narwhal-snapper.ts.net";
   pub = host: "${self}/keys/root_${host}.pub";
 in {
-  flake.modules.nixos.base = {
+  config = lib.mkIf config.myNixOs.profile.base.enable {
     programs.ssh.knownHosts = {
       snowpoint = {
         hostNames = ["snowpoint" "snowpoint.local" "snowpoint.${tnet}" "dewford" "dewford.local" "dewford.${tnet}"];

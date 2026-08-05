@@ -1,31 +1,47 @@
 {
-  config,
   inputs,
   self,
   ...
 }: {
   flake.nixosConfigurations.snowpoint = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; [
-      alloy
-      backups
-      base
-      cachefilesd
-      data-share
-      fail2ban
-      k3s-node
-      locale-en-us
-      media-share
-      prometheus-node
-      swap
-      syncthing
-      tailscale
-      users-aly
-      vps
-      wireguard-k3s
+    specialArgs = {inherit inputs self;};
+
+    modules = [
+      self.nixosModules.myHw
+      self.nixosModules.myNixOs
+      self.nixosModules.myDisko
+
+      {
+        myNixOs = {
+          profile = {
+            backups.enable = true;
+            base.enable = true;
+            dataShare.enable = true;
+            k3s.enable = true;
+            localeEnUs.enable = true;
+            mediaShare.enable = true;
+            swap.enable = true;
+            vps.enable = true;
+            wireguardK3s.enable = true;
+          };
+
+          service = {
+            alloy.enable = true;
+            cachefilesd.enable = true;
+            fail2ban.enable = true;
+            prometheusNode.enable = true;
+            syncthing.enable = true;
+            tailscale.enable = true;
+          };
+
+          users.aly.enable = true;
+        };
+
+        myDisko.profile.lvmExt4.enable = true;
+      }
 
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
-      config.flake.diskoConfigurations.lvm-ext4
       (
         {
           modulesPath,
@@ -62,7 +78,7 @@
           myDisko.installDrive = "/dev/vda";
           system.autoUpgrade.dates = "03:30";
 
-          myK3s = {
+          myNixOs.profile.k3s = {
             role = "server";
             serverAddr = "https://pastoria.cute:6443";
             transportInterface = "wg-k3s";
@@ -71,16 +87,16 @@
             ingress = true;
           };
 
-          myWireguardK3s.enable = true;
+          myNixOs.profile.wireguardK3s.enable = true;
 
-          mySyncthing = {
+          myNixOs.service.syncthing = {
             certFile = config.sops.secrets.syncthingCert.path;
             keyFile = config.sops.secrets.syncthingKey.path;
             syncROMs = false;
             user = "aly";
           };
 
-          myUsers.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
+          myNixOs.users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
 

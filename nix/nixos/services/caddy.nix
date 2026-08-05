@@ -1,9 +1,13 @@
-{self, ...}: {
-  flake.modules.nixos.caddy = {
-    config,
-    pkgs,
-    ...
-  }: {
+{
+  config,
+  lib,
+  pkgs,
+  self,
+  ...
+}: {
+  options.myNixOs.service.caddy.enable = lib.mkEnableOption "Caddy web server";
+
+  config = lib.mkIf config.myNixOs.service.caddy.enable {
     sops.secrets.tailscaleCaddyAuth = {
       sopsFile = "${self}/secrets/tailscale.yaml";
       key = "caddy_auth_env";

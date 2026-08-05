@@ -1,12 +1,15 @@
 {
-  flake.modules.nixos.base = {pkgs, ...}: {
-    config = {
-      mySshKeys.authorizedUsers.root = ["aly"];
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  config = lib.mkIf config.myNixOs.profile.base.enable {
+    mySshKeys.authorizedUsers.root = ["aly"];
 
-      users = {
-        defaultUserShell = pkgs.fish;
-        mutableUsers = false;
-      };
+    users = {
+      defaultUserShell = pkgs.fish;
+      mutableUsers = false;
     };
   };
 }

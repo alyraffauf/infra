@@ -1,9 +1,12 @@
 {
-  flake.modules.nixos.media-share = {
-    config,
-    pkgs,
-    ...
-  }: {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  options.myNixOs.profile.mediaShare.enable = lib.mkEnableOption "NFS media share";
+
+  config = lib.mkIf config.myNixOs.profile.mediaShare.enable {
     assertions = [
       {
         assertion = config.services.tailscale.enable;

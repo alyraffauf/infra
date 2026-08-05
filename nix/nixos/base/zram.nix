@@ -1,5 +1,9 @@
 {
-  flake.modules.nixos.base = {
+  config,
+  lib,
+  ...
+}: {
+  config = lib.mkIf config.myNixOs.profile.base.enable {
     zramSwap = {
       enable = true;
       algorithm = "zstd";

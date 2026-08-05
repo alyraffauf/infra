@@ -1,5 +1,11 @@
 {
-  flake.modules.nixos.fail2ban = {config, ...}: {
+  config,
+  lib,
+  ...
+}: {
+  options.myNixOs.service.fail2ban.enable = lib.mkEnableOption "fail2ban";
+
+  config = lib.mkIf config.myNixOs.service.fail2ban.enable {
     environment.etc = {
       "fail2ban/filter.d/forgejo.conf".text = ''
         [Definition]

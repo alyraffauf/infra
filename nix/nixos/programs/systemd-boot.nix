@@ -1,5 +1,11 @@
 {
-  flake.modules.nixos.systemd-boot = {lib, ...}: {
+  config,
+  lib,
+  ...
+}: {
+  options.myNixOs.program.systemdBoot.enable = lib.mkEnableOption "systemd-boot";
+
+  config = lib.mkIf config.myNixOs.program.systemdBoot.enable {
     boot = {
       initrd.systemd.enable = lib.mkDefault true;
 

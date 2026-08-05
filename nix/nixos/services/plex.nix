@@ -1,80 +1,79 @@
-{inputs, ...}: {
-  flake.modules.nixos = {
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: {
+  options.myNixOs.service = {
     plex = {
-      config,
-      lib,
-      ...
-    }: {
-      options.myPlex.dataDir = lib.mkOption {
+      enable = lib.mkEnableOption "Plex media server";
+      dataDir = lib.mkOption {
         description = "Data directory to use.";
         default = "/var/lib";
         type = lib.types.str;
       };
-
-      config = {
-        services.plex = {
-          enable = true;
-          dataDir = "${config.myPlex.dataDir}/plex";
-
-          extraPlugins = [
-            (builtins.path {
-              name = "Audnexus.bundle";
-              path = inputs.audnexus;
-            })
-            (builtins.path {
-              name = "Hama.bundle";
-              path = inputs.hama;
-            })
-          ];
-
-          extraScanners = [
-            (builtins.path {
-              name = "Absolute-Series-Scanner";
-              path = inputs.absolute;
-            })
-          ];
-
-          openFirewall = true;
-        };
-
-        systemd.services.plex.serviceConfig.TimeoutStopSec = 15;
-      };
     };
 
-    tautulli = {
+    tautulli.enable = lib.mkEnableOption "Tautulli";
+  };
+
+  config = lib.mkMerge [
+    (lib.mkIf config.myNixOs.service.plex.enable {
+      services.plex = {
+        enable = true;
+        dataDir = "${config.myNixOs.service.plex.dataDir}/plex";
+
+        extraPlugins = [
+          (builtins.path {
+            name = "Audnexus.bundle";
+            path = inputs.audnexus;
+          })
+          (builtins.path {
+            name = "Hama.bundle";
+            path = inputs.hama;
+          })
+        ];
+
+        extraScanners = [
+          (builtins.path {
+            name = "Absolute-Series-Scanner";
+            path = inputs.absolute;
+          })
+        ];
+
+        openFirewall = true;
+      };
+
+      systemd.services.plex.serviceConfig.TimeoutStopSec = 15;
+    })
+
+    (lib.mkIf config.myNixOs.service.tautulli.enable {
       services.tautulli = {
         enable = true;
         openFirewall = true;
       };
-    };
+    })
 
-    backups = {
-      config,
-      lib,
-      pkgs,
-      ...
-    }: let
-      stop = service: "${pkgs.systemd}/bin/systemctl stop ${service}";
-      start = service: "${pkgs.systemd}/bin/systemctl start ${service}";
-    in {
-      config.myBackups.jobs = lib.mkMerge [
-        (lib.mkIf config.services.plex.enable {
+    (lib.mkIf config.myNixOs.profile.backups.enable {
+      myNixOs.profile.backups.jobs = lib.mkMerge [
+        (lib.mkIf config.myNixOs.service.plex.enable {
           plex = {
-            backupCleanupCommand = start "plex";
-            backupPrepareCommand = stop "plex";
+            backupCleanupCommand = "${pkgs.systemd}/bin/systemctl start plex";
+            backupPrepareCommand = "${pkgs.systemd}/bin/systemctl stop plex";
             exclude = ["${config.services.plex.dataDir}/Plex Media Server/Plug-in Support/Databases"];
             paths = [config.services.plex.dataDir];
           };
         })
 
-        (lib.mkIf config.services.tautulli.enable {
+        (lib.mkIf config.myNixOs.service.tautulli.enable {
           tautulli = {
-            backupCleanupCommand = start "tautulli";
-            backupPrepareCommand = stop "tautulli";
+            backupCleanupCommand = "${pkgs.systemd}/bin/systemctl start tautulli";
+            backupPrepareCommand = "${pkgs.systemd}/bin/systemctl stop tautulli";
             paths = [config.services.tautulli.dataDir];
           };
         })
       ];
-    };
-  };
+    })
+  ];
 }

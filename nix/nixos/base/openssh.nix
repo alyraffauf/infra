@@ -1,5 +1,9 @@
 {
-  flake.modules.nixos.base = {
+  config,
+  lib,
+  ...
+}: {
+  config = lib.mkIf config.myNixOs.profile.base.enable {
     services.openssh = {
       enable = true;
       openFirewall = true;

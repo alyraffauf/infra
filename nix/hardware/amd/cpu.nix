@@ -1,9 +1,11 @@
 {
-  flake.modules.nixos.amd-cpu = {
-    config,
-    lib,
-    ...
-  }: {
+  config,
+  lib,
+  ...
+}: {
+  options.myHw.amd.cpu.enable = lib.mkEnableOption "AMD CPU support";
+
+  config = lib.mkIf config.myHw.amd.cpu.enable {
     boot = {
       blacklistedKernelModules = ["k10temp"];
       extraModulePackages = with config.boot.kernelPackages; [zenpower];

@@ -1,9 +1,12 @@
 {
-  flake.modules.nixos.data-share = {
-    config,
-    pkgs,
-    ...
-  }: {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  options.myNixOs.profile.dataShare.enable = lib.mkEnableOption "NFS data share";
+
+  config = lib.mkIf config.myNixOs.profile.dataShare.enable {
     assertions = [
       {
         assertion = config.services.tailscale.enable;

@@ -1,27 +1,43 @@
 {
-  config,
   inputs,
   self,
   ...
 }: {
   flake.nixosConfigurations.pastoria = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; [
-      alloy
-      backups
-      base
-      fail2ban
-      k3s-node
-      locale-en-us
-      podman
-      prometheus-node
-      swap
-      tailscale
-      vps
-      wireguard-k3s
+    specialArgs = {inherit inputs self;};
+
+    modules = [
+      self.nixosModules.myHw
+      self.nixosModules.myNixOs
+      self.nixosModules.myDisko
+
+      {
+        myNixOs = {
+          profile = {
+            backups.enable = true;
+            base.enable = true;
+            k3s.enable = true;
+            localeEnUs.enable = true;
+            swap.enable = true;
+            vps.enable = true;
+            wireguardK3s.enable = true;
+          };
+
+          program.podman.enable = true;
+
+          service = {
+            alloy.enable = true;
+            fail2ban.enable = true;
+            prometheusNode.enable = true;
+            tailscale.enable = true;
+          };
+        };
+
+        myDisko.profile.lvmExt4.enable = true;
+      }
 
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
-      config.flake.diskoConfigurations.lvm-ext4
       (
         {
           modulesPath,
@@ -58,7 +74,7 @@
             };
           };
 
-          myK3s = {
+          myNixOs.profile.k3s = {
             role = "server";
             serverAddr = "https://snowpoint.cute:6443";
             transportInterface = "wg-k3s";
@@ -67,9 +83,9 @@
             ingress = true;
           };
 
-          myWireguardK3s.enable = true;
+          myNixOs.profile.wireguardK3s.enable = true;
 
-          mySwap.size = 4096;
+          myNixOs.profile.swap.size = 4096;
         }
       )
 

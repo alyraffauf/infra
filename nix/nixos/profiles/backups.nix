@@ -1,39 +1,42 @@
-{self, ...}: {
-  flake.modules.nixos.backups = {
-    config,
-    lib,
-    ...
-  }: let
-    backupDestination = "rclone:b2:aly-backups/${config.networking.hostName}";
-    mkRepo = service: "${backupDestination}/${service}";
+{
+  config,
+  lib,
+  self,
+  ...
+}: let
+  backupDestination = "rclone:b2:aly-backups/${config.networking.hostName}";
+  mkRepo = service: "${backupDestination}/${service}";
 
-    restic = {
-      extraBackupArgs = [
-        "--cleanup-cache"
-        "--compression max"
-        "--no-scan"
-      ];
+  restic = {
+    extraBackupArgs = [
+      "--cleanup-cache"
+      "--compression max"
+      "--no-scan"
+    ];
 
-      inhibitsSleep = true;
-      initialize = true;
-      passwordFile = config.sops.secrets.restic-passwd.path;
+    inhibitsSleep = true;
+    initialize = true;
+    passwordFile = config.sops.secrets.restic-passwd.path;
 
-      pruneOpts = [
-        "--keep-daily 7"
-        "--keep-weekly 4"
-        "--keep-monthly 3"
-      ];
+    pruneOpts = [
+      "--keep-daily 7"
+      "--keep-weekly 4"
+      "--keep-monthly 3"
+    ];
 
-      rcloneConfigFile = config.sops.secrets.rclone-b2.path;
+    rcloneConfigFile = config.sops.secrets.rclone-b2.path;
 
-      timerConfig = {
-        OnCalendar = "daily";
-        Persistent = true;
-        RandomizedDelaySec = "3h";
-      };
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+      RandomizedDelaySec = "3h";
     };
-  in {
-    options.myBackups.jobs = lib.mkOption {
+  };
+in {
+  options.myNixOs.profile.backups = {
+    enable = lib.mkEnableOption "restic backups";
+
+    jobs = lib.mkOption {
       description = "Restic backup jobs rendered with the shared defaults.";
       default = {};
 
@@ -67,30 +70,30 @@
         };
       }));
     };
+  };
 
-    config = {
-      sops.secrets = {
-        restic-passwd = {
-          sopsFile = "${self}/secrets/restic.yaml";
-          key = "PASSWORD";
-        };
-
-        rclone-b2 = {
-          sopsFile = "${self}/secrets/b2.yaml";
-          key = "rclone_config";
-        };
+  config = lib.mkIf config.myNixOs.profile.backups.enable {
+    sops.secrets = {
+      restic-passwd = {
+        sopsFile = "${self}/secrets/restic.yaml";
+        key = "PASSWORD";
       };
 
-      services.restic.backups = let
-        mkRestic = _: job:
-          restic
-          // {
-            inherit (job) paths repository exclude;
-            backupPrepareCommand = lib.mkIf (job.backupPrepareCommand != null) job.backupPrepareCommand;
-            backupCleanupCommand = lib.mkIf (job.backupCleanupCommand != null) job.backupCleanupCommand;
-          };
-      in
-        lib.mapAttrs mkRestic config.myBackups.jobs;
+      rclone-b2 = {
+        sopsFile = "${self}/secrets/b2.yaml";
+        key = "rclone_config";
+      };
     };
+
+    services.restic.backups = let
+      mkRestic = _: job:
+        restic
+        // {
+          inherit (job) paths repository exclude;
+          backupPrepareCommand = lib.mkIf (job.backupPrepareCommand != null) job.backupPrepareCommand;
+          backupCleanupCommand = lib.mkIf (job.backupCleanupCommand != null) job.backupCleanupCommand;
+        };
+    in
+      lib.mapAttrs mkRestic config.myNixOs.profile.backups.jobs;
   };
 }

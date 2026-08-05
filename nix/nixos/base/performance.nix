@@ -1,5 +1,9 @@
 {
-  flake.modules.nixos.base = {lib, ...}: {
+  config,
+  lib,
+  ...
+}: {
+  config = lib.mkIf config.myNixOs.profile.base.enable {
     boot.kernel.sysctl = {
       "fs.file-max" = lib.mkDefault 2097152;
       "fs.inotify.max_user_instances" = lib.mkOverride 100 8192;

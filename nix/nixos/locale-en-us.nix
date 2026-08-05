@@ -1,5 +1,11 @@
-{lib, ...}: {
-  flake.modules.nixos.locale-en-us = {
+{
+  config,
+  lib,
+  ...
+}: {
+  options.myNixOs.profile.localeEnUs.enable = lib.mkEnableOption "US English locale";
+
+  config = lib.mkIf config.myNixOs.profile.localeEnUs.enable {
     i18n = {
       defaultLocale = lib.mkDefault "en_US.UTF-8";
 

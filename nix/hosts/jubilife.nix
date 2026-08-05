@@ -1,5 +1,4 @@
 {
-  config,
   inputs,
   self,
   ...
@@ -9,34 +8,57 @@
   k3sPodCidr = "10.42.0.0/16";
 in {
   flake.nixosConfigurations.jubilife = inputs.nixpkgs.lib.nixosSystem {
-    modules = with config.flake.modules.nixos; [
-      alloy
-      amd-cpu
-      arr
-      b2-mounts
-      backups
-      base
-      btrfs
-      caddy
-      fail2ban
-      intel-gpu
-      k3s-node
-      lanzaboote
-      locale-en-us
-      podman
-      prometheus-node
-      qbittorrent
-      swap
-      syncthing
-      tailscale
-      tautulli
-      users-aly
-      vps
-      wireguard-k3s
+    specialArgs = {inherit inputs self;};
+
+    modules = [
+      self.nixosModules.myHw
+      self.nixosModules.myNixOs
+      self.nixosModules.myDisko
+
+      {
+        myHw = {
+          amd.cpu.enable = true;
+          intel.gpu.enable = true;
+        };
+
+        myNixOs = {
+          profile = {
+            arr.enable = true;
+            b2Mounts.enable = true;
+            backups.enable = true;
+            base.enable = true;
+            btrfs.enable = true;
+            k3s.enable = true;
+            localeEnUs.enable = true;
+            swap.enable = true;
+            vps.enable = true;
+            wireguardK3s.enable = true;
+          };
+
+          program = {
+            lanzaboote.enable = true;
+            podman.enable = true;
+          };
+
+          service = {
+            alloy.enable = true;
+            caddy.enable = true;
+            fail2ban.enable = true;
+            prometheusNode.enable = true;
+            qbittorrent.enable = true;
+            syncthing.enable = true;
+            tailscale.enable = true;
+            tautulli.enable = true;
+          };
+
+          users.aly.enable = true;
+        };
+
+        myDisko.profile.luksBtrfsSubvolumes.enable = true;
+      }
 
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
-      config.flake.diskoConfigurations.luks-btrfs-subvolumes
       (
         {
           config,
@@ -96,10 +118,10 @@ in {
           system.stateVersion = "25.11";
           myDisko.installDrive = "/dev/disk/by-id/nvme-PNY_CS2130_1TB_SSD_PNY211821050701050CC";
 
-          myArr.dataDir = "/mnt/Data";
+          myNixOs.profile.arr.dataDir = "/mnt/Data";
           system.autoUpgrade.dates = "04:15";
 
-          myB2Mounts = {
+          myNixOs.profile.b2Mounts = {
             cacheDir = "/mnt/Data/.rclone-cache";
             audioCacheSize = "50G";
             audioReadAhead = "3G";
@@ -107,12 +129,7 @@ in {
             videoReadAhead = "5G";
           };
 
-          # myForgejoRunner = {
-          #   dockerContainers = 3;
-          #   nativeRunners = 2;
-          # };
-
-          myK3s = {
+          myNixOs.profile.k3s = {
             role = "server";
             clusterInit = true;
             transportInterface = "wg-k3s";
@@ -120,9 +137,9 @@ in {
             zone = "home";
           };
 
-          myWireguardK3s.enable = true;
+          myNixOs.profile.wireguardK3s.enable = true;
 
-          mySyncthing = {
+          myNixOs.service.syncthing = {
             certFile = config.sops.secrets.syncthingCert.path;
             keyFile = config.sops.secrets.syncthingKey.path;
             romsPath = "${dataDirectory}/syncthing/ROMs";
@@ -220,13 +237,13 @@ in {
             };
           };
 
-          myUsers.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
+          myNixOs.users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
 
       # containers
       {
-        myBackups.jobs.dizquetv.paths = ["/mnt/Data/dizquetv"];
+        myNixOs.profile.backups.jobs.dizquetv.paths = ["/mnt/Data/dizquetv"];
 
         systemd.tmpfiles.rules = [
           "z /mnt/Data 0755 root root - -"
@@ -331,7 +348,7 @@ in {
       # services
       (
         {config, ...}: {
-          myBackups.jobs = {
+          myNixOs.profile.backups.jobs = {
             immich = {
               paths = [
                 "${dataDirectory}/immich/library"

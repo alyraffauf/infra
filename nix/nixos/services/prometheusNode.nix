@@ -1,5 +1,11 @@
 {
-  flake.modules.nixos.prometheus-node = {
+  config,
+  lib,
+  ...
+}: {
+  options.myNixOs.service.prometheusNode.enable = lib.mkEnableOption "Prometheus node exporter";
+
+  config = lib.mkIf config.myNixOs.service.prometheusNode.enable {
     services.prometheus.exporters.node = {
       enable = true;
       enabledCollectors = ["systemd"];

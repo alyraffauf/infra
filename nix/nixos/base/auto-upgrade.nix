@@ -1,36 +1,34 @@
 {
-  flake.modules.nixos.base = {
-    config,
-    lib,
-    ...
-  }: {
-    options.myFlakeUrl = lib.mkOption {
-      type = lib.types.str;
-      default = "github:alyraffauf/infra";
-      description = "Default flake URL for this NixOS configuration.";
+  config,
+  lib,
+  ...
+}: {
+  options.myNixOs.profile.base.flakeUrl = lib.mkOption {
+    type = lib.types.str;
+    default = "github:alyraffauf/infra";
+    description = "Default flake URL for this NixOS configuration.";
+  };
+
+  config = lib.mkIf config.myNixOs.profile.base.enable {
+    environment.variables = {
+      FLAKE = config.myNixOs.profile.base.flakeUrl;
+      NH_FLAKE = config.myNixOs.profile.base.flakeUrl;
     };
 
-    config = {
-      environment.variables = {
-        FLAKE = config.myFlakeUrl;
-        NH_FLAKE = config.myFlakeUrl;
-      };
+    system.autoUpgrade = {
+      enable = true;
+      allowReboot = true;
+      dates = lib.mkDefault "02:00";
+      flags = ["--accept-flake-config"];
+      flake = config.myNixOs.profile.base.flakeUrl;
+      operation = lib.mkDefault "switch";
+      persistent = true;
+      randomizedDelaySec = lib.mkDefault "0";
+      runGarbageCollection = true;
 
-      system.autoUpgrade = {
-        enable = true;
-        allowReboot = true;
-        dates = lib.mkDefault "02:00";
-        flags = ["--accept-flake-config"];
-        flake = config.myFlakeUrl;
-        operation = lib.mkDefault "switch";
-        persistent = true;
-        randomizedDelaySec = lib.mkDefault "0";
-        runGarbageCollection = true;
-
-        rebootWindow = {
-          lower = "02:00";
-          upper = "06:00";
-        };
+      rebootWindow = {
+        lower = "02:00";
+        upper = "06:00";
       };
     };
   };
