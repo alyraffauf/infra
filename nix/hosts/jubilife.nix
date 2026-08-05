@@ -19,7 +19,6 @@ in {
       btrfs
       caddy
       fail2ban
-      forgejo-runner
       intel-gpu
       k3s-node
       lanzaboote
@@ -108,10 +107,10 @@ in {
             videoReadAhead = "5G";
           };
 
-          myForgejoRunner = {
-            dockerContainers = 3;
-            nativeRunners = 2;
-          };
+          # myForgejoRunner = {
+          #   dockerContainers = 3;
+          #   nativeRunners = 2;
+          # };
 
           myK3s = {
             role = "server";
