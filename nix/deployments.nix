@@ -1,5 +1,5 @@
 {self, ...}: {
-  flake.blzrd.nodes = {
+  blzrd.nodes = {
     eterna = {
       output = self.nixosConfigurations.eterna.config.system.build.toplevel;
       type = "nixos";

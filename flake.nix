@@ -72,6 +72,7 @@
         (inputs.import-tree ./nix/flake)
         inputs.files.flakeModules.default
         inputs.flake-parts.flakeModules.modules
+        inputs.blzrd.flakeModule
         inputs.treefmt-nix.flakeModule
       ];
     };
