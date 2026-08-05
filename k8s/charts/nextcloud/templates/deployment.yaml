@@ -36,7 +36,7 @@ spec:
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: docker.io/library/nextcloud:34-apache@sha256:eea6e621ded409a0f878db118cd8aec619b555172d30f50d04f9bc2e5e852b4c
+          image: docker.io/library/nextcloud:34-apache@sha256:d7666d54d87c58d52869ddda36d1acbd4a7f53faf8ab6b91293daf204f3434e8
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
@@ -84,7 +84,7 @@ spec:
             timeoutSeconds: 10
             failureThreshold: 3
         - name: cron
-          image: docker.io/library/nextcloud:34-apache@sha256:eea6e621ded409a0f878db118cd8aec619b555172d30f50d04f9bc2e5e852b4c
+          image: docker.io/library/nextcloud:34-apache@sha256:d7666d54d87c58d52869ddda36d1acbd4a7f53faf8ab6b91293daf204f3434e8
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
