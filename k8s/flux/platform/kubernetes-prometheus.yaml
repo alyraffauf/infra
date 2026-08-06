@@ -40,6 +40,15 @@ spec:
       service:
         type: NodePort
         nodePort: 30220
+      extraScrapeConfigs:
+        - job_name: flux-controllers
+          metrics_path: /metrics
+          static_configs:
+            - targets:
+                - helm-controller.flux-system.svc.cluster.local:8080
+                - kustomize-controller.flux-system.svc.cluster.local:8080
+                - notification-controller.flux-system.svc.cluster.local:8080
+                - source-controller.flux-system.svc.cluster.local:8080
     kube-state-metrics:
       prometheusScrape: true
     prometheus-node-exporter:

@@ -12,11 +12,9 @@ visible in the app chart.
 ```text
 charts/
 ├── aly-codes/              # Static site (aly.codes)
-├── audiobookshelf/         # Audiobook library with rclone-mounted media
 ├── tranquil-pds/           # Reference atproto Personal Data Server
 ├── cert-manager-issuers/   # Let's Encrypt ClusterIssuer + wildcard Certificates
 ├── external-routes/        # Ingress + Service + EndpointSlice for off-cluster targets
-├── forgejo/                # Git hosting (git.aly.codes)
 ├── forward-auth/           # Per-app traefik-forward-auth frontends
 ├── immich/                 # Photo library + ML + app-specific Postgres
 ├── longhorn-creds/         # B2 backup Secret + recurring backup job + UI ingress
@@ -24,6 +22,9 @@ charts/
 ├── pg-shared/              # CloudNativePG cluster using local-path replicas
 └── ...
 ```
+
+Undeployed charts live in [`../drafts`](../drafts), outside the Flux chart
+inventory. See its README before promoting a draft to production.
 
 ## Chart Style
 

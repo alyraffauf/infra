@@ -4,6 +4,147 @@
   ...
 }: let
   tnet = "narwhal-snapper.ts.net";
+  kubernetesOperationsDashboard = builtins.toJSON {
+    annotations.list = [];
+    editable = true;
+    panels = [
+      {
+        datasource = "Kubernetes Prometheus";
+        fieldConfig.defaults.unit = "short";
+        gridPos = {
+          h = 8;
+          w = 8;
+          x = 0;
+          y = 0;
+        };
+        targets = [
+          {
+            expr = "sum(gotk_reconcile_condition{type=\"Ready\",status=\"True\"})";
+            refId = "A";
+          }
+        ];
+        title = "Flux resources ready";
+        type = "stat";
+      }
+      {
+        datasource = "Kubernetes Prometheus";
+        fieldConfig.defaults.unit = "short";
+        gridPos = {
+          h = 8;
+          w = 8;
+          x = 8;
+          y = 0;
+        };
+        targets = [
+          {
+            expr = "sum(gotk_reconcile_condition{type=\"Ready\",status=\"False\"})";
+            refId = "A";
+          }
+        ];
+        title = "Flux reconciliation failures";
+        type = "stat";
+      }
+      {
+        datasource = "Kubernetes Prometheus";
+        fieldConfig.defaults.unit = "short";
+        gridPos = {
+          h = 8;
+          w = 8;
+          x = 16;
+          y = 0;
+        };
+        targets = [
+          {
+            expr = "sum(increase(kube_pod_container_status_restarts_total[1h]))";
+            refId = "A";
+          }
+        ];
+        title = "Container restarts (1h)";
+        type = "stat";
+      }
+      {
+        datasource = "Kubernetes Prometheus";
+        fieldConfig.defaults.unit = "short";
+        gridPos = {
+          h = 8;
+          w = 8;
+          x = 0;
+          y = 8;
+        };
+        targets = [
+          {
+            expr = "sum(kube_pod_status_ready{condition=\"true\"})";
+            refId = "A";
+          }
+        ];
+        title = "Ready pods";
+        type = "stat";
+      }
+      {
+        datasource = "Kubernetes Prometheus";
+        fieldConfig.defaults.unit = "short";
+        gridPos = {
+          h = 8;
+          w = 8;
+          x = 8;
+          y = 8;
+        };
+        targets = [
+          {
+            expr = "sum(kube_persistentvolumeclaim_status_phase{phase=\"Pending\"})";
+            refId = "A";
+          }
+        ];
+        title = "Pending PVCs";
+        type = "stat";
+      }
+      {
+        datasource = "Kubernetes Prometheus";
+        fieldConfig.defaults.unit = "percent";
+        gridPos = {
+          h = 8;
+          w = 8;
+          x = 16;
+          y = 8;
+        };
+        targets = [
+          {
+            expr = "sum(kube_pod_container_resource_requests{resource=\"cpu\"}) / sum(kube_node_status_allocatable{resource=\"cpu\"})";
+            refId = "A";
+          }
+        ];
+        title = "Requested node CPU";
+        type = "gauge";
+      }
+      {
+        datasource = "Loki";
+        gridPos = {
+          h = 10;
+          w = 24;
+          x = 0;
+          y = 16;
+        };
+        targets = [
+          {
+            expr = "{job=\"kubernetes-pods\"} |~ \"(?i)error\"";
+            refId = "A";
+          }
+        ];
+        title = "Recent Kubernetes error logs";
+        type = "logs";
+      }
+    ];
+    refresh = "30s";
+    schemaVersion = 39;
+    tags = ["kubernetes" "operations"];
+    templating.list = [];
+    time = {
+      from = "now-6h";
+      to = "now";
+    };
+    title = "Kubernetes Operations";
+    uid = "kubernetes-operations";
+  };
 in {
   flake.nixosConfigurations.eterna = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = {inherit inputs self;};
@@ -204,7 +345,7 @@ in {
       }
 
       # observability
-      {
+      ({pkgs, ...}: {
         services = {
           grafana = {
             enable = true;
@@ -242,6 +383,17 @@ in {
                   url = "https://loki.${tnet}";
                 }
               ];
+
+              dashboards.settings = {
+                apiVersion = 1;
+                providers = [
+                  {
+                    name = "Kubernetes Operations";
+                    options.path = pkgs.writeText "kubernetes-operations.json" kubernetesOperationsDashboard;
+                    type = "file";
+                  }
+                ];
+              };
             };
           };
 
@@ -382,7 +534,7 @@ in {
             ];
           };
         };
-      }
+      })
 
       # services
       {

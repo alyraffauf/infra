@@ -2,7 +2,7 @@
 // the forward-auth chart, and vice versa.
 
 const OIDC_CLIENTS_FILE = "ansible/playbooks/vars/oidc-clients.yml";
-const FORWARD_AUTH_VALUES_FILE = "k8s/flux/apps/releases.yaml";
+const FORWARD_AUTH_VALUES_FILE = "k8s/flux/apps/forward-auth.yaml";
 const SLUG_PREFIX = "forward-auth-";
 
 type OIDCClient = { slug: string; integration?: string };

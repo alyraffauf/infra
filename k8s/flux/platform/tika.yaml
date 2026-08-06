@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 15m
   releaseName: tika
-  targetNamespace: default
+  targetNamespace: platform
   install:
     remediation:
       retries: 3

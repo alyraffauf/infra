@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-forward-auth-navidrome@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: identity-forward-auth-navidrome@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:

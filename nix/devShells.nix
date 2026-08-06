@@ -29,6 +29,7 @@
           just
           kustomize
           kubectl
+          kubeconform
           helmWithDiff
           nh
           skopeo

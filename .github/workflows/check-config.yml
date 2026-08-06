@@ -26,33 +26,16 @@ jobs:
       - run: bun scripts/check.ts
 
   chart-templates:
-    name: helm template each chart
+    name: render declared Helm releases
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with: { fetch-depth: 1 }
+      - uses: oven-sh/setup-bun@v2
       - uses: azure/setup-helm@v5
-      - uses: azure/setup-kubectl@v5
-      - name: helm template each local chart with the generated global values
-        run: |
-          set -euo pipefail
-          # Source the same cute-haus-global values Flux feeds charts via
-          # valuesFrom, straight from the generated ConfigMap — no plain values
-          # file to drift. Full valuesFrom-resolving render lives in local
-          # `just flux-test`; it can't run in public CI because decrypting the
-          # SOPS secrets layer risks leaking plaintext into public logs.
-          values="$(mktemp)"
-          kubectl kustomize k8s/flux/sources \
-            | yq e 'select(.kind == "ConfigMap" and .metadata.name == "cute-haus-global") | .data["values.yaml"]' - \
-            > "$values"
-          for chart in k8s/charts/*/; do
-            name="$(basename "$chart")"
-            [[ "$name" == "common" ]] && continue
-            echo "::group::$name"
-            helm dependency update "$chart" >/dev/null
-            helm template "$chart" -f "$values" >/dev/null
-            echo "::endgroup::"
-          done
+      - uses: yannh/kubeconform-action@v1.7.0
+      - name: lint, render, and schema-check declared local releases
+        run: bun scripts/render-releases.ts
 
   flux-kustomize:
     name: flux kustomize build

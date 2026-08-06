@@ -50,9 +50,9 @@ spec:
             - -c
             - |
               echo "waiting for tika..."
-              until wget -qO- http://tika:9998/; do sleep 2; done
+              until wget -qO- http://tika.platform.svc:9998/; do sleep 2; done
               echo "waiting for gotenberg..."
-              until wget -qO- http://gotenberg:3000/health; do sleep 2; done
+              until wget -qO- http://gotenberg.platform.svc:3000/health; do sleep 2; done
               echo "dependencies ready"
           resources:
             requests:
@@ -101,9 +101,9 @@ spec:
             - name: PAPERLESS_TIKA_ENABLED
               value: "1"
             - name: PAPERLESS_TIKA_ENDPOINT
-              value: "http://tika:9998"
+              value: "http://tika.platform.svc:9998"
             - name: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
-              value: "http://gotenberg:3000"
+              value: "http://gotenberg.platform.svc:3000"
             - name: PAPERLESS_TIME_ZONE
               value: "America/New_York"
             - name: PAPERLESS_URL

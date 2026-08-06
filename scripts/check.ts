@@ -3,10 +3,12 @@
 // check doesn't hide another). Exits non-zero if any check fails.
 
 import { checkForwardAuth } from "./check-forward-auth.ts";
+import { checkChartInventory } from "./check-chart-inventory.ts";
 import { checkPinnedImages } from "./check-pinned-images.ts";
 import { checkReleaseNames } from "./check-release-names.ts";
 
 const checks = [
+  { name: "chart-inventory", run: checkChartInventory },
   { name: "forward-auth", run: checkForwardAuth },
   { name: "release-names", run: checkReleaseNames },
   { name: "pinned-images", run: checkPinnedImages },

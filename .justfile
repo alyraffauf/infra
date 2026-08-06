@@ -178,6 +178,7 @@ sops-edit FILE:
 [group('kubes')]
 check:
     bun scripts/check.ts
+    bun scripts/render-releases.ts
     for dir in k8s/flux/system k8s/flux/sources k8s/flux/secrets k8s/flux/infra-crds k8s/flux/infra-core k8s/flux/platform k8s/flux/apps k8s/flux/external-routes; do kubectl kustomize "$dir" >/dev/null; done
     nix flake check --impure
 
@@ -188,15 +189,20 @@ check:
 flux-test:
     uvx flux-local@8.3.0 test --enable-helm --path k8s/flux
 
+# Concise live Flux, workload, storage, certificate, and warning-event health.
+[group('kubes')]
+k8s-status:
+    bun scripts/k8s-status.ts
+
 # Bump a digest-pinned chart image to its current upstream digest.
 # Usage: just bump <chart> | just bump --all | just bump --check
 [group('kubes')]
 bump TARGET:
     bun scripts/bump-image.ts {{ TARGET }}
 
-# Real-release helper for local in-tree charts only. Flux HelmRelease objects
-# live in flux-system; Helm installs into the target namespace.
-# Usage: just k8s {apply|diff|suspend|resume|reconcile} <release> [target-namespace] [helmrelease-namespace]
+# Flux release helper. Git is the normal deployment path; `diff` previews a
+# local in-tree chart, and the other actions operate on its HelmRelease.
+# Usage: just k8s {diff|suspend|resume|reconcile} <release> [target-namespace] [helmrelease-namespace]
 [group('kubes')]
 k8s action release namespace='default' hr_namespace='flux-system':
     #!/usr/bin/env bash
@@ -221,17 +227,6 @@ k8s action release namespace='default' hr_namespace='flux-system':
     }
 
     case "{{action}}" in
-      apply)
-        if [[ ! -f "$chart/Chart.yaml" ]]; then
-          echo "just k8s apply supports local charts only: $chart/Chart.yaml not found" >&2
-          exit 2
-        fi
-        values="$(global_values)"
-        trap 'status=$?; rm -f "$values"; flux_cmd resume helmrelease "{{release}}" -n "{{hr_namespace}}" || true; exit "$status"' EXIT
-        flux_cmd suspend helmrelease "{{release}}" -n "{{hr_namespace}}" || true
-        helm upgrade --install "{{release}}" "$chart" \
-          -n "{{namespace}}" -f "$values"
-        ;;
       diff)
         if [[ ! -f "$chart/Chart.yaml" ]]; then
           echo "just k8s diff supports local charts only: $chart/Chart.yaml not found" >&2
@@ -251,7 +246,7 @@ k8s action release namespace='default' hr_namespace='flux-system':
         flux_cmd reconcile helmrelease "{{release}}" -n "{{hr_namespace}}" --with-source
         ;;
       *)
-        echo "usage: just k8s {apply|diff|suspend|resume|reconcile} <release> [target-namespace] [helmrelease-namespace]" >&2
+        echo "usage: just k8s {diff|suspend|resume|reconcile} <release> [target-namespace] [helmrelease-namespace]" >&2
         exit 2
         ;;
     esac

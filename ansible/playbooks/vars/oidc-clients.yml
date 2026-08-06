@@ -11,6 +11,7 @@ oidc_clients:
   # Slug must match the forward-auth-<app> Deployment name.
   - slug: forward-auth-navidrome
     name: Navidrome
+    namespace: identity
     logoUrl: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/navidrome.png
     launchURL: https://navidrome.cute.haus/
     callbackURLs:
