@@ -121,10 +121,10 @@ spec:
   prune: true
   wait: true
   healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
+    - apiVersion: apps/v1
+      kind: Deployment
       name: gotenberg
-      namespace: flux-system
+      namespace: platform
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: kubernetes-alloy
@@ -137,10 +137,10 @@ spec:
       kind: HelmRelease
       name: pg-shared
       namespace: flux-system
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
+    - apiVersion: apps/v1
+      kind: Deployment
       name: tika
-      namespace: flux-system
+      namespace: platform
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: valkey
