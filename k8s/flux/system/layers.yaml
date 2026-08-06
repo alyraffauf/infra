@@ -177,7 +177,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps
+    - name: infra-core
   interval: 15m
   path: ./k8s/flux/external-routes
   prune: true
