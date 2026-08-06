@@ -10,53 +10,28 @@ in {
   config = lib.mkIf config.myNixOs.profile.base.enable {
     programs.ssh.knownHosts = {
       snowpoint = {
-        hostNames = ["snowpoint" "snowpoint.local" "snowpoint.${tnet}" "dewford" "dewford.local" "dewford.${tnet}"];
+        hostNames = ["snowpoint" "snowpoint.local" "snowpoint.${tnet}" "snowpoint.cute" "dewford" "dewford.local" "dewford.${tnet}"];
         publicKeyFile = pub "snowpoint";
       };
 
-      fallarbor = {
-        hostNames = ["fallarbor" "fallarbor.local" "fallarbor.${tnet}"];
-        publicKeyFile = pub "fallarbor";
-      };
-
-      fortree = {
-        hostNames = ["fortree" "fortree.local" "fortree.${tnet}"];
-        publicKeyFile = pub "fortree";
-      };
-
       jubilife = {
-        hostNames = ["jubilife" "jubilife.local" "jubilife.${tnet}" "lilycove" "lilycove.local" "lilycove.${tnet}"];
+        hostNames = ["jubilife" "jubilife.local" "jubilife.${tnet}" "jubilife.cute" "lilycove" "lilycove.local" "lilycove.${tnet}"];
         publicKeyFile = pub "jubilife";
       };
 
       pastoria = {
-        hostNames = ["pastoria" "pastoria.local" "pastoria.${tnet}"];
+        hostNames = ["pastoria" "pastoria.local" "pastoria.${tnet}" "pastoria.cute"];
         publicKeyFile = pub "pastoria";
       };
 
       eterna = {
-        hostNames = ["eterna" "eterna.local" "eterna.${tnet}" "mauville" "mauville.local" "mauville.${tnet}"];
+        hostNames = ["eterna" "eterna.local" "eterna.${tnet}" "eterna.cute" "mauville" "mauville.local" "mauville.${tnet}"];
         publicKeyFile = pub "eterna";
       };
 
       petalburg = {
         hostNames = ["petalburg" "petalburg.local" "petalburg.${tnet}"];
         publicKeyFile = pub "petalburg";
-      };
-
-      rustboro = {
-        hostNames = ["rustboro" "rustboro.local" "rustboro.${tnet}"];
-        publicKeyFile = pub "rustboro";
-      };
-
-      slateport = {
-        hostNames = ["slateport" "slateport.local" "slateport.${tnet}"];
-        publicKeyFile = pub "slateport";
-      };
-
-      sootopolis = {
-        hostNames = ["sootopolis" "sootopolis.local" "sootopolis.${tnet}"];
-        publicKeyFile = pub "sootopolis";
       };
     };
   };
