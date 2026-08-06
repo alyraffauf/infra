@@ -70,16 +70,16 @@ the three moved services.
 
 ## Service inventory
 
-This table is maintained with the HelmRelease files. `local-path` means
+This table is maintained with the Flux workload declarations. `local-path` means
 node-local or host-mounted data and must be recovered on its owning node.
 
-| Release          | Chart        | Namespace   | URL                          | Dependencies                       | Persistence                                    | Backup / restore owner         | Data-loss expectation                   |
+| Release          | Delivery     | Namespace   | URL                          | Dependencies                       | Persistence                                    | Backup / restore owner         | Data-loss expectation                   |
 | ---------------- | ------------ | ----------- | ---------------------------- | ---------------------------------- | ---------------------------------------------- | ------------------------------ | --------------------------------------- |
-| aly-codes        | aly-codes    | websites    | https://aly.codes            | —                                  | none                                           | Git/site build                 | rebuildable                             |
-| collabora        | collabora    | default     | https://collabora.cute.haus  | nextcloud                          | none                                           | configuration only             | rebuildable                             |
-| error-pages      | error-pages  | default     | internal                     | traefik                            | none                                           | Git                            | rebuildable                             |
+| aly-codes        | Kustomize    | websites    | https://aly.codes            | —                                  | none                                           | Git/site build                 | rebuildable                             |
+| collabora        | Kustomize    | default     | https://collabora.cute.haus  | nextcloud                          | none                                           | configuration only             | rebuildable                             |
+| error-pages      | Kustomize    | default     | internal                     | traefik                            | none                                           | Git                            | rebuildable                             |
 | forward-auth     | forward-auth | identity    | internal                     | Pocket ID                          | SOPS secret                                    | SOPS / identity operator       | reconfigure clients                     |
-| gotenberg        | gotenberg    | platform    | internal                     | —                                  | none                                           | Git                            | rebuildable                             |
+| gotenberg        | Kustomize    | platform    | internal                     | —                                  | none                                           | Git                            | rebuildable                             |
 | immich           | immich       | default     | https://immich.cute.haus     | valkey                             | local-path uploads/ML cache, Longhorn database | node owner / Immich export     | photo loss possible without node data   |
 | morsels          | morsels      | websites    | https://morsels.blue         | —                                  | Longhorn                                       | Longhorn backup owner          | restore from volume backup              |
 | navidrome        | navidrome    | default     | https://navidrome.cute.haus  | forward-auth                       | Longhorn config, host media                    | Longhorn / media host owner    | media is external; config may be lost   |
@@ -88,17 +88,17 @@ node-local or host-mounted data and must be recovered on its owning node.
 | paperless        | paperless    | default     | https://paperless.cute.haus  | pg-shared, valkey, tika, gotenberg | local-path data                                | node owner / CNPG backup owner | documents may be lost without node data |
 | pg-shared        | pg-shared    | cnpg-system | internal                     | CNPG                               | Longhorn database volumes, B2 backups          | CNPG backup owner              | point-in-time limited to backups        |
 | plex             | plex         | default     | https://plex.cute.haus       | media host                         | local-path config and media mounts             | node/media owner               | config or metadata loss possible        |
-| pocket-id        | pocket-id    | default     | https://id.cute.haus         | pg-shared                          | CNPG                                           | CNPG backup owner              | identity records depend on DB backup    |
+| pocket-id        | Kustomize    | default     | https://id.cute.haus         | pg-shared                          | CNPG                                           | CNPG backup owner              | identity records depend on DB backup    |
 | seerr            | seerr        | default     | https://seerr.cute.haus      | pg-shared                          | Longhorn config, CNPG                          | Longhorn / CNPG backup owner   | restore app config and DB               |
-| slingshot        | slingshot    | microcosm   | https://slingshot.cute.haus  | —                                  | ephemeral cache                                | Git                            | rebuildable                             |
-| switchyard       | switchyard   | websites    | https://switchyard.aly.codes | —                                  | none                                           | Git/site build                 | rebuildable                             |
-| tika             | tika         | platform    | internal                     | —                                  | none                                           | Git                            | rebuildable                             |
-| tranquil-pds     | tranquil-pds | default     | https://pds.cute.haus        | pg-shared, valkey                  | CNPG, B2 repository data                       | CNPG/B2 owner                  | account data loss without backups       |
+| slingshot        | Kustomize    | microcosm   | https://slingshot.cute.haus  | —                                  | ephemeral cache                                | Git                            | rebuildable                             |
+| switchyard       | Kustomize    | websites    | https://switchyard.aly.codes | —                                  | none                                           | Git/site build                 | rebuildable                             |
+| tika             | Kustomize    | platform    | internal                     | —                                  | none                                           | Git                            | rebuildable                             |
+| tranquil-pds     | Kustomize    | default     | https://pds.cute.haus        | pg-shared, valkey                  | CNPG, B2 repository data                       | CNPG/B2 owner                  | account data loss without backups       |
 | uptime-kuma      | uptime-kuma  | default     | https://kuma.cute.haus       | —                                  | Longhorn                                       | Longhorn backup owner          | monitor history/config loss possible    |
 | vaultwarden      | vaultwarden  | default     | https://vault.cute.haus      | —                                  | Longhorn                                       | Longhorn backup owner          | vault loss is critical                  |
 | valkey           | valkey       | default     | internal                     | —                                  | Longhorn                                       | Longhorn backup owner          | cache/session loss tolerated            |
 | valkey-nextcloud | valkey       | nextcloud   | internal                     | —                                  | Longhorn                                       | Longhorn backup owner          | cache/session loss tolerated            |
-| watsup           | watsup       | websites    | https://cute.haus            | —                                  | ConfigMap                                      | Git                            | rebuildable                             |
+| watsup           | Kustomize    | websites    | https://cute.haus            | —                                  | ConfigMap                                      | Git                            | rebuildable                             |
 
 ## Stateful recovery
 

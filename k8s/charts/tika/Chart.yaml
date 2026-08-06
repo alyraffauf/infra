@@ -1,5 +1,0 @@
-apiVersion: v2
-name: tika
-description: Apache Tika document parsing and OCR service
-type: application
-version: 0.1.0

@@ -108,6 +108,16 @@ async function run(command: string[], input?: string): Promise<void> {
   if ((await process.exited) !== 0) throw new Error(command.join(" "));
 }
 
+async function commandOutput(command: string[]): Promise<string> {
+  const process = Bun.spawn(command, {
+    stdout: "pipe",
+    stderr: "inherit",
+  });
+  const output = await new Response(process.stdout).text();
+  if ((await process.exited) !== 0) throw new Error(command.join(" "));
+  return output;
+}
+
 async function renderRelease(
   release: HelmRelease,
   globalValues: Record<string, unknown>,
@@ -172,6 +182,21 @@ async function renderRelease(
   }
 }
 
+async function renderRawKustomizations(): Promise<void> {
+  for (const layer of ["apps", "platform"]) {
+    const files = new Bun.Glob(`k8s/flux/${layer}/*/kustomization.yaml`);
+    for await (const path of files.scan(".")) {
+      const directory = path.replace(/\/kustomization\.yaml$/, "");
+      console.log(`${directory}: render and validate`);
+      const manifest = await commandOutput(["kubectl", "kustomize", directory]);
+      await run(
+        ["kubeconform", "-ignore-missing-schemas", "-summary"],
+        manifest,
+      );
+    }
+  }
+}
+
 const globalValues = Bun.YAML.parse(
   await Bun.file("k8s/flux/sources/global.values.yaml").text(),
 ) as Record<string, unknown>;
@@ -179,3 +204,5 @@ const globalValues = Bun.YAML.parse(
 for (const release of await localReleases()) {
   await renderRelease(release, globalValues);
 }
+
+await renderRawKustomizations();

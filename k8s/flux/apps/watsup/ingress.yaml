@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: watsup
+  annotations:
+    helm.sh/resource-policy: keep
+  labels:
+    app: watsup
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - "cute.haus"
+        - "www.cute.haus"
+      secretName: cute-haus-tls
+  rules:
+    - host: "cute.haus"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: watsup
+                port:
+                  number: 80
+    - host: "www.cute.haus"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: watsup
+                port:
+                  number: 80

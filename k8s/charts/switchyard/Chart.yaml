@@ -1,5 +1,0 @@
-apiVersion: v2
-name: switchyard
-description: Switchyard marketing site (switchyard.aly.codes)
-type: application
-version: 0.1.0

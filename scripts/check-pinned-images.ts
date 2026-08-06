@@ -4,6 +4,10 @@
 // push-and-redeploy loop.
 
 const GLOB = "k8s/charts/*/**/*.yaml";
+const RAW_GLOBS = [
+  "k8s/flux/apps/*/**/*.yaml",
+  "k8s/flux/platform/*/**/*.yaml",
+];
 const FLUX_DIRS = [
   "k8s/flux/infra-crds",
   "k8s/flux/infra-core",
@@ -72,6 +76,31 @@ export async function checkPinnedImages(): Promise<string[]> {
         const shortRepo = repo.split("/").slice(-1)[0];
         errors.push(
           `${chartName}: ${shortRepo} '${tag}' is not pinned to a sha256 digest`,
+        );
+      }
+    }
+  }
+
+  for (const rawGlob of RAW_GLOBS) {
+    const rawFiles = new Bun.Glob(rawGlob);
+    for await (const manifestPath of rawFiles.scan(".")) {
+      const application = manifestPath.split("/")[3];
+      if (ALLOW_FLOATING.has(application)) continue;
+
+      const text = await Bun.file(manifestPath).text();
+      const imageLines = [
+        ...text.matchAll(
+          /^\s*(?:image|imageName):\s+["']?([^"'\s{}]+:[^"'\s{}]+)["']?\s*$/gm,
+        ),
+      ];
+      for (const match of imageLines) {
+        const fullRef = match[1];
+        if (fullRef.includes("@sha256:")) continue;
+
+        const [repo, tag] = fullRef.split(":");
+        const shortRepo = repo.split("/").slice(-1)[0];
+        errors.push(
+          `${application}: ${shortRepo} '${tag}' is not pinned to a sha256 digest`,
         );
       }
     }

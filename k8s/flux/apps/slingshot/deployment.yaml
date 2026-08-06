@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slingshot
+  annotations:
+    helm.sh/resource-policy: keep
+  labels:
+    app: slingshot
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: slingshot
+  template:
+    metadata:
+      labels:
+        app: slingshot
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      # Give foyer a moment to flush disk caches on shutdown.
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+      containers:
+        - name: slingshot
+          image: ghcr.io/alyraffauf/slingshot:latest@sha256:24d0777f1beedb946c4b2a06410a55cea75ff883430cc7629a18336207f212f7
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SLINGSHOT_JETSTREAM
+              value: "wss://jetstream1.us-east.bsky.network/subscribe"
+            - name: SLINGSHOT_CACHE_DIR
+              value: "/cache"
+            - name: SLINGSHOT_RECORD_CACHE_MEMORY_MB
+              value: "256"
+            - name: SLINGSHOT_RECORD_CACHE_DISK_DB # GB, despite the name
+              value: "4"
+            - name: SLINGSHOT_IDENTITY_CACHE_MEMORY_MB
+              value: "64"
+            - name: SLINGSHOT_IDENTITY_CACHE_DISK_DB # GB, despite the name
+              value: "2"
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 250m
+              memory: 640Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          # No HTTP health route exists; --healthcheck is an outbound ping. A TCP
+          # probe is the right readiness signal. The identity cache also needs a
+          # high fd limit (~4096); containerd's default (~1048576) is plenty, but
+          # if a node were misconfigured low the pod crashes here - loudly - on
+          # "Too many open files", which is exactly what this startupProbe surfaces.
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+          volumeMounts:
+            - name: cache
+              mountPath: /cache
+      volumes:
+        - name: cache
+          emptyDir:
+            # Headroom over the 4+2 GB record/identity disk caches above.
+            sizeLimit: 8Gi

@@ -55,11 +55,23 @@ async function chartDirectories(root: string): Promise<Set<string>> {
   return charts;
 }
 
+async function rawApplicationNames(): Promise<Set<string>> {
+  const names = new Set<string>();
+  for (const layer of ["apps", "platform"]) {
+    const files = new Bun.Glob(`k8s/flux/${layer}/*/kustomization.yaml`);
+    for await (const path of files.scan(".")) {
+      names.add(path.split("/")[3]);
+    }
+  }
+  return names;
+}
+
 export async function checkChartInventory(): Promise<string[]> {
-  const [declared, production, drafts] = await Promise.all([
+  const [declared, production, drafts, rawApplications] = await Promise.all([
     declaredChartCounts(),
     chartDirectories("k8s/charts"),
     chartDirectories("k8s/drafts"),
+    rawApplicationNames(),
   ]);
   const errors: string[] = [];
 
@@ -85,6 +97,17 @@ export async function checkChartInventory(): Promise<string[]> {
     if (!production.has(chart))
       errors.push(
         `HelmRelease references '${chart}', which is not a production chart (${count} release(s))`,
+      );
+  }
+
+  for (const application of rawApplications) {
+    if (declared.has(application))
+      errors.push(
+        `application '${application}' is declared as both a Helm chart and raw Kustomize workload`,
+      );
+    if (production.has(application))
+      errors.push(
+        `raw Kustomize application '${application}' still has a production Helm chart`,
       );
   }
 

@@ -1,5 +1,0 @@
-apiVersion: v2
-name: watsup
-description: Watsup dashboard
-type: application
-version: 0.1.0

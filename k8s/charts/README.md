@@ -1,22 +1,21 @@
 # Charts
 
 In-tree Helm charts deployed by Flux HelmReleases under [`../flux`](../flux).
+Small hand-authored workloads live as raw Kustomize manifests in their Flux
+layer instead of as charts.
 
-Most app charts use explicit Kubernetes manifests. Helm is used for light
-substitution, mostly `.Chart.Name` and shared non-secret values passed by Flux.
-Avoid shared Deployment/Service/PVC helpers; app-specific behavior should stay
-visible in the app chart.
+Helm is reserved for upstream packages, reusable releases, and charts that
+need data-driven rendering. Avoid shared Deployment/Service/PVC helpers;
+app-specific behavior should stay visible in direct manifests.
 
 ## Layout
 
 ```text
 charts/
-├── aly-codes/              # Static site (aly.codes)
-├── tranquil-pds/           # Reference atproto Personal Data Server
 ├── cert-manager-issuers/   # Let's Encrypt ClusterIssuer + wildcard Certificates
 ├── external-routes/        # Ingress + Service + EndpointSlice for off-cluster targets
 ├── forward-auth/           # Per-app traefik-forward-auth frontends
-├── immich/                 # Photo library + ML + app-specific Postgres
+├── immich/                 # Photo library + app-specific Postgres
 ├── longhorn-creds/         # B2 backup Secret + recurring backup job + UI ingress
 ├── paperless/              # Document management with rclone media mount
 ├── pg-shared/              # CloudNativePG cluster using local-path replicas
@@ -25,6 +24,17 @@ charts/
 
 Undeployed charts live in [`../drafts`](../drafts), outside the Flux chart
 inventory. See its README before promoting a draft to production.
+
+## Workload Styles
+
+Use raw Kustomize manifests for fixed, hand-authored workloads. Their files
+live beside the Flux layer that applies them, for example
+`../flux/apps/aly-codes/` or `../flux/platform/tika/`. Each directory has a
+small `kustomization.yaml` that sets its namespace and lists its resources.
+
+Use Helm only when release reuse or structured rendering is meaningful. The
+remaining local Helm charts are data-driven or stateful; they are not generic
+wrappers around otherwise static YAML.
 
 ## Chart Style
 
@@ -91,20 +101,16 @@ Avoid these:
 
 Charts fall into three readability tiers:
 
-- **Explicit application charts** keep app-specific resources visible in
-  separate templates. Most of these only substitute names and the shared
-  failover toleration; that small amount of templating is intentional.
 - **Configurable application charts** such as Plex, Valkey, Paperless,
   Nextcloud, and Immich render meaningful values that affect the workload.
 - **Data-driven charts** render repeated resources from structured values:
   `forward-auth`, `external-routes`, `pg-shared`, and
   `cert-manager-issuers`.
 
-Do not move charts into namespace- or tier-named directories. The HelmRelease
-is the deployment boundary, and a chart can be reused by multiple releases
-(for example, the two Valkey releases). Keep fixed resource names readable,
-but retain templating when it expresses release namespace, shared policy, or
-real repetition.
+Do not move Helm charts into namespace-named directories. The HelmRelease is
+the deployment boundary, and a chart can be reused by multiple releases (for
+example, the two Valkey releases). Fixed hand-authored workloads belong in
+their Flux layer as raw manifests instead.
 
 ## Data-Driven Exceptions
 
