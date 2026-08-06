@@ -26,10 +26,10 @@ spec:
   values:
     defaultSettings:
       defaultDataPath: /var/lib/longhorn
-      defaultReplicaCount: 3
+      defaultReplicaCount: 2
       replicaSoftAntiAffinity: false
-      replicaZoneSoftAntiAffinity: true
-      replicaAutoBalance: best-effort
+      replicaZoneSoftAntiAffinity: false
+      replicaAutoBalance: least-effort
       concurrentReplicaRebuildPerNodeLimit: 3
       nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
       allowRecurringJobWhileVolumeDetached: true
