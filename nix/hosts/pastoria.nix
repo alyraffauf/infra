@@ -23,7 +23,7 @@
             wireguardK3s.enable = true;
           };
 
-          program.podman.enable = true;
+          program.docker.enable = true;
 
           service = {
             alloy.enable = true;

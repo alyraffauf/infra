@@ -37,7 +37,7 @@ in {
 
           program = {
             lanzaboote.enable = true;
-            podman.enable = true;
+            docker.enable = true;
           };
 
           service = {
@@ -369,9 +369,7 @@ in {
               };
 
               garage.paths = ["${dataDirectory}/garage"];
-
               nextcloud.paths = ["${dataDirectory}/nextcloud/html"];
-
               paperless.paths = ["${dataDirectory}/paperless"];
 
               plex = {
