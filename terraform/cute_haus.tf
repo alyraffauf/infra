@@ -13,6 +13,7 @@ locals {
     "pds.cute.haus"            = false
     "photoprism.cute.haus"     = false
     "plex.cute.haus"           = false
+    "seerr.cute.haus"          = true
     "slingshot.cute.haus"      = true
     "status.cute.haus"         = true
     "vault.cute.haus"          = true

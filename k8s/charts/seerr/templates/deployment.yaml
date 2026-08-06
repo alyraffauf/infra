@@ -47,10 +47,23 @@ spec:
           image: seerr/seerr:latest@sha256:f4768de5f616248d723e05891f3345a1402123775d03bf0890dbfedc0831bda1
           imagePullPolicy: IfNotPresent
           env:
+            - name: DB_TYPE
+              value: "postgres"
+            - name: DB_HOST
+              value: "pg-shared-rw.cnpg-system.svc"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "seerr"
+            - name: DB_NAME
+              value: "seerr"
             - name: TZ
               value: "America/New_York"
             - name: LOG_LEVEL
               value: "info"
+          envFrom:
+            - secretRef:
+                name: seerr-env
           ports:
             - name: http
               containerPort: 5055

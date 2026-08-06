@@ -38,3 +38,5 @@ spec:
         database: paperless
       nextcloud:
         database: nextcloud
+      seerr:
+        database: seerr
