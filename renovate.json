@@ -21,7 +21,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^k8s/charts/.*\\.ya?ml$/"],
+      "managerFilePatterns": [
+        "/^k8s\\/(?:charts|flux\\/(?:apps|platform))\\/.*\\.ya?ml$/"
+      ],
       "matchStrings": [
         "\\s*(?:image|imageName|pluginImage):\\s+[\"']?(?<depName>[^\\s\"'{}]+?):(?<currentValue>[^\\s\"'@{}]+)@(?<currentDigest>sha256:[a-f0-9]{64})[\"']?"
       ],

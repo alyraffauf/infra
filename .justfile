@@ -194,8 +194,8 @@ flux-test:
 k8s-status:
     bun scripts/k8s-status.ts
 
-# Bump a digest-pinned chart image to its current upstream digest.
-# Usage: just bump <chart> | just bump --all | just bump --check
+# Bump a public digest-pinned Helm or raw-workload image to its current upstream digest.
+# Usage: just bump <workload> | just bump --all | just bump --check
 [group('kubes')]
 bump TARGET:
     bun scripts/bump-image.ts {{ TARGET }}
@@ -257,7 +257,7 @@ k8s action release namespace='default' hr_namespace='flux-system':
 bump-tranquil:
     #!/usr/bin/env bash
     set -euo pipefail
-    TEMPLATE=k8s/charts/tranquil-pds/templates/deployment.yaml
+    TEMPLATE=k8s/flux/apps/tranquil-pds/deployment.yaml
     FULL=$(grep 'image:.*@sha256:' "$TEMPLATE" | awk '{print $2}')
     REPO="${FULL%%:*}"
     TAG_WITH_DIGEST="${FULL#*:}"
