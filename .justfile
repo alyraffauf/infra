@@ -86,8 +86,8 @@ sops-bootstrap:
     echo "this machine's age recipient (must be in .sops.yaml):"
     ssh-to-age -i ~/.ssh/id_ed25519.pub
 
-# Regenerate .sops.yaml from keys/*.pub, then re-encrypt every
-# secrets/*.yaml. Run after adding or removing a .pub file.
+# Regenerate .sops.yaml from keys/*.pub, then re-encrypt every managed SOPS
+# file. Run after adding or removing a .pub file.
 [group('secrets')]
 sops-rekey:
     #!/usr/bin/env bash
@@ -158,7 +158,8 @@ sops-rekey:
         done
     } > .sops.yaml
     echo "regenerated .sops.yaml"
-    for f in secrets/*.yaml; do
+    secret_files=(secrets/*.yaml k8s/flux/secrets/*.sops.yaml)
+    for f in "${secret_files[@]}"; do
         echo "rekeying $f"
         sops updatekeys -y "$f"
     done
