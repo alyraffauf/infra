@@ -5,34 +5,28 @@
   ...
 }: let
   tnet = "narwhal-snapper.ts.net";
-  pub = host: "${self}/keys/root_${host}.pub";
+  rootKeyFiles = lib.filterAttrs (
+    fileName: fileType:
+      fileType
+      == "regular"
+      && lib.hasPrefix "root_" fileName
+      && lib.hasSuffix ".pub" fileName
+  ) (builtins.readDir "${self}/keys");
+  aliases = {
+    eterna = ["eterna.cute" "mauville" "mauville.local" "mauville.${tnet}"];
+    jubilife = ["jubilife.cute" "lilycove" "lilycove.local" "lilycove.${tnet}"];
+    pastoria = ["pastoria.cute"];
+    snowpoint = ["snowpoint.cute" "dewford" "dewford.local" "dewford.${tnet}"];
+  };
 in {
   config = lib.mkIf config.myNixOs.profile.base.enable {
-    programs.ssh.knownHosts = {
-      snowpoint = {
-        hostNames = ["snowpoint" "snowpoint.local" "snowpoint.${tnet}" "snowpoint.cute" "dewford" "dewford.local" "dewford.${tnet}"];
-        publicKeyFile = pub "snowpoint";
-      };
-
-      jubilife = {
-        hostNames = ["jubilife" "jubilife.local" "jubilife.${tnet}" "jubilife.cute" "lilycove" "lilycove.local" "lilycove.${tnet}"];
-        publicKeyFile = pub "jubilife";
-      };
-
-      pastoria = {
-        hostNames = ["pastoria" "pastoria.local" "pastoria.${tnet}" "pastoria.cute"];
-        publicKeyFile = pub "pastoria";
-      };
-
-      eterna = {
-        hostNames = ["eterna" "eterna.local" "eterna.${tnet}" "eterna.cute" "mauville" "mauville.local" "mauville.${tnet}"];
-        publicKeyFile = pub "eterna";
-      };
-
-      petalburg = {
-        hostNames = ["petalburg" "petalburg.local" "petalburg.${tnet}"];
-        publicKeyFile = pub "petalburg";
-      };
-    };
+    programs.ssh.knownHosts = lib.mapAttrs' (fileName: _fileType: let
+      hostName = lib.removeSuffix ".pub" (lib.removePrefix "root_" fileName);
+    in
+      lib.nameValuePair hostName {
+        hostNames = [hostName "${hostName}.local" "${hostName}.${tnet}"] ++ (aliases.${hostName} or []);
+        publicKeyFile = "${self}/keys/${fileName}";
+      })
+    rootKeyFiles;
   };
 }
