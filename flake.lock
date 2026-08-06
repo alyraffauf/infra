@@ -41,11 +41,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1785949891,
-        "narHash": "sha256-RBFAn3SXGoXnD57epmz/Zrym3OyZDzjYZZAjAW0uglQ=",
+        "lastModified": 1786022103,
+        "narHash": "sha256-pb+MymRdyOfqNNynE+0WZS3hu8aPLSsCToZQ1JYnCcs=",
         "owner": "alyraffauf",
         "repo": "blzrd",
-        "rev": "57d977efcc762c98461aa0c3ddba9d9496a6174b",
+        "rev": "794a2f18a736efb94ba095b18a4667c8dd85b99c",
         "type": "github"
       },
       "original": {
