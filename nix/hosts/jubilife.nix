@@ -54,7 +54,9 @@ in {
           users.aly.enable = true;
         };
 
-        myDisko.profile.luksBtrfsSubvolumes.enable = true;
+        myDisko = {
+          profile.luksBtrfsSubvolumes.enable = true;
+        };
       }
 
       inputs.disko.nixosModules.disko
@@ -116,35 +118,42 @@ in {
           };
 
           system.stateVersion = "25.11";
-          myDisko.installDrive = "/dev/disk/by-id/nvme-PNY_CS2130_1TB_SSD_PNY211821050701050CC";
-
-          myNixOs.profile.arr.dataDir = "/mnt/Data";
           system.autoUpgrade.dates = "04:15";
 
-          myNixOs.profile.b2Mounts = {
-            cacheDir = "/mnt/Data/.rclone-cache";
-            audioCacheSize = "50G";
-            audioReadAhead = "3G";
-            videoCacheSize = "300G";
-            videoReadAhead = "5G";
+          myDisko = {
+            installDrive = "/dev/disk/by-id/nvme-PNY_CS2130_1TB_SSD_PNY211821050701050CC";
           };
 
-          myNixOs.profile.k3s = {
-            role = "server";
-            clusterInit = true;
-            transportInterface = "wg-k3s";
-            nodeIP = "10.254.0.1";
-            zone = "home";
-          };
+          myNixOs = {
+            profile = {
+              arr.dataDir = "/mnt/Data";
 
-          myNixOs.profile.wireguardK3s.enable = true;
+              b2Mounts = {
+                cacheDir = "/mnt/Data/.rclone-cache";
+                audioCacheSize = "50G";
+                audioReadAhead = "3G";
+                videoCacheSize = "300G";
+                videoReadAhead = "5G";
+              };
 
-          myNixOs.service.syncthing = {
-            certFile = config.sops.secrets.syncthingCert.path;
-            keyFile = config.sops.secrets.syncthingKey.path;
-            romsPath = "${dataDirectory}/syncthing/ROMs";
-            syncROMs = true;
-            user = "aly";
+              k3s = {
+                role = "server";
+                clusterInit = true;
+                transportInterface = "wg-k3s";
+                nodeIP = "10.254.0.1";
+                zone = "home";
+              };
+            };
+
+            service.syncthing = {
+              certFile = config.sops.secrets.syncthingCert.path;
+              keyFile = config.sops.secrets.syncthingKey.path;
+              romsPath = "${dataDirectory}/syncthing/ROMs";
+              syncROMs = true;
+              user = "aly";
+            };
+
+            users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
           };
 
           sops.secrets = {
@@ -236,14 +245,14 @@ in {
               Group = "garage";
             };
           };
-
-          myNixOs.users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
 
       # containers
       {
-        myNixOs.profile.backups.jobs.dizquetv.paths = ["/mnt/Data/dizquetv"];
+        myNixOs = {
+          profile.backups.jobs.dizquetv.paths = ["/mnt/Data/dizquetv"];
+        };
 
         systemd.tmpfiles.rules = [
           "z /mnt/Data 0755 root root - -"
@@ -348,25 +357,27 @@ in {
       # services
       (
         {config, ...}: {
-          myNixOs.profile.backups.jobs = {
-            immich = {
-              paths = [
-                "${dataDirectory}/immich/library"
-                "${dataDirectory}/immich/profile"
-                "${dataDirectory}/immich/upload"
-                "${dataDirectory}/immich/backups"
-              ];
-            };
+          myNixOs = {
+            profile.backups.jobs = {
+              immich = {
+                paths = [
+                  "${dataDirectory}/immich/library"
+                  "${dataDirectory}/immich/profile"
+                  "${dataDirectory}/immich/upload"
+                  "${dataDirectory}/immich/backups"
+                ];
+              };
 
-            garage.paths = ["${dataDirectory}/garage"];
+              garage.paths = ["${dataDirectory}/garage"];
 
-            nextcloud.paths = ["${dataDirectory}/nextcloud/html"];
+              nextcloud.paths = ["${dataDirectory}/nextcloud/html"];
 
-            paperless.paths = ["${dataDirectory}/paperless"];
+              paperless.paths = ["${dataDirectory}/paperless"];
 
-            plex = {
-              exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];
-              paths = ["${dataDirectory}/plex"];
+              plex = {
+                exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];
+                paths = ["${dataDirectory}/plex"];
+              };
             };
           };
 

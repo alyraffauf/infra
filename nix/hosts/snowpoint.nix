@@ -37,7 +37,9 @@
           users.aly.enable = true;
         };
 
-        myDisko.profile.lvmExt4.enable = true;
+        myDisko = {
+          profile.lvmExt4.enable = true;
+        };
       }
 
       inputs.disko.nixosModules.disko
@@ -75,28 +77,35 @@
           };
 
           services.qemuGuest.enable = true;
-          myDisko.installDrive = "/dev/vda";
           system.autoUpgrade.dates = "03:30";
 
-          myNixOs.profile.k3s = {
-            role = "server";
-            serverAddr = "https://pastoria.cute:6443";
-            transportInterface = "wg-k3s";
-            nodeIP = "10.254.0.3";
-            zone = "cloud";
-            ingress = true;
+          myDisko = {
+            installDrive = "/dev/vda";
           };
 
-          myNixOs.profile.wireguardK3s.enable = true;
+          myNixOs = {
+            profile = {
+              k3s = {
+                role = "server";
+                serverAddr = "https://pastoria.cute:6443";
+                transportInterface = "wg-k3s";
+                nodeIP = "10.254.0.3";
+                zone = "cloud";
+                ingress = true;
+              };
+            };
 
-          myNixOs.service.syncthing = {
-            certFile = config.sops.secrets.syncthingCert.path;
-            keyFile = config.sops.secrets.syncthingKey.path;
-            syncROMs = false;
-            user = "aly";
+            service = {
+              syncthing = {
+                certFile = config.sops.secrets.syncthingCert.path;
+                keyFile = config.sops.secrets.syncthingKey.path;
+                syncROMs = false;
+                user = "aly";
+              };
+            };
+
+            users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
           };
-
-          myNixOs.users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
 

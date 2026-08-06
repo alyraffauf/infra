@@ -224,33 +224,37 @@ in {
             stateVersion = "25.11";
           };
 
-          myNixOs.profile.backups.jobs = {
-            syncthing-sync = {
-              paths = ["/home/aly/sync"];
-              repository = "rclone:b2:aly-backups/syncthing/sync";
+          myNixOs = {
+            profile = {
+              backups.jobs = {
+                syncthing-sync = {
+                  paths = ["/home/aly/sync"];
+                  repository = "rclone:b2:aly-backups/syncthing/sync";
+                };
+
+                syncthing-roms = {
+                  paths = [config.myNixOs.service.syncthing.romsPath];
+                  repository = "rclone:b2:aly-backups/syncthing/roms";
+                };
+              };
+
+              k3s = {
+                role = "agent";
+                serverAddr = "https://pastoria.cute:6443";
+                transportInterface = "wg-k3s";
+                nodeIP = "10.254.0.4";
+                zone = "home";
+                ingress = true;
+              };
             };
 
-            syncthing-roms = {
-              paths = [config.myNixOs.service.syncthing.romsPath];
-              repository = "rclone:b2:aly-backups/syncthing/roms";
+            service.syncthing = {
+              certFile = config.sops.secrets.syncthingCert.path;
+              keyFile = config.sops.secrets.syncthingKey.path;
+              user = "aly";
             };
-          };
 
-          myNixOs.profile.k3s = {
-            role = "agent";
-            serverAddr = "https://pastoria.cute:6443";
-            transportInterface = "wg-k3s";
-            nodeIP = "10.254.0.4";
-            zone = "home";
-            ingress = true;
-          };
-
-          myNixOs.profile.wireguardK3s.enable = true;
-
-          myNixOs.service.syncthing = {
-            certFile = config.sops.secrets.syncthingCert.path;
-            keyFile = config.sops.secrets.syncthingKey.path;
-            user = "aly";
+            users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
           };
 
           sops.secrets = {
@@ -263,8 +267,6 @@ in {
               key = "eterna_key";
             };
           };
-
-          myNixOs.users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
         }
       )
 

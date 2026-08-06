@@ -33,7 +33,9 @@
           };
         };
 
-        myDisko.profile.lvmExt4.enable = true;
+        myDisko = {
+          profile.lvmExt4.enable = true;
+        };
       }
 
       inputs.disko.nixosModules.disko
@@ -60,8 +62,11 @@
 
           nixpkgs.hostPlatform = "x86_64-linux";
           system.stateVersion = "26.05";
-          myDisko.installDrive = "/dev/sda";
           system.autoUpgrade.dates = "01:45";
+
+          myDisko = {
+            installDrive = "/dev/sda";
+          };
 
           systemd.services.atbbs-telnet = {
             description = "TCP proxy for atbbs telnet";
@@ -74,18 +79,20 @@
             };
           };
 
-          myNixOs.profile.k3s = {
-            role = "server";
-            serverAddr = "https://snowpoint.cute:6443";
-            transportInterface = "wg-k3s";
-            nodeIP = "10.254.0.2";
-            zone = "cloud";
-            ingress = true;
+          myNixOs = {
+            profile = {
+              k3s = {
+                role = "server";
+                serverAddr = "https://snowpoint.cute:6443";
+                transportInterface = "wg-k3s";
+                nodeIP = "10.254.0.2";
+                zone = "cloud";
+                ingress = true;
+              };
+
+              swap.size = 4096;
+            };
           };
-
-          myNixOs.profile.wireguardK3s.enable = true;
-
-          myNixOs.profile.swap.size = 4096;
         }
       )
 
