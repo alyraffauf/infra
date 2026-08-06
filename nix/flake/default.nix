@@ -4,10 +4,10 @@
     ../devShells.nix
     ../disko.nix
     ../files/zed.nix
-    ../hosts/eterna.nix
-    ../hosts/jubilife.nix
-    ../hosts/pastoria.nix
-    ../hosts/snowpoint.nix
+    ../hosts/eterna
+    ../hosts/jubilife
+    ../hosts/pastoria
+    ../hosts/snowpoint
     ../nixos.nix
     ../overlays.nix
     ../packages.nix
