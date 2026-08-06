@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: aly-codes
+  annotations:
+    helm.sh/resource-policy: keep
   labels:
     app: aly-codes
 spec:

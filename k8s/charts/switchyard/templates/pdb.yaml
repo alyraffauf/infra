@@ -2,6 +2,8 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: switchyard
+  annotations:
+    helm.sh/resource-policy: keep
   labels:
     app: switchyard
 spec:

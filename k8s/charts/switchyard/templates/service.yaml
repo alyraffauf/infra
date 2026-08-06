@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: switchyard
+  annotations:
+    helm.sh/resource-policy: keep
   labels:
     app: switchyard
 spec:
