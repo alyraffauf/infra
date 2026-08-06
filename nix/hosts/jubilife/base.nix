@@ -1,6 +1,4 @@
-{
-  ...
-}: {
+_: {
   myHw = {
     amd.cpu.enable = true;
     intel.gpu.enable = true;
