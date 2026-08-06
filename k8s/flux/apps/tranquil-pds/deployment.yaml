@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tranquil-pds
-  annotations:
-    helm.sh/resource-policy: keep
   labels:
     app: tranquil-pds
 spec:

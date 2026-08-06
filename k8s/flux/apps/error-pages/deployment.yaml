@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: error-pages
-  annotations:
-    helm.sh/resource-policy: keep
   labels:
     app: error-pages
 spec:

@@ -2,8 +2,6 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: tranquil-pds
-  annotations:
-    helm.sh/resource-policy: keep
   labels:
     app: tranquil-pds
 spec:

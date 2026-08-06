@@ -2,8 +2,6 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: aly-codes
-  annotations:
-    helm.sh/resource-policy: keep
   labels:
     app: aly-codes
 spec:

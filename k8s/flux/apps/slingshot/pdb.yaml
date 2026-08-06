@@ -2,8 +2,6 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: slingshot
-  annotations:
-    helm.sh/resource-policy: keep
   labels:
     app: slingshot
 spec:
