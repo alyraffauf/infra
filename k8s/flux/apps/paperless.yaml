@@ -7,8 +7,6 @@ spec:
   dependsOn:
     - name: pg-shared
     - name: valkey
-    - name: tika
-    - name: gotenberg
   interval: 15m
   releaseName: paperless
   targetNamespace: default
