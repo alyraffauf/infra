@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: tika
   labels:
-    app: {{ .Chart.Name }}
+    app: tika
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: tika
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: tika
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -31,7 +31,7 @@ spec:
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: tika
           image: apache/tika:3.3.1.0-full@sha256:d8e6ed96260ad89307a93195a1b856102987a818ac648502f8efbaf313d32470
           imagePullPolicy: IfNotPresent
           ports:

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: collabora
   labels:
-    app: {{ .Chart.Name }}
+    app: collabora
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: collabora
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: collabora
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -32,7 +32,7 @@ spec:
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: collabora
           image: docker.io/collabora/code:latest@sha256:1f864ce3f0c49e867787b6dd303bd6ba989542d3023f6809df558eafd04c1b97
           imagePullPolicy: IfNotPresent
           # MKNOD is required for Collabora's per-document chroot jails.

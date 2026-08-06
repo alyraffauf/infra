@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: navidrome
   labels:
-    app: {{ .Chart.Name }}
+    app: navidrome
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: navidrome
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: navidrome
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -35,7 +35,7 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: jubilife
       containers:
-        - name: {{ .Chart.Name }}
+        - name: navidrome
           image: deluan/navidrome:0.63.2@sha256:9012939114fbb1bb641b81cf96dec5ded15f0aafefe8d47a511d7cb919658e40
           imagePullPolicy: IfNotPresent
           command:
@@ -109,10 +109,10 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-data
+            claimName: navidrome-data
         - name: media
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-media
+            claimName: navidrome-media
             readOnly: true
         - name: env
           secret:

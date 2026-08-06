@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: vaultwarden
   labels:
-    app: {{ .Chart.Name }}
+    app: vaultwarden
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: vaultwarden
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: vaultwarden
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -42,7 +42,7 @@ spec:
                     values:
                       - cloud
       containers:
-        - name: {{ .Chart.Name }}
+        - name: vaultwarden
           image: vaultwarden/server:latest@sha256:ebdfe70701c60ac0c28c697e787cea767d7972940b786037b29fe0d507f821e8
           imagePullPolicy: IfNotPresent
           env:
@@ -94,4 +94,4 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-data
+            claimName: vaultwarden-data

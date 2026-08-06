@@ -1,11 +1,11 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Chart.Name }}
+  name: aly-codes
   labels:
-    app: {{ .Chart.Name }}
+    app: aly-codes
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: aly-codes

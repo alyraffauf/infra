@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.Name }}
+  name: morsels
   labels:
-    app: {{ .Chart.Name }}
+    app: morsels
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Chart.Name }}
+    app: morsels
   ports:
     - name: http
       port: 80

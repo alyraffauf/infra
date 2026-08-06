@@ -12,6 +12,27 @@ const FLUX_DIRS = [
   "k8s/flux/external-routes",
 ];
 
+// These charts use literal resource names. Keep their HelmRelease name equal
+// to the chart directory so a rename cannot silently orphan or collide with
+// an existing workload.
+const FIXED_NAME_CHARTS = new Set([
+  "aly-codes",
+  "collabora",
+  "error-pages",
+  "gotenberg",
+  "morsels",
+  "navidrome",
+  "ombi",
+  "pocket-id",
+  "seerr",
+  "slingshot",
+  "switchyard",
+  "tika",
+  "tranquil-pds",
+  "uptime-kuma",
+  "vaultwarden",
+]);
+
 type HelmRelease = {
   kind?: string;
   metadata?: { name?: string };
@@ -95,6 +116,16 @@ async function renderRelease(
   const chart = release.spec?.chart?.spec?.chart;
   if (!name || !chart)
     throw new Error("HelmRelease is missing a name or chart");
+
+  const chartName = chart.replace(/^\.\/k8s\/charts\//, "");
+  if (
+    FIXED_NAME_CHARTS.has(chartName) &&
+    (release.spec?.releaseName ?? name) !== chartName
+  ) {
+    throw new Error(
+      `${name}: fixed-name chart '${chartName}' must use releaseName '${chartName}'`,
+    );
+  }
 
   for (const source of release.spec?.valuesFrom ?? []) {
     if (

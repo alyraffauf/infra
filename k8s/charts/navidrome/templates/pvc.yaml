@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Chart.Name }}-data
+  name: navidrome-data
   labels:
-    app: {{ .Chart.Name }}
+    app: navidrome
   annotations:
     helm.sh/resource-policy: keep
 spec:
@@ -17,9 +17,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Chart.Name }}-media
+  name: navidrome-media
   labels:
-    app: {{ .Chart.Name }}
+    app: navidrome
 spec:
   capacity:
     storage: 1Ti
@@ -42,16 +42,16 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Chart.Name }}-media
+  name: navidrome-media
   labels:
-    app: {{ .Chart.Name }}
+    app: navidrome
   annotations:
     helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadOnlyMany
   storageClassName: ""
-  volumeName: {{ .Chart.Name }}-media
+  volumeName: navidrome-media
   resources:
     requests:
       storage: 1Ti

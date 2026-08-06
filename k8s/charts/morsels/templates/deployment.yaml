@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: morsels
   labels:
-    app: {{ .Chart.Name }}
+    app: morsels
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: morsels
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: morsels
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -32,7 +32,7 @@ spec:
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: morsels
           image: ghcr.io/alyraffauf/morsels:latest@sha256:a16a51a3571deffe9c372aa604e78694c9bb1d75201ce903a4c8f19ec42a39a0
           imagePullPolicy: IfNotPresent
           ports:
@@ -70,4 +70,4 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-data
+            claimName: morsels-data

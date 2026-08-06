@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Chart.Name }}-data
+  name: ombi-data
   labels:
-    app: {{ .Chart.Name }}
+    app: ombi
   annotations:
     helm.sh/resource-policy: keep
 spec:

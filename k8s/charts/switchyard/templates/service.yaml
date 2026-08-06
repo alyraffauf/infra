@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.Name }}
+  name: switchyard
   labels:
-    app: {{ .Chart.Name }}
+    app: switchyard
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Chart.Name }}
+    app: switchyard
   ports:
     - name: http
       port: 80

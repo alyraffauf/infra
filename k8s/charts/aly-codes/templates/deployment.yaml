@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: aly-codes
   labels:
-    app: {{ .Chart.Name }}
+    app: aly-codes
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: aly-codes
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: aly-codes
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -34,15 +34,15 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: {{ .Chart.Name }}
+              app: aly-codes
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: {{ .Chart.Name }}
+              app: aly-codes
       containers:
-        - name: {{ .Chart.Name }}
+        - name: aly-codes
           image: ghcr.io/alyraffauf/aly.codes:latest@sha256:39b4d3dca56de4a7cee342465e9ac4945c086509c4659ce66788c8b62aef3c2d
           imagePullPolicy: IfNotPresent
           ports:

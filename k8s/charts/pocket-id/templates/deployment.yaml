@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: pocket-id
   labels:
-    app: {{ .Chart.Name }}
+    app: pocket-id
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: pocket-id
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: pocket-id
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -43,7 +43,7 @@ spec:
                     values:
                       - cloud
       containers:
-        - name: {{ .Chart.Name }}
+        - name: pocket-id
           image: ghcr.io/pocket-id/pocket-id:v2@sha256:4a277d141d6069fd9a7b321a9aca80f4b9812b8fa122ee566d2f15900e3d8448
           imagePullPolicy: IfNotPresent
           env:

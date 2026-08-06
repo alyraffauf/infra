@@ -1,11 +1,11 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Chart.Name }}
+  name: tranquil-pds
   labels:
-    app: {{ .Chart.Name }}
+    app: tranquil-pds
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: tranquil-pds

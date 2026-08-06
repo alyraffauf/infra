@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.Name }}
+  name: seerr
   labels:
-    app: {{ .Chart.Name }}
+    app: seerr
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Chart.Name }}
+    app: seerr
   ports:
     - name: http
       port: 80

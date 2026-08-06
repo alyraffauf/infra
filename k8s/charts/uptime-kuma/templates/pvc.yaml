@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Chart.Name }}-data
+  name: uptime-kuma-data
   labels:
-    app: {{ .Chart.Name }}
+    app: uptime-kuma
   annotations:
     helm.sh/resource-policy: keep
 spec:

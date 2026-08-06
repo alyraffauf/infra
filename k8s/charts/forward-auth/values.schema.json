@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "apps": {
+      "type": "object",
+      "additionalProperties": { "type": "object" }
+    },
+    "image": { "type": "object" },
+    "resources": { "type": "object" },
+    "ingressClassName": { "type": "string" },
+    "tlsSecret": { "type": "string" },
+    "issuerURL": { "type": "string", "format": "uri" },
+    "cookieDomain": { "type": "string" },
+    "lifetime": { "type": ["string", "integer"] },
+    "logLevel": { "type": "string" }
+  },
+  "additionalProperties": true
+}

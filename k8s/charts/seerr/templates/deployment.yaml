@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: seerr
   labels:
-    app: {{ .Chart.Name }}
+    app: seerr
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: seerr
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: seerr
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -43,7 +43,7 @@ spec:
                     values:
                       - cloud
       containers:
-        - name: {{ .Chart.Name }}
+        - name: seerr
           image: seerr/seerr:latest@sha256:f4768de5f616248d723e05891f3345a1402123775d03bf0890dbfedc0831bda1
           imagePullPolicy: IfNotPresent
           env:
@@ -97,4 +97,4 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-config
+            claimName: seerr-config

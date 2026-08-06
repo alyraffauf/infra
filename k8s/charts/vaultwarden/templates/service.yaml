@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.Name }}
+  name: vaultwarden
   labels:
-    app: {{ .Chart.Name }}
+    app: vaultwarden
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Chart.Name }}
+    app: vaultwarden
   ports:
     - name: http
       port: 80

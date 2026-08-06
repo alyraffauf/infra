@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.Name }}
+  name: gotenberg
   labels:
-    app: {{ .Chart.Name }}
+    app: gotenberg
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Chart.Name }}
+    app: gotenberg
   ports:
     - name: http
       port: 3000

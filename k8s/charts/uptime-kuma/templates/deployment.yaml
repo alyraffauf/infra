@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: uptime-kuma
   labels:
-    app: {{ .Chart.Name }}
+    app: uptime-kuma
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: uptime-kuma
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: uptime-kuma
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -42,7 +42,7 @@ spec:
                     values:
                       - cloud
       containers:
-        - name: {{ .Chart.Name }}
+        - name: uptime-kuma
           image: louislam/uptime-kuma:2@sha256:a8610b3b4c38077922ba51b036691e06887d7cefd91fe620fd3d6d23d03dc240
           imagePullPolicy: IfNotPresent
           ports:
@@ -79,4 +79,4 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-data
+            claimName: uptime-kuma-data

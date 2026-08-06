@@ -1,9 +1,9 @@
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ .Chart.Name }}-drop-auth-header
+  name: navidrome-drop-auth-header
   labels:
-    app: {{ .Chart.Name }}
+    app: navidrome
 spec:
   headers:
     customRequestHeaders:

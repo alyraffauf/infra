@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: slingshot
   labels:
-    app: {{ .Chart.Name }}
+    app: slingshot
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: slingshot
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: slingshot
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -37,7 +37,7 @@ spec:
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: slingshot
           image: ghcr.io/alyraffauf/slingshot:latest@sha256:24d0777f1beedb946c4b2a06410a55cea75ff883430cc7629a18336207f212f7
           imagePullPolicy: IfNotPresent
           env:

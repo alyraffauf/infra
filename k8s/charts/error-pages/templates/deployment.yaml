@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: error-pages
   labels:
-    app: {{ .Chart.Name }}
+    app: error-pages
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: error-pages
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: error-pages
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -29,7 +29,7 @@ spec:
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: error-pages
           image: ghcr.io/tarampampam/error-pages:4@sha256:f23f8042a2804669315fd232281d0ccecf1959332314a46e02ca2482064064a6
           imagePullPolicy: IfNotPresent
           env:

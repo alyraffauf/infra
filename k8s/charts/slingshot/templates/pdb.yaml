@@ -1,11 +1,11 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Chart.Name }}
+  name: slingshot
   labels:
-    app: {{ .Chart.Name }}
+    app: slingshot
 spec:
   maxUnavailable: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: slingshot

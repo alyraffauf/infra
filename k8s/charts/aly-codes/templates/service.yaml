@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.Name }}
+  name: aly-codes
   labels:
-    app: {{ .Chart.Name }}
+    app: aly-codes
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Chart.Name }}
+    app: aly-codes
   ports:
     - name: http
       port: 80

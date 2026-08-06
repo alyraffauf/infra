@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["letsencrypt", "wildcards"],
+  "properties": {
+    "letsencrypt": {
+      "type": "object",
+      "required": ["email", "server"],
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "server": { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": true
+    },
+    "cloudflare": { "type": "object" },
+    "wildcards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "namespace", "domain"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "namespace": { "type": "string", "minLength": 1 },
+          "domain": { "type": "string", "minLength": 1 },
+          "replicateTo": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

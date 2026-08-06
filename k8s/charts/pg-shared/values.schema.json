@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["cluster", "roles", "backup"],
+  "properties": {
+    "cluster": {
+      "type": "object",
+      "required": ["name", "instances", "storage"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "instances": { "type": "integer", "minimum": 1 },
+        "storage": {
+          "type": "object",
+          "required": ["storageClass", "size"],
+          "properties": {
+            "storageClass": { "type": "string", "minLength": 1 },
+            "size": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "roles": { "type": "object", "additionalProperties": { "type": "object" } },
+    "backup": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": { "enabled": { "type": "boolean" } },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

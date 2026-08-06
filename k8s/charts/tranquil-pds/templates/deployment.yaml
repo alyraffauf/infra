@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: tranquil-pds
   labels:
-    app: {{ .Chart.Name }}
+    app: tranquil-pds
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: tranquil-pds
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: tranquil-pds
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "3000"
@@ -40,9 +40,9 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: {{ .Chart.Name }}
+              app: tranquil-pds
       containers:
-        - name: {{ .Chart.Name }}
+        - name: tranquil-pds
           image: atcr.io/tranquil.farm/tranquil-pds:latest@sha256:9332076274e8b6f971b5b22eebfb322ed4fabe7914bfa0ec15db4244ce981e32
           imagePullPolicy: IfNotPresent
           env:
@@ -54,10 +54,6 @@ spec:
               value: "valkey"
             - name: CRAWLERS
               value: "https://bsky.network"
-            # - name: DATABASE_ACQUIRE_TIMEOUT_SECS
-            #   value: "60"
-            # - name: DATABASE_MIN_CONNECTIONS
-            #   value: "1"
             - name: INVITE_CODE_REQUIRED
               value: "true"
             - name: MAIL_FROM_ADDRESS

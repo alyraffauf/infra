@@ -1,9 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Chart.Name }}
+  name: navidrome
   labels:
-    app: {{ .Chart.Name }}
+    app: navidrome
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: identity-forward-auth-navidrome@kubernetescrd
 spec:
@@ -20,18 +20,18 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Chart.Name }}
+                name: navidrome
                 port:
                   number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Chart.Name }}-rest
+  name: navidrome-rest
   labels:
-    app: {{ .Chart.Name }}
+    app: navidrome
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Chart.Name }}-drop-auth-header@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-navidrome-drop-auth-header@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
@@ -46,6 +46,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Chart.Name }}
+                name: navidrome
                 port:
                   number: 80

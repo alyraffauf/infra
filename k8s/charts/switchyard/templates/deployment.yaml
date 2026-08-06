@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: switchyard
   labels:
-    app: {{ .Chart.Name }}
+    app: switchyard
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: switchyard
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: switchyard
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -34,15 +34,15 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: {{ .Chart.Name }}
+              app: switchyard
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: {{ .Chart.Name }}
+              app: switchyard
       containers:
-        - name: {{ .Chart.Name }}
+        - name: switchyard
           image: ghcr.io/alyraffauf/switchyard-website:latest@sha256:9f2b460f89c6333546e0f5fa90efa1a379a22e9917457860f462281598c5e2d4
           imagePullPolicy: IfNotPresent
           ports:

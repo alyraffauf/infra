@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: gotenberg
   labels:
-    app: {{ .Chart.Name }}
+    app: gotenberg
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: gotenberg
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: gotenberg
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -31,7 +31,7 @@ spec:
           effect: NoExecute
           tolerationSeconds: {{ $.Values.global.failover.fastTolerationSeconds | default 60 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: gotenberg
           image: gotenberg/gotenberg:8@sha256:67097317623a503ba2a6a7e9ae8db6929a1f7e1bbd88077bacf2d325fbdab923
           imagePullPolicy: IfNotPresent
           ports:

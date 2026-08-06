@@ -87,6 +87,25 @@ Avoid these:
 - Values that model arbitrary pod specs, containers, sidecars, volumes, or env.
 - Large `_helpers.tpl` files for simple app charts.
 
+## Chart Tiers
+
+Charts fall into three readability tiers:
+
+- **Explicit application charts** keep app-specific resources visible in
+  separate templates. Most of these only substitute names and the shared
+  failover toleration; that small amount of templating is intentional.
+- **Configurable application charts** such as Plex, Valkey, Paperless,
+  Nextcloud, and Immich render meaningful values that affect the workload.
+- **Data-driven charts** render repeated resources from structured values:
+  `forward-auth`, `external-routes`, `pg-shared`, and
+  `cert-manager-issuers`.
+
+Do not move charts into namespace- or tier-named directories. The HelmRelease
+is the deployment boundary, and a chart can be reused by multiple releases
+(for example, the two Valkey releases). Keep fixed resource names readable,
+but retain templating when it expresses release namespace, shared policy, or
+real repetition.
+
 ## Data-Driven Exceptions
 
 Some charts intentionally render repeated resources from values:
