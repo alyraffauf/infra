@@ -1,9 +1,11 @@
 {
-  inputs,
-  self,
+  config,
+  lib,
+  pkgs,
   ...
 }: let
-  tnet = "narwhal-snapper.ts.net";
+  cfg = config.myNixOs.profile.observability;
+  tailnet = "narwhal-snapper.ts.net";
   kubernetesOperationsDashboard = builtins.toJSON {
     annotations.list = [];
     editable = true;
@@ -145,197 +147,46 @@
     title = "Kubernetes Operations";
     uid = "kubernetes-operations";
   };
-in [
-  self.nixosModules.myHw
-  self.nixosModules.myNixOs
+in {
+  options.myNixOs.profile.observability.enable = lib.mkEnableOption "the Grafana, Prometheus, and Loki observability stack";
 
-  ./base.nix
+  config = lib.mkIf cfg.enable {
+    myNixOs.service.caddy.enable = true;
 
-  inputs.disko.nixosModules.disko
-  inputs.sops-nix.nixosModules.sops
-  (
-    {config, ...}: {
-      fileSystems."/mnt/Storage" = {
-        device = "/dev/disk/by-id/ata-CT2000BX500SSD1_2345E8842829";
-        fsType = "btrfs";
-        options = ["compress=zstd" "noatime" "nofail"];
-      };
-
-      networking = {
-        firewall = {
-          enable = true;
-          allowedTCPPorts = [2049];
-          allowedUDPPorts = [2049];
-        };
-
-        hostName = "eterna";
-      };
-
-      services.nfs.server = {
-        enable = true;
-
-        exports = ''
-          /mnt/Storage 100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,fsid=0)
+    services = {
+      caddy.virtualHosts = {
+        "grafana.${tailnet}".extraConfig = ''
+          bind tailscale/grafana
+          reverse_proxy localhost:3010
+        '';
+        "loki.${tailnet}".extraConfig = ''
+          bind tailscale/loki
+          reverse_proxy localhost:3030
+        '';
+        "prometheus.${tailnet}".extraConfig = ''
+          bind tailscale/prometheus
+          reverse_proxy localhost:3020
         '';
       };
 
-      system = {
-        autoUpgrade.dates = "05:00";
-        stateVersion = "25.11";
-      };
-
-      myNixOs = {
-        profile = {
-          backups.jobs = {
-            syncthing-sync = {
-              paths = ["/home/aly/sync"];
-              repository = "rclone:b2:aly-backups/syncthing/sync";
-            };
-
-            syncthing-roms = {
-              paths = [config.myNixOs.service.syncthing.romsPath];
-              repository = "rclone:b2:aly-backups/syncthing/roms";
-            };
-          };
-
-          k3s = {
-            role = "agent";
-            serverAddr = "https://pastoria.cute:6443";
-            transportInterface = "wg-k3s";
-            nodeIP = "10.254.0.4";
-            zone = "home";
-            ingress = true;
-          };
-        };
-
-        service.syncthing = {
-          certFile = config.sops.secrets.syncthingCert.path;
-          keyFile = config.sops.secrets.syncthingKey.path;
-          user = "aly";
-        };
-
-        users.aly.password = "$6$JTk2qi27OpA2fOAY$ZgTDg0wbmbwHUD..0xT4xYX.AR5hWQFCMVmn8G88yi3IAY7015AupovTpfy0arkI7nl/IDu5L09bzLKeXGvJC1";
-      };
-
-      sops.secrets = {
-        syncthingCert = {
-          sopsFile = "${self}/secrets/syncthing.yaml";
-          key = "eterna_cert";
-        };
-        syncthingKey = {
-          sopsFile = "${self}/secrets/syncthing.yaml";
-          key = "eterna_key";
-        };
-      };
-    }
-  )
-
-  # disk layout
-  {
-    disko.devices = {
-      disk = {
-        vdb = {
-          type = "disk";
-          device = "/dev/sda";
-
-          content = {
-            type = "gpt";
-
-            partitions = {
-              ESP = {
-                content = {
-                  format = "vfat";
-
-                  mountOptions = [
-                    "defaults"
-                    "umask=0077"
-                  ];
-
-                  mountpoint = "/boot";
-                  type = "filesystem";
-                };
-
-                size = "1024M";
-                type = "EF00";
-              };
-
-              luks = {
-                size = "100%";
-
-                content = {
-                  type = "luks";
-                  name = "crypted";
-
-                  content = {
-                    type = "btrfs";
-                    extraArgs = ["-f"];
-
-                    subvolumes = {
-                      "/root" = {
-                        mountOptions = ["compress=zstd" "noatime"];
-                        mountpoint = "/";
-                      };
-
-                      "persist" = {
-                        mountOptions = ["compress=zstd" "noatime"];
-                        mountpoint = "/persist";
-                      };
-
-                      "/home" = {
-                        mountOptions = ["compress=zstd" "noatime"];
-                        mountpoint = "/home";
-                      };
-
-                      "/home/.snapshots" = {
-                        mountOptions = ["compress=zstd" "noatime"];
-                        mountpoint = "/home/.snapshots";
-                      };
-
-                      "/nix" = {
-                        mountOptions = ["compress=zstd" "noatime"];
-                        mountpoint = "/nix";
-                      };
-                    };
-                  };
-                };
-              };
-            };
-          };
-        };
-      };
-    };
-  }
-
-  # Retired after observability moves to snowpoint. This definition stays only
-  # until eterna itself is removed from the flake.
-  ({
-    pkgs,
-    lib,
-    ...
-  }: {
-    services = {
-      grafana = lib.mkIf false {
+      grafana = {
         enable = true;
-
         settings = {
           security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
-
           server = {
             http_addr = "0.0.0.0";
             http_port = 3010;
-            domain = "grafana.${tnet}";
+            domain = "grafana.${tailnet}";
           };
         };
-
         provision = {
           enable = true;
-
           datasources.settings.datasources = [
             {
               name = "Prometheus";
               type = "prometheus";
               access = "proxy";
-              url = "https://prometheus.${tnet}";
+              url = "https://prometheus.${tailnet}";
             }
             {
               name = "Kubernetes Prometheus";
@@ -347,10 +198,9 @@ in [
               name = "Loki";
               type = "loki";
               access = "proxy";
-              url = "https://loki.${tnet}";
+              url = "https://loki.${tailnet}";
             }
           ];
-
           dashboards.settings = {
             apiVersion = 1;
             providers = [
@@ -364,89 +214,56 @@ in [
         };
       };
 
-      loki = lib.mkIf false {
+      loki = {
         enable = true;
-
         configuration = {
           auth_enabled = false;
-
           server = {
             http_listen_port = 3030;
             grpc_listen_port = 0;
           };
-
           common = {
             instance_addr = "0.0.0.0";
             path_prefix = "/tmp/loki";
-
-            storage = {
-              filesystem = {
-                chunks_directory = "/tmp/loki/chunks";
-                rules_directory = "/tmp/loki/rules";
-              };
+            storage.filesystem = {
+              chunks_directory = "/tmp/loki/chunks";
+              rules_directory = "/tmp/loki/rules";
             };
-
             replication_factor = 1;
-
-            ring = {
-              kvstore = {
-                store = "inmemory";
-              };
-            };
+            ring.kvstore.store = "inmemory";
           };
-
-          frontend = {
-            max_outstanding_per_tenant = 2048;
-          };
-
-          pattern_ingester = {
-            enabled = true;
-          };
-
+          frontend.max_outstanding_per_tenant = 2048;
+          pattern_ingester.enabled = true;
           limits_config = {
             max_global_streams_per_user = 0;
             ingestion_rate_mb = 50000;
             ingestion_burst_size_mb = 50000;
             volume_enabled = true;
           };
-
-          query_range = {
-            results_cache = {
-              cache = {
-                embedded_cache = {
-                  enabled = true;
-                  max_size_mb = 100;
-                };
+          query_range.results_cache.cache.embedded_cache = {
+            enabled = true;
+            max_size_mb = 100;
+          };
+          schema_config.configs = [
+            {
+              from = "2020-10-24";
+              store = "tsdb";
+              object_store = "filesystem";
+              schema = "v13";
+              index = {
+                prefix = "index_";
+                period = "24h";
               };
-            };
-          };
-
-          schema_config = {
-            configs = [
-              {
-                from = "2020-10-24";
-                store = "tsdb";
-                object_store = "filesystem";
-                schema = "v13";
-                index = {
-                  prefix = "index_";
-                  period = "24h";
-                };
-              }
-            ];
-          };
-
-          analytics = {
-            reporting_enabled = false;
-          };
+            }
+          ];
+          analytics.reporting_enabled = false;
         };
       };
 
-      prometheus = lib.mkIf false {
+      prometheus = {
         enable = true;
         globalConfig.scrape_interval = "10s";
         port = 3020;
-
         scrapeConfigs = [
           {
             job_name = "bazarr";
@@ -492,26 +309,10 @@ in [
                 targets = ["jubilife:3021"];
                 labels.instance = "jubilife";
               }
-              {
-                targets = ["eterna:3021"];
-                labels.instance = "eterna";
-              }
             ];
           }
         ];
       };
     };
-  })
-
-  # services
-  {
-    services.caddy.email = "alyraffauf@fastmail.com";
-  }
-
-  {
-    nixpkgs = {
-      overlays = [self.overlays.default];
-      config.allowUnfree = true;
-    };
-  }
-]
+  };
+}

@@ -128,5 +128,5 @@ data:
     [[sections.services]]
     name = "Grafana"
     url = "https://grafana.narwhal-snapper.ts.net/"
-    healthUrl = "http://10.254.0.4:3010/api/health"
+    healthUrl = "http://10.254.0.3:3010/api/health"
     icon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/grafana.png"
