@@ -10,7 +10,7 @@ _: {
       backups.enable = true;
       btrfs.enable = true;
       dataShare.enable = true;
-      k3s.enable = true;
+      k3s.enable = false;
       localeEnUs.enable = true;
       swap.enable = true;
       vps.enable = true;
