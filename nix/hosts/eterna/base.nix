@@ -22,7 +22,6 @@ _: {
     };
     service = {
       alloy.enable = true;
-      atbbs.enable = true;
       caddy.enable = true;
       fail2ban.enable = true;
       prometheusNode.enable = true;
