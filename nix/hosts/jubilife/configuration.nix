@@ -42,7 +42,6 @@ in [
         gh
         handbrake
         lazygit
-        makemkv
         mediainfo
         mkvtoolnix
         opencode
