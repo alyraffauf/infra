@@ -115,6 +115,7 @@ in {
         "--memory=2g"
         "--pull=always"
         "--tmpfs=/cache:rw,size=8g,uid=65532,gid=65532"
+        "--ulimit=nofile=8192:8192"
       ];
       ports = ["10.254.0.1:8765:8080"];
     };
@@ -146,5 +147,4 @@ in {
     requires = ["mnt-Data.mount" "mnt-Media.mount"];
   };
 
-  systemd.services.docker-slingshot.serviceConfig.LimitNOFILE = 8192;
 }
