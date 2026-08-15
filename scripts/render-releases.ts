@@ -16,19 +16,10 @@ const FLUX_DIRS = [
 // to the chart directory so a rename cannot silently orphan or collide with
 // an existing workload.
 const FIXED_NAME_CHARTS = new Set([
-  "aly-codes",
-  "collabora",
-  "error-pages",
-  "gotenberg",
   "morsels",
   "navidrome",
   "ombi",
-  "pocket-id",
   "seerr",
-  "slingshot",
-  "switchyard",
-  "tika",
-  "tranquil-pds",
   "uptime-kuma",
   "vaultwarden",
 ]);

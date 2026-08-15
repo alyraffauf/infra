@@ -101,8 +101,8 @@ Avoid these:
 
 Charts fall into three readability tiers:
 
-- **Configurable application charts** such as Plex, Valkey, Paperless,
-  Nextcloud, and Immich render meaningful values that affect the workload.
+- **Configurable application charts** such as Valkey, Paperless, Nextcloud,
+  and Immich render meaningful values that affect the workload.
 - **Data-driven charts** render repeated resources from structured values:
   `forward-auth`, `external-routes`, `pg-shared`, and
   `cert-manager-issuers`.
