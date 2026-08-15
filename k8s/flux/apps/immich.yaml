@@ -4,6 +4,7 @@ metadata:
   name: immich
   namespace: flux-system
 spec:
+  suspend: true
   dependsOn:
     - name: valkey
   interval: 15m
