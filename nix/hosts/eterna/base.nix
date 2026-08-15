@@ -26,7 +26,6 @@
       k3s.enable = false;
       localeEnUs.enable = true;
       swap.enable = true;
-      vps.enable = true;
       wireguardK3s.enable = true;
     };
     program = {

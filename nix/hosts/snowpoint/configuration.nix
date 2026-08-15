@@ -21,7 +21,6 @@
         mediaShare.enable = true;
         observability.enable = true;
         swap.enable = true;
-        vps.enable = true;
         wireguardK3s.enable = true;
       };
       service = {
@@ -40,21 +39,16 @@
   inputs.disko.nixosModules.disko
   inputs.sops-nix.nixosModules.sops
   ({
-    modulesPath,
     config,
     self,
     ...
   }: {
-    imports = ["${modulesPath}/profiles/qemu-guest.nix"];
-
     boot.loader.grub = {
       efiSupport = true;
       efiInstallAsRemovable = true;
     };
 
-    fileSystems = {};
     networking.hostName = "snowpoint";
-    nixpkgs.hostPlatform = "x86_64-linux";
     system = {
       stateVersion = "25.11";
       autoUpgrade.dates = "03:30";

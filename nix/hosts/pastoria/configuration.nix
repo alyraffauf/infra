@@ -18,7 +18,6 @@
         k3s.enable = true;
         localeEnUs.enable = true;
         swap.enable = true;
-        vps.enable = true;
         wireguardK3s.enable = true;
       };
 
@@ -37,13 +36,7 @@
 
   inputs.disko.nixosModules.disko
   inputs.sops-nix.nixosModules.sops
-  ({
-    modulesPath,
-    pkgs,
-    ...
-  }: {
-    imports = ["${modulesPath}/profiles/qemu-guest.nix"];
-
+  ({pkgs, ...}: {
     boot.loader.grub = {
       efiSupport = true;
       efiInstallAsRemovable = true;
@@ -54,7 +47,6 @@
       hostName = "pastoria";
     };
 
-    nixpkgs.hostPlatform = "x86_64-linux";
     system = {
       stateVersion = "26.05";
       autoUpgrade.dates = "01:45";
