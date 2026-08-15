@@ -3,8 +3,11 @@
   self,
   ...
 }: [
-  self.nixosModules.myHw
   self.nixosModules.myNixOs
+
+  {
+    hardware.facter.reportPath = ./facter.json;
+  }
 
   ./base.nix
 

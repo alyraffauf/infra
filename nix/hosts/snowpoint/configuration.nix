@@ -3,9 +3,12 @@
   self,
   ...
 }: [
-  self.nixosModules.myHw
   self.nixosModules.myNixOs
   self.nixosModules.myDisko
+
+  {
+    hardware.facter.reportPath = ./facter.json;
+  }
 
   {
     myNixOs = {

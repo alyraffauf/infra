@@ -7,9 +7,12 @@
   dataDirectory = "/mnt/Data";
   k3sPodCidr = "10.42.0.0/16";
 in [
-  self.nixosModules.myHw
   self.nixosModules.myNixOs
   self.nixosModules.myDisko
+
+  {
+    hardware.facter.reportPath = ./facter.json;
+  }
 
   ./base.nix
 
