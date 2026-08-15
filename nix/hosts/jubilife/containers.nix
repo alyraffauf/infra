@@ -145,4 +145,6 @@ in {
     after = ["mnt-Data.mount" "mnt-Media.mount"];
     requires = ["mnt-Data.mount" "mnt-Media.mount"];
   };
+
+  systemd.services.docker-slingshot.serviceConfig.LimitNOFILE = 8192;
 }
