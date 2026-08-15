@@ -26,3 +26,12 @@ spec:
     - kind: ConfigMap
       name: cute-haus-global
       valuesKey: values.yaml
+  values:
+    routes:
+      - name: plex
+        host: plex.cute.haus
+        target:
+          ip: 10.254.0.1
+          port: 32400
+        tls:
+          secretName: cute-haus-tls

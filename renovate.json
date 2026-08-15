@@ -47,14 +47,13 @@
       "datasourceTemplate": "docker"
     },
     {
-      "description": "Plex plugin/scanner bundles pinned to a git commit (repo/branch/rev)",
+      "description": "Direct OCI containers on NixOS hosts",
       "customType": "regex",
-      "managerFilePatterns": ["/^k8s/charts/.*\\.ya?ml$/"],
+      "managerFilePatterns": ["/^nix/hosts/.*/containers\\.nix$/"],
       "matchStrings": [
-        "repo:\\s+[\"']?(?<depName>[^\\s\"']+)[\"']?\\s+branch:\\s+[\"']?(?<currentValue>[^\\s\"']+)[\"']?\\s+rev:\\s+[\"']?(?<currentDigest>[a-f0-9]{40})[\"']?"
+        "image = \\\"(?<depName>[^\\s\\\"]+):(?<currentValue>[^@\\\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})\\\""
       ],
-      "packageNameTemplate": "https://github.com/{{{depName}}}",
-      "datasourceTemplate": "git-refs"
+      "datasourceTemplate": "docker"
     }
   ],
 

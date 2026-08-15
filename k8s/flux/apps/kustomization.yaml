@@ -11,7 +11,6 @@ resources:
   - nextcloud.yaml
   - ombi.yaml
   - paperless.yaml
-  - plex.yaml
   - pocket-id
   - seerr.yaml
   - slingshot
