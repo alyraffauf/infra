@@ -25,10 +25,7 @@ in [
       pkgs,
       ...
     }: {
-      boot = {
-        initrd.availableKernelModules = ["r8169"];
-        kernelModules = ["sg"];
-      };
+      boot.kernelModules = ["sg"];
 
       environment.systemPackages = with pkgs; [
         abcde
