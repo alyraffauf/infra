@@ -5,7 +5,6 @@ resources:
   - collabora
   - error-pages
   - forward-auth.yaml
-  - immich.yaml
   - morsels.yaml
   - navidrome.yaml
   - nextcloud.yaml
