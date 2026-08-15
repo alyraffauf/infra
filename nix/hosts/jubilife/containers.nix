@@ -48,8 +48,7 @@
 
   virtualisation.oci-containers.containers = {
     dizquetv = {
-      image = "vexorian/dizquetv:latest";
-      pull = "always";
+      image = "vexorian/dizquetv:latest@sha256:98a7bc11dc5d16732c06c779ac7fd843dc4254853203f2d9dd9293b099743ca1";
       ports = ["0.0.0.0:8000:8000"];
       volumes = [
         "/mnt/Data/dizquetv:/home/node/app/.dizquetv"
@@ -60,7 +59,6 @@
     plex = {
       image = "docker.io/plexinc/pms-docker:1.43.3.10861-07dfddaeb@sha256:5bc1d13f48da6366f46aaf2a3ce1a6292897eadc1f8efcbbd7321d30e94f2ed4";
       devices = ["/dev/dri:/dev/dri"];
-      pull = "always";
 
       environment = {
         ADVERTISE_IP = "https://plex.cute.haus:443";
@@ -88,7 +86,6 @@
 
     slingshot = {
       image = "ghcr.io/alyraffauf/slingshot:latest@sha256:24d0777f1beedb946c4b2a06410a55cea75ff883430cc7629a18336207f212f7";
-      pull = "always";
 
       environment = {
         SLINGSHOT_CACHE_DIR = "/cache";
@@ -112,7 +109,6 @@
     immich-postgres = {
       image = "ghcr.io/immich-app/postgres:17-vectorchord0.4.3-pgvector0.8.0@sha256:0baf4cde9b54d8d7dc6a6ad8d8c43c3c6b884f82e1c2a023d571414820e39336";
       networks = ["immich"];
-      pull = "always";
 
       environment = {
         PGDATA = "/var/lib/postgresql/data/pgdata";
@@ -135,7 +131,6 @@
       image = "ghcr.io/immich-app/immich-machine-learning:v3.1.0-openvino@sha256:627dfaf9339037be132209784883f7be13c1deb6be799454797bf6f231331f5b";
       devices = ["/dev/dri:/dev/dri"];
       networks = ["immich"];
-      pull = "always";
       environment.MACHINE_LEARNING_CACHE_FOLDER = "/cache";
       extraOptions = [
         "--memory=4g"
@@ -146,7 +141,6 @@
     immich-valkey = {
       image = "valkey/valkey:9-alpine@sha256:ee91f7a174ac4d6a6b0685b3a60e321f0a9dbbb691f9b0e285be2ba1d1be8328";
       networks = ["immich"];
-      pull = "always";
       cmd = ["valkey-server" "--maxmemory" "1gb" "--maxmemory-policy" "volatile-lru"];
     };
 
@@ -158,7 +152,6 @@
         "immich-valkey"
       ];
       networks = ["immich"];
-      pull = "always";
       environment = {
         DB_DATABASE_NAME = "immich";
         DB_HOSTNAME = "immich-postgres";

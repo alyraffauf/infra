@@ -15,7 +15,6 @@ charts/
 ├── cert-manager-issuers/   # Let's Encrypt ClusterIssuer + wildcard Certificates
 ├── external-routes/        # Ingress + Service + EndpointSlice for off-cluster targets
 ├── forward-auth/           # Per-app traefik-forward-auth frontends
-├── immich/                 # Photo library + app-specific Postgres
 ├── longhorn-creds/         # B2 backup Secret + recurring backup job + UI ingress
 ├── paperless/              # Document management with rclone media mount
 ├── pg-shared/              # CloudNativePG cluster using local-path replicas
