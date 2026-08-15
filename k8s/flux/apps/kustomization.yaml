@@ -13,7 +13,6 @@ resources:
   - paperless.yaml
   - pocket-id
   - seerr.yaml
-  - slingshot
   - switchyard
   - tranquil-pds
   - uptime-kuma.yaml

@@ -77,7 +77,7 @@ in {
     };
 
     plex = {
-      image = "docker.io/plexinc/pms-docker:1.43.2.10687-563d026ea@sha256:c37106c57fed7a6624f5dee5a3ce460ff011f09a2aa7f4ee9e8dbbd08ae1b87e";
+      image = "docker.io/plexinc/pms-docker:1.43.3.10861-07dfddaeb@sha256:5bc1d13f48da6366f46aaf2a3ce1a6292897eadc1f8efcbbd7321d30e94f2ed4";
       environment = {
         ADVERTISE_IP = "https://plex.cute.haus:443";
         PLEX_GID = "1000";
@@ -98,6 +98,25 @@ in {
         "/etc/localtime:/etc/localtime:ro"
         "/mnt/Backblaze:/mnt/Backblaze:ro,rslave"
       ];
+    };
+
+    slingshot = {
+      image = "ghcr.io/alyraffauf/slingshot:latest@sha256:24d0777f1beedb946c4b2a06410a55cea75ff883430cc7629a18336207f212f7";
+      environment = {
+        SLINGSHOT_CACHE_DIR = "/cache";
+        SLINGSHOT_IDENTITY_CACHE_DISK_DB = "2";
+        SLINGSHOT_IDENTITY_CACHE_MEMORY_MB = "64";
+        SLINGSHOT_JETSTREAM = "wss://jetstream1.us-east.bsky.network/subscribe";
+        SLINGSHOT_RECORD_CACHE_DISK_DB = "4";
+        SLINGSHOT_RECORD_CACHE_MEMORY_MB = "256";
+      };
+      extraOptions = [
+        "--cpus=2"
+        "--memory=2g"
+        "--pull=always"
+        "--tmpfs=/cache:rw,size=8g,uid=65532,gid=65532"
+      ];
+      ports = ["10.254.0.1:8765:8080"];
     };
   };
 
