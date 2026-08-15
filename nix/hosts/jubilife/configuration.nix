@@ -3,9 +3,32 @@
   self,
   ...
 }: let
+  lib = inputs.nixpkgs.lib;
   tnet = "narwhal-snapper.ts.net";
   dataDirectory = "/mnt/Data";
   k3sPodCidr = "10.42.0.0/16";
+  exportarrServices = {
+    bazarr = {
+      apiKey = "bazarr_api_key";
+      port = 9708;
+    };
+    lidarr = {
+      apiKey = "lidarr_api_key";
+      port = 9709;
+    };
+    prowlarr = {
+      apiKey = "prowlarr_api_key";
+      port = 9710;
+    };
+    radarr = {
+      apiKey = "radarr_api_key";
+      port = 9711;
+    };
+    sonarr = {
+      apiKey = "sonarr_api_key";
+      port = 9712;
+    };
+  };
 in [
   self.nixosModules.myNixOs
   self.nixosModules.myDisko
@@ -205,67 +228,32 @@ in [
   # prometheus exporters
   (
     {config, ...}: {
-      sops.secrets = {
-        bazarrApiKey = {
-          sopsFile = "${self}/secrets/arr.yaml";
-          key = "bazarr_api_key";
-        };
-        lidarrApiKey = {
-          sopsFile = "${self}/secrets/arr.yaml";
-          key = "lidarr_api_key";
-        };
-        prowlarrApiKey = {
-          sopsFile = "${self}/secrets/arr.yaml";
-          key = "prowlarr_api_key";
-        };
-        radarrApiKey = {
-          sopsFile = "${self}/secrets/arr.yaml";
-          key = "radarr_api_key";
-        };
-        sonarrApiKey = {
-          sopsFile = "${self}/secrets/arr.yaml";
-          key = "sonarr_api_key";
-        };
-      };
+      sops.secrets =
+        lib.mapAttrs' (
+          serviceName: service: {
+            name = "${serviceName}ApiKey";
+            value = {
+              sopsFile = "${self}/secrets/arr.yaml";
+              key = service.apiKey;
+            };
+          }
+        )
+        exportarrServices;
 
-      services.prometheus.exporters = {
-        exportarr-bazarr = {
-          enable = true;
-          apiKeyFile = config.sops.secrets.bazarrApiKey.path;
-          port = 9708;
-          url = "https://bazarr.${tnet}";
-        };
-
-        exportarr-lidarr = {
-          enable = true;
-          apiKeyFile = config.sops.secrets.lidarrApiKey.path;
-          port = 9709;
-          url = "https://lidarr.${tnet}";
-        };
-
-        exportarr-prowlarr = {
-          enable = true;
-          apiKeyFile = config.sops.secrets.prowlarrApiKey.path;
-          port = 9710;
-          url = "https://prowlarr.${tnet}";
-        };
-
-        exportarr-radarr = {
-          enable = true;
-          apiKeyFile = config.sops.secrets.radarrApiKey.path;
-          port = 9711;
-          url = "https://radarr.${tnet}";
-        };
-
-        exportarr-sonarr = {
-          enable = true;
-          apiKeyFile = config.sops.secrets.sonarrApiKey.path;
-          port = 9712;
-          url = "https://sonarr.${tnet}";
-        };
-
-        smartctl.enable = true;
-      };
+      services.prometheus.exporters =
+        (lib.mapAttrs' (
+            serviceName: service: {
+              name = "exportarr-${serviceName}";
+              value = {
+                enable = true;
+                apiKeyFile = config.sops.secrets."${serviceName}ApiKey".path;
+                inherit (service) port;
+                url = "https://${serviceName}.${tnet}";
+              };
+            }
+          )
+          exportarrServices)
+        // {smartctl.enable = true;};
     }
   )
 
