@@ -280,6 +280,7 @@ in [
               "${dataDirectory}/immich/profile"
               "${dataDirectory}/immich/upload"
               "${dataDirectory}/immich/backups"
+              "${dataDirectory}/immich/postgres"
             ];
           };
 
