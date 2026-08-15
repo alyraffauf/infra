@@ -59,7 +59,7 @@ in {
     "d /mnt/Data/garage/meta 0700 garage garage - -"
     "d /mnt/Data/garage/data 0700 garage garage - -"
     "d /mnt/Data/immich/ml-cache 0755 root root - -"
-    "d /mnt/Data/immich/postgres 0700 root root - -"
+    "d /mnt/Data/immich/postgres 0700 999 999 - -"
     "d /mnt/Data/nextcloud/html 0750 33 33 - -"
     "d /mnt/Data/paperless 0750 1000 1000 - -"
     "d /mnt/Data/paperless/data 0750 1000 1000 - -"
@@ -190,10 +190,6 @@ in {
       script = "docker network inspect immich >/dev/null 2>&1 || docker network create immich";
       serviceConfig.Type = "oneshot";
     };
-    docker-immich.enable = false;
-    docker-immich-machine-learning.enable = false;
-    docker-immich-postgres.enable = false;
-    docker-immich-valkey.enable = false;
   };
 
   systemd.services.plex-plugins = {
