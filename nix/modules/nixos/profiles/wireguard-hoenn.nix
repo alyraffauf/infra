@@ -1,4 +1,14 @@
-_: {
+{lib, ...}: let
+  nodes = {
+    pastoria = "10.254.1.1";
+    mauville = "10.254.1.2";
+    rustboro = "10.254.1.3";
+    sootopolis = "10.254.1.4";
+    fortree = "10.254.1.5";
+    fallarbor = "10.254.1.6";
+  };
+  coreDnsHosts = lib.concatStringsSep "\n" (lib.mapAttrsToList (name: address: "    ${address} ${name}.hoenn") nodes);
+in {
   flake.nixosModules.wireguardHoenn = {
     config,
     self,
@@ -13,15 +23,6 @@ _: {
     };
 
     networking = {
-      hosts = {
-        "10.254.1.1" = ["pastoria.hoenn"];
-        "10.254.1.2" = ["mauville.hoenn"];
-        "10.254.1.3" = ["rustboro.hoenn"];
-        "10.254.1.4" = ["sootopolis.hoenn"];
-        "10.254.1.5" = ["fortree.hoenn"];
-        "10.254.1.6" = ["fallarbor.hoenn"];
-      };
-
       firewall = {
         allowedUDPPorts = [51821];
         trustedInterfaces = ["wg-hoenn"];
@@ -55,6 +56,23 @@ _: {
           }
         ];
       };
+    };
+
+    services.coredns = {
+      enable = true;
+      config = lib.concatStringsSep "\n" [
+        "hoenn:53 {"
+        "  bind ${nodes.pastoria}"
+        "  hosts {"
+        coreDnsHosts
+        "  }"
+        "}"
+      ];
+    };
+
+    systemd.services.coredns = {
+      after = ["wireguard-wg-hoenn.service"];
+      requires = ["wireguard-wg-hoenn.service"];
     };
   };
 }
