@@ -20,7 +20,9 @@
 
     blzrd = {
       url = "github:alyraffauf/blzrd";
+      inputs.flake-parts.follows = "flake-parts";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.treefmt-nix.follows = "treefmt-nix";
     };
 
     sops-nix = {
