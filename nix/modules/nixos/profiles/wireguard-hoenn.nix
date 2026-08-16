@@ -25,10 +25,10 @@ in {
     networking = {
       firewall = {
         allowedUDPPorts = [51821];
-        trustedInterfaces = ["wg-hoenn"];
+        trustedInterfaces = ["hoenn"];
       };
 
-      wireguard.interfaces.wg-hoenn = {
+      wireguard.interfaces.hoenn = {
         ips = ["10.254.1.1/24"];
         listenPort = 51821;
         privateKeyFile = config.sops.secrets.wireguard-hoenn-private.path;
@@ -71,8 +71,8 @@ in {
     };
 
     systemd.services.coredns = {
-      after = ["wireguard-wg-hoenn.service"];
-      requires = ["wireguard-wg-hoenn.service"];
+      after = ["wireguard-hoenn.service"];
+      requires = ["wireguard-hoenn.service"];
     };
   };
 }
