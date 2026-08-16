@@ -43,7 +43,7 @@ spec:
               app: tranquil-pds
       containers:
         - name: tranquil-pds
-          image: atcr.io/tranquil.farm/tranquil-pds:latest@sha256:e404bec0fb19494702f26d6da0ed144fa1201a3a7dbed059b994b1737aa878a1
+          image: atcr.io/tranquil.farm/tranquil-pds:latest@sha256:c0cf3c0e63efbda82dbadb0d78d3b58d75d23253462320d81ef43edaa5478451
           imagePullPolicy: IfNotPresent
           env:
             - name: AWS_REGION
