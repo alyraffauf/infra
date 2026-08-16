@@ -86,7 +86,7 @@ _: {
       };
 
       slingshot = {
-        image = "ghcr.io/alyraffauf/slingshot:latest@sha256:24d0777f1beedb946c4b2a06410a55cea75ff883430cc7629a18336207f212f7";
+        image = "ghcr.io/alyraffauf/slingshot:latest@sha256:6e3a2860f0c4aa98e6f95f9ff6a7d9eb61266f2272e3eaeb6de32ba221b20e38";
 
         environment = {
           SLINGSHOT_CACHE_DIR = "/cache";
