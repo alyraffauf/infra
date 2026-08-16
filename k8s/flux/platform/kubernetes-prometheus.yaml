@@ -35,8 +35,8 @@ spec:
       persistentVolume:
         storageClass: longhorn
         size: 10Gi
-      retention: 7d
-      retentionSize: 5GB
+      retention: 3d
+      retentionSize: 2GB
       service:
         type: NodePort
         nodePort: 30220
