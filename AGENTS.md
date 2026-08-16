@@ -53,16 +53,16 @@ treefmt-nix). Enforced via `nix flake check` in `just check`.
 
 ## Architecture
 
-- `nix/` — flake-parts with its entrypoint in `nix/flake/`. Hosts live in
-  `nix/hosts/<host>.nix` and set `flake.nixosConfigurations.<host>`. Hosts
-  import the wholesale `self.nixosModules.myNixOs` and, where needed,
-  `self.nixosModules.myHw` collections. Features are opt-in under
-  `myNixOs.profile.*`, `myNixOs.program.*`, `myNixOs.service.*`, and
-  `myHw.<manufacturer>.<part>` (for example,
-  `myHw.intel.gpu.enable = true`). Disk profiles live in `nix/disko.nix`.
-  k3s node config is in
-  `nix/nixos/profiles/k3s.nix` (flannel on the configured transport interface;
-  startup blocks until that interface has an IP).
+- `nix/modules/` — dendritic flake-parts tree loaded wholesale by import-tree.
+  Shared NixOS files contribute directly to `flake.nixosModules.default` or a
+  named deferred module. Hosts live in `nix/modules/hosts/nixos/<host>/`:
+  topical sibling files contribute to `flake.nixosModules.<host>`, while
+  `default.nix` constructs `config.flake.nixosConfigurations.<host>` from the
+  shared, named, and host deferred modules. Importing a named deferred module
+  activates it; `myNixOs.*` and `myDisko.*` options only parameterize imported
+  modules. Disko modules live in `nix/modules/disko/`. k3s node config is in
+  `nix/modules/nixos/profiles/k3s.nix` (flannel on the configured transport
+  interface; startup blocks until that interface has an IP).
 - `k8s/` — `flux/` is the ordered release graph. `flux/system/layers.yaml`
   defines the Flux Kustomization DAG; `flux/*/*.yaml` hold HelmReleases;
   `flux/secrets/*.sops.yaml` are first-class Kubernetes Secrets decrypted by

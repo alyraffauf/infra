@@ -16,8 +16,7 @@ This repository contains NixOS, K8s, and Ansible configurations, along with what
 .
 ├── flake.nix                # Flake entry point
 ├── nix/                     # NixOS + flake modules
-│   ├── hosts/               # NixOS host configurations
-│   └── modules/             # NixOS / flake modules
+│   └── modules/             # Dendritic flake, NixOS, Disko, and host modules
 ├── k8s/                     # k3s: Flux + in-tree Helm charts
 │   ├── flux/                # GitOps release graph (Flux Kustomizations/HelmReleases)
 │   ├── charts/              # In-tree helm charts (see k8s/charts/README.md)

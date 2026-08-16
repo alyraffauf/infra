@@ -49,7 +49,9 @@
     {
       "description": "Direct OCI containers on NixOS hosts",
       "customType": "regex",
-      "managerFilePatterns": ["/^nix/hosts/.*/containers\\.nix$/"],
+      "managerFilePatterns": [
+        "/^nix/modules/hosts/nixos/.*/containers\\.nix$/"
+      ],
       "matchStrings": [
         "image = \\\"(?<depName>[^\\s\\\"]+):(?<currentValue>[^@\\\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})\\\""
       ],
