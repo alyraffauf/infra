@@ -17,6 +17,7 @@
       self.nixosModules.k3s
       self.nixosModules.swap
       self.nixosModules.wireguardK3s
+      self.nixosModules.wireguardHoenn
       self.nixosModules.docker
       self.nixosModules.alloy
       self.nixosModules.fail2ban
