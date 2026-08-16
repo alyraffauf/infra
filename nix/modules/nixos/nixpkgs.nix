@@ -1,8 +1,5 @@
-_: {
-  flake.nixosModules.default = {self, ...}: {
-    nixpkgs = {
-      config.allowUnfree = true;
-      overlays = [self.overlays.default];
-    };
+{sharedPackageSets, ...}: {
+  flake.nixosModules.default = {
+    nixpkgs.pkgs = sharedPackageSets.x86_64-linux;
   };
 }

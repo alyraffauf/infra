@@ -64,9 +64,32 @@
     ];
   };
 
-  outputs = inputs @ {flake-parts, ...}:
-    flake-parts.lib.mkFlake {inherit inputs;} {
-      systems = ["aarch64-darwin" "x86_64-linux"];
+  outputs = inputs @ {
+    flake-parts,
+    nixpkgs,
+    ...
+  }: let
+    sharedPackageSets = {
+      aarch64-darwin = import nixpkgs {
+        system = "aarch64-darwin";
+      };
+
+      x86_64-linux = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+        overlays = [inputs.self.overlays.default];
+      };
+    };
+  in
+    flake-parts.lib.mkFlake {
+      inherit inputs;
+      specialArgs = {inherit sharedPackageSets;};
+    } {
+      systems = builtins.attrNames sharedPackageSets;
+
+      perSystem = {system, ...}: {
+        _module.args.pkgs = sharedPackageSets.${system};
+      };
 
       imports = [
         (inputs.import-tree ./nix/modules)
