@@ -13,7 +13,6 @@ _: {
         && lib.hasSuffix ".pub" fileName
     ) (builtins.readDir "${self}/keys");
     aliases = {
-      eterna = ["eterna.cute" "mauville" "mauville.local" "mauville.${tnet}"];
       jubilife = ["jubilife.cute" "lilycove" "lilycove.local" "lilycove.${tnet}"];
       pastoria = ["pastoria.cute"];
       snowpoint = ["snowpoint.cute" "dewford" "dewford.local" "dewford.${tnet}"];

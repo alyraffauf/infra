@@ -24,12 +24,6 @@ _: {
         endpoint = "152.53.90.225:51820";
         publicKey = "t1mErjV5oE4ucLtRt2UHiPShkPluxp+uM2+pRoswVS8=";
       };
-      eterna = {
-        address = "10.254.0.4";
-        homeEndpoint = "192.168.1.248:51821";
-        listenPort = 51821;
-        publicKey = "jZV8JNiEx+mZ6BzYFAxqUPy1a78AZkdgTAt7VBClhGE=";
-      };
     };
     node = nodes.${config.networking.hostName};
     isHomeNode = node ? homeEndpoint;

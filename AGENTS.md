@@ -18,7 +18,7 @@ k3s; SOPS+age secrets; Cloudflare/B2 via Terraform.
 | Task                           | Command                                                            |
 | ------------------------------ | ------------------------------------------------------------------ |
 | Local pre-push gate            | `just check` → `bun scripts/check.ts` + `nix flake check --impure` |
-| Build a NixOS host (no deploy) | `just build <host>` (`eterna` `jubilife` `pastoria` `snowpoint`)   |
+| Build a NixOS host (no deploy) | `just build <host>` (`jubilife` `pastoria` `snowpoint`)            |
 | Deploy all hosts               | `just deploy` (`blzrd switch`)                                     |
 | Offline deploy + reboot        | `just deploy-offline`                                              |
 | Update flake inputs            | `just update [inputs]` / `just update-nixpkgs`                     |

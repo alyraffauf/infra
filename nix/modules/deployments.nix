@@ -1,11 +1,5 @@
 {self, ...}: {
   blzrd.nodes = {
-    eterna = {
-      output = self.nixosConfigurations.eterna.config.system.build.toplevel;
-      type = "nixos";
-      user = "root";
-    };
-
     jubilife = {
       output = self.nixosConfigurations.jubilife.config.system.build.toplevel;
       type = "nixos";

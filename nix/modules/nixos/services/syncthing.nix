@@ -52,7 +52,6 @@ _: {
 
           devices = {
             "allyx" = {id = "XTEVJX2-DBEFN4X-UCG43YR-V4FOQYU-DMM2WH4-AMCC5FS-42UB3DM-KUDVHQL";};
-            "eterna" = {id = "ZAD2MVO-I2OQII4-C3T756B-BEBQMM6-Q4ILH2H-5CR3TMI-DR4VBFD-GLRVOQK";};
             "fallarbor" = {id = "P4URLH4-YWLMO6J-W62ET7H-TQAO3Y6-T2FAYOY-C2VTI65-VQXHVGG-NQ76PAZ";};
             "fortree" = {id = "S6PVA3I-EKOCGIU-GFX7AE6-FXM45OW-JTYN5LJ-UZ4LADZ-NNAJGDD-KST2VAG";};
             "groudon" = {id = "VOEAEAG-NP5Z3BM-DK5FO75-6G4NKSJ-3EUNFSV-VIR4KDH-OM6ZN7L-OOQKCQJ";};
@@ -74,7 +73,7 @@ _: {
           folders = lib.mkMerge [
             {
               "sync" = {
-                devices = ["allyx" "eterna" "fallarbor" "fortree" "groudon" "jubilife" "kyogre" "oreburgh" "pacifidlog" "petalburg" "rustboro" "slateport" "snowpoint" "sootopolis" "verdanturf"];
+                devices = ["allyx" "fallarbor" "fortree" "groudon" "jubilife" "kyogre" "oreburgh" "pacifidlog" "petalburg" "rustboro" "slateport" "snowpoint" "sootopolis" "verdanturf"];
                 id = "default";
                 path = "~/sync";
                 versioning = {

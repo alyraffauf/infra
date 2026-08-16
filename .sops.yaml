@@ -3,7 +3,6 @@
 # only k8s/flux/secrets/*.sops.yaml.
 keys:
   # === user keys (aly@<host>) ===
-  - &user_aly_eterna age1g79dfm0p44q5yxzhwd9syg965lupdu3n5lgyltdannmul5v5v5aszzz3gs
   - &user_aly_fortree age1kny9hv9t64ge379mk977slfx8deqy3df0c4cydh0lxu4ffczkftqpe2x6g
   - &user_aly_jubilife age1e5a0aaueyk34klry2qk094zrwfsvga0uft93mwweye30xhqhvfzs3jgqku
   - &user_aly_pacifidlog age1j9jju3whwj72udhge7v4c77gk6v6w2cq8zjngzyppwtptfsz499qyywu9a
@@ -12,7 +11,6 @@ keys:
   - &user_aly_snowpoint age1zj2aq2a2v3ngcer7s3jz6pufhh8ula8pw56etmy28dy25wrkk3vq59hu2s
   - &user_aly_sootopolis age15td0jk5e2qeq2pexvxguhuuaxuaa7nhql7mhx9jr79caska6t4pqdv5spl
   # === host keys (root@<host>) ===
-  - &host_eterna age1su5lre6favcv6gdc50yh7ecv33qgfp0tm6klunpuasa3q79kmqtsykaq0d
   - &host_jubilife age157en2pt286a22pxzyugt84ak6rn2at89tpma88juqfgj84lme5csq4999g
   - &host_pastoria age1xwlrtfu3du4jxg2l6eemzqeed8tflhdkjn0q5j9pzpecshtp3cpsh60l4j
   - &host_petalburg age1kgp3x48wn0dmzwqp0vdpfsdw42rej0ypkj0qavs7c2t2tgdud5zqcmhl40
@@ -24,7 +22,6 @@ creation_rules:
   - path_regex: ^k8s/flux/secrets/.*\.sops\.ya?ml$
     key_groups:
       - age:
-          - *user_aly_eterna
           - *user_aly_fortree
           - *user_aly_jubilife
           - *user_aly_pacifidlog
@@ -32,7 +29,6 @@ creation_rules:
           - *user_aly_rustboro
           - *user_aly_snowpoint
           - *user_aly_sootopolis
-          - *host_eterna
           - *host_jubilife
           - *host_pastoria
           - *host_petalburg
@@ -42,7 +38,6 @@ creation_rules:
   - path_regex: ^secrets/.*\.ya?ml$
     key_groups:
       - age:
-          - *user_aly_eterna
           - *user_aly_fortree
           - *user_aly_jubilife
           - *user_aly_pacifidlog
@@ -50,7 +45,6 @@ creation_rules:
           - *user_aly_rustboro
           - *user_aly_snowpoint
           - *user_aly_sootopolis
-          - *host_eterna
           - *host_jubilife
           - *host_pastoria
           - *host_petalburg
