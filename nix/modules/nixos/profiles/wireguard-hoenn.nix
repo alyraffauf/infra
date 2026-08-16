@@ -17,6 +17,7 @@ _: {
         "10.254.1.1" = ["pastoria.hoenn"];
         "10.254.1.2" = ["mauville.hoenn"];
         "10.254.1.3" = ["rustboro.hoenn"];
+        "10.254.1.4" = ["sootopolis.hoenn"];
       };
 
       firewall = {
@@ -37,6 +38,10 @@ _: {
           {
             allowedIPs = ["10.254.1.3/32"];
             publicKey = "ZhpSQzxRmKrp3Tsny9rGP1PCtcP/zghdRoQJBPWPGGQ=";
+          }
+          {
+            allowedIPs = ["10.254.1.4/32"];
+            publicKey = "ezW8vZQUpvcb2ltr8BOIn+iZ/lXI0mvNLs49ZiaZnCA=";
           }
         ];
       };
