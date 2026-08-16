@@ -19,6 +19,7 @@ _: {
         "10.254.1.3" = ["rustboro.hoenn"];
         "10.254.1.4" = ["sootopolis.hoenn"];
         "10.254.1.5" = ["fortree.hoenn"];
+        "10.254.1.6" = ["fallarbor.hoenn"];
       };
 
       firewall = {
@@ -47,6 +48,10 @@ _: {
           {
             allowedIPs = ["10.254.1.5/32"];
             publicKey = "rquW00TzyERo86qdjA+Xc4dtFfNQIidxxIkp9Y6hSBY=";
+          }
+          {
+            allowedIPs = ["10.254.1.6/32"];
+            publicKey = "ZbPq07drguGi6udpyBj1zOsyoxQzcm4awstyWIJRzAQ=";
           }
         ];
       };
