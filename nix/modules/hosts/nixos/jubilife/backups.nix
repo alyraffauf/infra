@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.jubilife = {
+  flake.nixosModules.jubilife = {config, ...}: {
     myNixOs.profile.backups.jobs = let
       dataDirectory = "/mnt/Data";
     in {
@@ -16,6 +16,14 @@ _: {
       plex = {
         exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];
         paths = ["${dataDirectory}/plex"];
+      };
+      syncthing-roms = {
+        paths = [config.myNixOs.service.syncthing.romsPath];
+        repository = "rclone:b2:aly-backups/syncthing/roms";
+      };
+      syncthing-sync = {
+        paths = ["/home/aly/sync"];
+        repository = "rclone:b2:aly-backups/syncthing/sync";
       };
     };
   };
