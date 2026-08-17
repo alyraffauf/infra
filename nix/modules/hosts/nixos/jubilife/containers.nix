@@ -229,7 +229,7 @@ _: {
         };
         environmentFiles = [config.sops.templates.postgres-environment.path];
         volumes = [
-          "/mnt/Data/postgres:/var/lib/postgresql/data"
+          "/mnt/Data/postgres:/var/lib/postgresql"
           "${pkgs.writeShellScript "postgres-init-nextcloud" ''
             set -eu
             psql --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" \\
