@@ -1,18 +1,10 @@
 ---
 - name: "[{{ client_spec.slug }}] Configure local Nextcloud OIDC"
-  ansible.builtin.command:
-    argv:
-      - docker
-      - exec
-      - --user=33:33
-      - -e
-      - "OIDC_CLIENT_ID={{ oidc_client_credentials.client_id }}"
-      - -e
-      - "OIDC_CLIENT_SECRET={{ oidc_client_credentials.client_secret }}"
-      - nextcloud
-      - /bin/sh
-      - -ec
-      - |
+  ansible.builtin.raw: |
+    docker exec --user=33:33 \
+      -e OIDC_CLIENT_ID={{ oidc_client_credentials.client_id | quote }} \
+      -e OIDC_CLIENT_SECRET={{ oidc_client_credentials.client_secret | quote }} \
+      nextcloud /bin/sh -ec '
         occ() {
           php /var/www/html/occ "$@"
         }
@@ -28,5 +20,6 @@
           --mapping-email=email \
           --mapping-display-name=name \
           --unique-uid=0
+      '
   delegate_to: jubilife
   no_log: true
