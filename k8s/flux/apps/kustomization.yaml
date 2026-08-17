@@ -7,7 +7,6 @@ resources:
   - forward-auth.yaml
   - morsels.yaml
   - navidrome.yaml
-  - nextcloud.yaml
   - ombi.yaml
   - paperless.yaml
   - pocket-id
