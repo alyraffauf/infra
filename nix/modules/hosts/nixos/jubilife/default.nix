@@ -23,6 +23,7 @@
       self.nixosModules.wireguardK3s
       self.nixosModules.lanzaboote
       self.nixosModules.docker
+      self.nixosModules.dockerNetworks
       self.nixosModules.alloy
       self.nixosModules.atbbs
       self.nixosModules.caddy

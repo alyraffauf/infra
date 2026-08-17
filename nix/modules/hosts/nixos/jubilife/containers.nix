@@ -91,6 +91,27 @@ _: {
       '';
     };
 
+    myNixOs.docker.networks = {
+      immich.containers = [
+        "immich-postgres"
+        "immich-machine-learning"
+        "immich-valkey"
+        "immich"
+      ];
+
+      nextcloud = {
+        containers = [
+          "postgres"
+          "nextcloud-valkey"
+          "nextcloud"
+          "nextcloud-cron"
+        ];
+        subnet = "172.19.0.0/16";
+        bridgeInterface = "nextcloud0";
+        allowedTCPPorts = [3900];
+      };
+    };
+
     virtualisation.oci-containers.containers = {
       dizquetv = {
         image = "vexorian/dizquetv:latest@sha256:98a7bc11dc5d16732c06c779ac7fd843dc4254853203f2d9dd9293b099743ca1";
@@ -316,58 +337,6 @@ _: {
     };
 
     systemd.services = {
-      docker-network-immich = {
-        after = ["docker.service"];
-        requires = ["docker.service"];
-
-        before = [
-          "docker-immich-postgres.service"
-          "docker-immich-machine-learning.service"
-          "docker-immich-valkey.service"
-          "docker-immich.service"
-        ];
-
-        requiredBy = [
-          "docker-immich-postgres.service"
-          "docker-immich-machine-learning.service"
-          "docker-immich-valkey.service"
-          "docker-immich.service"
-        ];
-
-        path = [pkgs.docker];
-        script = "docker network inspect immich >/dev/null 2>&1 || docker network create immich";
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-        };
-      };
-
-      docker-network-nextcloud = {
-        after = ["docker.service"];
-        requires = ["docker.service"];
-
-        before = [
-          "docker-postgres.service"
-          "docker-nextcloud-valkey.service"
-          "docker-nextcloud.service"
-          "docker-nextcloud-cron.service"
-        ];
-
-        requiredBy = [
-          "docker-postgres.service"
-          "docker-nextcloud-valkey.service"
-          "docker-nextcloud.service"
-          "docker-nextcloud-cron.service"
-        ];
-
-        path = [pkgs.docker];
-        script = "docker network inspect nextcloud >/dev/null 2>&1 || docker network create --driver bridge --subnet 172.19.0.0/16 --opt com.docker.network.bridge.name=nextcloud0 nextcloud";
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-        };
-      };
-
       docker-dizquetv.unitConfig.RequiresMountsFor = ["/mnt/Data"];
 
       docker-plex.unitConfig.RequiresMountsFor = [
