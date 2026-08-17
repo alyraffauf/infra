@@ -47,10 +47,10 @@
       "datasourceTemplate": "docker"
     },
     {
-      "description": "Direct OCI containers on NixOS hosts",
+      "description": "Direct OCI containers on NixOS hosts, including per-stack modules",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^nix/modules/hosts/nixos/.*/containers\\.nix$/"
+        "/^nix/modules/hosts/nixos/.*/containers(?:/.*)?\\.nix$/"
       ],
       "matchStrings": [
         "image = \\\"(?<depName>[^\\s\\\"]+):(?<currentValue>[^@\\\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})\\\""
