@@ -87,6 +87,7 @@ _: {
       services = {
         k3s = {
           enable = true;
+          gracefulNodeShutdown.enable = true;
           inherit (cfg) role clusterInit;
           serverAddr = lib.mkIf (cfg.serverAddr != null) cfg.serverAddr;
           tokenFile = config.sops.secrets.k3s.path;
