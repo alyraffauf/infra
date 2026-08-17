@@ -1,8 +1,32 @@
 ---
-- ansible.builtin.include_tasks: _write-secret-and-restart.yml
-  vars:
-    secret_name: nextcloud-sso-env
-    secret_data:
-      OIDC_CLIENT_ID: "{{ oidc_client_credentials.client_id }}"
-      OIDC_CLIENT_SECRET: "{{ oidc_client_credentials.client_secret }}"
-    deployment_name: nextcloud
+- name: "[{{ client_spec.slug }}] Configure local Nextcloud OIDC"
+  ansible.builtin.command:
+    argv:
+      - docker
+      - exec
+      - --user=33:33
+      - -e
+      - "OIDC_CLIENT_ID={{ oidc_client_credentials.client_id }}"
+      - -e
+      - "OIDC_CLIENT_SECRET={{ oidc_client_credentials.client_secret }}"
+      - nextcloud
+      - /bin/sh
+      - -ec
+      - |
+        occ() {
+          php /var/www/html/occ "$@"
+        }
+
+        occ app:install user_oidc || true
+        occ app:enable user_oidc
+        occ user_oidc:provider cute.haus \
+          --clientid="$OIDC_CLIENT_ID" \
+          --clientsecret="$OIDC_CLIENT_SECRET" \
+          --discoveryuri="https://id.cute.haus/.well-known/openid-configuration" \
+          --scope="openid email profile" \
+          --mapping-uid=preferred_username \
+          --mapping-email=email \
+          --mapping-display-name=name \
+          --unique-uid=0
+  delegate_to: jubilife
+  no_log: true

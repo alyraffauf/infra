@@ -11,7 +11,10 @@ _: {
         "${dataDirectory}/immich/postgres"
       ];
       garage.paths = ["${dataDirectory}/garage"];
-      nextcloud.paths = ["${dataDirectory}/nextcloud/html"];
+      nextcloud.paths = [
+        "${dataDirectory}/nextcloud/html"
+        "${dataDirectory}/postgres"
+      ];
       paperless.paths = ["${dataDirectory}/paperless"];
       plex = {
         exclude = ["${dataDirectory}/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"];

@@ -4,6 +4,7 @@ metadata:
   name: nextcloud
   namespace: flux-system
 spec:
+  suspend: true
   dependsOn:
     - name: pg-shared
     - name: valkey-nextcloud
