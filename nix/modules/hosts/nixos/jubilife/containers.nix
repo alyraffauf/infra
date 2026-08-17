@@ -237,7 +237,7 @@ _: {
             CREATE ROLE nextcloud LOGIN PASSWORD :'nextcloud_postgres_password';
             CREATE DATABASE nextcloud OWNER nextcloud;
             SQL
-          ''}:/docker-entrypoint-initdb.d/10-nextcloud:ro"
+          ''}:/docker-entrypoint-initdb.d/10-nextcloud.sh:ro"
         ];
       };
 
@@ -287,7 +287,7 @@ _: {
         };
         environmentFiles = [config.sops.templates.nextcloud-environment.path];
         extraOptions = ["--memory=4g"];
-        ports = ["10.254.0.1:8080:80"];
+        ports = ["10.254.0.1:8081:80"];
         volumes = ["/mnt/Data/nextcloud/html:/var/www/html"];
       };
 
