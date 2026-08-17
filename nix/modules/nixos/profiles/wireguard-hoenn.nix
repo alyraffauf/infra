@@ -6,6 +6,7 @@
     sootopolis = "10.254.1.4";
     fortree = "10.254.1.5";
     fallarbor = "10.254.1.6";
+    pacifidlog = "10.254.1.7";
   };
   coreDnsHosts = lib.concatStringsSep "\n" (lib.mapAttrsToList (name: address: "    ${address} ${name}.hoenn") nodes);
 in {
@@ -53,6 +54,10 @@ in {
           {
             allowedIPs = ["10.254.1.6/32"];
             publicKey = "ZbPq07drguGi6udpyBj1zOsyoxQzcm4awstyWIJRzAQ=";
+          }
+          {
+            allowedIPs = ["10.254.1.7/32"];
+            publicKey = "E8FXq8GhLhP83beFTzyN5G37rW5DgM9YcwtnQmaKQHs=";
           }
         ];
       };
