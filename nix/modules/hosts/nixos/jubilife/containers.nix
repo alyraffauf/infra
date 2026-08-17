@@ -261,7 +261,7 @@ _: {
           MAIL_FROM_ADDRESS = "admin";
           OBJECTSTORE_S3_AUTOCREATE = "false";
           OBJECTSTORE_S3_BUCKET = "aly-nextcloud";
-          OBJECTSTORE_S3_HOST = "10.254.0.1";
+          OBJECTSTORE_S3_HOST = "host.docker.internal";
           OBJECTSTORE_S3_PORT = "3900";
           OBJECTSTORE_S3_REGION = "garage";
           OBJECTSTORE_S3_SSL = "false";
@@ -286,7 +286,10 @@ _: {
           NEXTCLOUD_TRUSTED_DOMAINS = "nextcloud.cute.haus";
         };
         environmentFiles = [config.sops.templates.nextcloud-environment.path];
-        extraOptions = ["--memory=4g"];
+        extraOptions = [
+          "--add-host=host.docker.internal:172.19.0.1"
+          "--memory=4g"
+        ];
         ports = ["10.254.0.1:8081:80"];
         volumes = ["/mnt/Data/nextcloud/html:/var/www/html"];
       };
@@ -304,7 +307,10 @@ _: {
           REDIS_HOST_PORT = "6379";
         };
         environmentFiles = [config.sops.templates.nextcloud-environment.path];
-        extraOptions = ["--user=33:33"];
+        extraOptions = [
+          "--add-host=host.docker.internal:172.19.0.1"
+          "--user=33:33"
+        ];
         volumes = ["/mnt/Data/nextcloud/html:/var/www/html"];
       };
     };
@@ -355,7 +361,7 @@ _: {
         ];
 
         path = [pkgs.docker];
-        script = "docker network inspect nextcloud >/dev/null 2>&1 || docker network create nextcloud";
+        script = "docker network inspect nextcloud >/dev/null 2>&1 || docker network create --driver bridge --subnet 172.19.0.0/16 --opt com.docker.network.bridge.name=nextcloud0 nextcloud";
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
@@ -402,6 +408,10 @@ _: {
             echo "Nextcloud database host is neither the cluster nor local PostgreSQL" >&2
             exit 1
           fi
+
+          ${pkgs.gnused}/bin/sed -i \
+            "s/10\\.254\\.0\\.1/host.docker.internal/g" \
+            "$config_file"
         '';
         unitConfig = {
           ConditionPathExists = "/mnt/Data/nextcloud/.local-postgres-ready";

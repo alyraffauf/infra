@@ -8,6 +8,7 @@ _: {
         -s 10.42.0.0/16 -p tcp --dport 2049 -j ACCEPT
         -s 10.42.0.0/16 -p udp --dport 2049 -j ACCEPT
       '';
+      interfaces.nextcloud0.allowedTCPPorts = [3900];
     };
   };
 }

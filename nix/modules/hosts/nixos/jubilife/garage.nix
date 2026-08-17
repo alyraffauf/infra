@@ -32,6 +32,7 @@ _: {
         owner = "garage";
         group = "garage";
         mode = "0400";
+        restartUnits = ["garage.service"];
         content = ''
           metadata_dir = "${dataDirectory}/garage/meta"
           data_dir = "${dataDirectory}/garage/data"
@@ -42,7 +43,8 @@ _: {
           rpc_secret = "${config.sops.placeholder.garageRpcSecret}"
 
           [s3_api]
-          api_bind_addr = "10.254.0.1:3900"
+          # The firewall limits S3 access to k3s and the local Nextcloud network.
+          api_bind_addr = "[::]:3900"
           s3_region = "garage"
         '';
       };
