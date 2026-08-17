@@ -49,6 +49,13 @@ spec:
           port: 8081
         tls:
           secretName: cute-haus-tls
+      - name: collabora
+        host: collabora.cute.haus
+        target:
+          ip: 10.254.0.1
+          port: 9980
+        tls:
+          secretName: cute-haus-tls
       - name: slingshot
         host: slingshot.cute.haus
         target:
