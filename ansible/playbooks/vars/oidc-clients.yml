@@ -43,7 +43,6 @@ oidc_clients:
       - https://paperless.cute.haus/accounts/oidc/pocket-id/login/callback/
     isPublic: false
     pkceEnabled: true
-    integration: paperless
 
   - slug: nextcloud
     name: Nextcloud

@@ -56,6 +56,13 @@ spec:
           port: 9980
         tls:
           secretName: cute-haus-tls
+      - name: paperless
+        host: paperless.cute.haus
+        target:
+          ip: 10.254.0.1
+          port: 8001
+        tls:
+          secretName: cute-haus-tls
       - name: slingshot
         host: slingshot.cute.haus
         target:
