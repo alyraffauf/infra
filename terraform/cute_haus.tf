@@ -97,7 +97,7 @@ resource "cloudflare_dns_record" "cute_haus_ombi" {
   zone_id  = local.zones.cute_haus
   name     = "ombi.cute.haus"
   type     = "A"
-  content  = local.hosts.sunnyshore
+  content  = local.hosts.olivine
   proxied  = true
   ttl      = 1
   tags     = []
