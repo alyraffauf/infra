@@ -7,7 +7,6 @@ locals {
     "kuma.cute.haus"           = true
     "navidrome.cute.haus"      = true
     "nextcloud.cute.haus"      = false
-    "ombi.cute.haus"           = true
     "paperless.cute.haus"      = false
     "photoprism.cute.haus"     = false
     "plex.cute.haus"           = false
@@ -30,6 +29,11 @@ moved {
 moved {
   from = cloudflare_dns_record.cute_haus_a["pds.cute.haus"]
   to   = cloudflare_dns_record.cute_haus_pds
+}
+
+moved {
+  from = cloudflare_dns_record.cute_haus_a["ombi.cute.haus"]
+  to   = cloudflare_dns_record.cute_haus_ombi
 }
 
 resource "cloudflare_dns_record" "cute_haus_a" {
@@ -72,6 +76,17 @@ resource "cloudflare_dns_record" "cute_haus_pds" {
   type     = "A"
   content  = local.hosts.sunnyshore
   proxied  = false
+  ttl      = 1
+  tags     = []
+  settings = {}
+}
+
+resource "cloudflare_dns_record" "cute_haus_ombi" {
+  zone_id  = local.zones.cute_haus
+  name     = "ombi.cute.haus"
+  type     = "A"
+  content  = local.hosts.sunnyshore
+  proxied  = true
   ttl      = 1
   tags     = []
   settings = {}
