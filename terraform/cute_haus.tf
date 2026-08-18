@@ -13,6 +13,12 @@ locals {
     "slingshot.cute.haus"      = true
     "status.cute.haus"         = true
   }
+
+  cute_haus_johto_ingress = toset([
+    "collabora.cute.haus",
+    "nextcloud.cute.haus",
+    "paperless.cute.haus",
+  ])
 }
 
 moved {
@@ -45,7 +51,7 @@ resource "cloudflare_dns_record" "cute_haus_a" {
   zone_id  = local.zones.cute_haus
   name     = each.key
   type     = "A"
-  content  = local.hosts.pastoria
+  content  = contains(local.cute_haus_johto_ingress, each.key) ? local.hosts.olivine : local.hosts.pastoria
   proxied  = each.value
   ttl      = 1
   tags     = []
