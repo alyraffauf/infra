@@ -1,9 +1,0 @@
----
-# tranquil's chart expects SSO_OIDC_* env names.
-- ansible.builtin.include_tasks: _write-secret-and-restart.yml
-  vars:
-    secret_name: tranquil-sso-env
-    secret_data:
-      SSO_OIDC_CLIENT_ID: "{{ oidc_client_credentials.client_id }}"
-      SSO_OIDC_CLIENT_SECRET: "{{ oidc_client_credentials.client_secret }}"
-    deployment_name: tranquil-pds

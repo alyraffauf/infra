@@ -30,8 +30,6 @@ spec:
     backup:
       enabled: true
     roles:
-      tranquil:
-        database: tranquil
       pocket-id:
         database: pocket-id
       paperless:

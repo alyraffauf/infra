@@ -61,11 +61,6 @@
 
   "packageRules": [
     {
-      "description": "Skip tranquil-pds (atcr.io needs separate creds)",
-      "enabled": false,
-      "matchPackageNames": ["/tranquil/"]
-    },
-    {
       "description": "Skip Forgejo (Forgejo registries resolve with skopeo but return no-result in Renovate)",
       "enabled": false,
       "matchPackageNames": [

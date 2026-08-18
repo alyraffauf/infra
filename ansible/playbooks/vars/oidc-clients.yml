@@ -6,8 +6,6 @@ oidc_clients:
       - https://pds.cute.haus/oauth/sso/callback
     isPublic: false
     pkceEnabled: true
-    integration: tranquil
-
   # Slug must match the forward-auth-<app> Deployment name.
   - slug: forward-auth-navidrome
     name: Navidrome

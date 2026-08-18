@@ -10,7 +10,6 @@ resources:
   - pocket-id
   - seerr.yaml
   - switchyard
-  - tranquil-pds
   - uptime-kuma.yaml
   - vaultwarden.yaml
   - watsup
