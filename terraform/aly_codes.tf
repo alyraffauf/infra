@@ -1,5 +1,5 @@
 locals {
-  aly_codes_ingress_hosts = toset([
+  aly_codes_public_hosts = toset([
     "aly.codes",
     "status.aly.codes",
     "switchyard.aly.codes",
@@ -9,7 +9,7 @@ locals {
 }
 
 resource "cloudflare_dns_record" "aly_codes_a" {
-  for_each = local.aly_codes_ingress_hosts
+  for_each = local.aly_codes_public_hosts
   zone_id  = local.zones.aly_codes
   name     = each.value
   type     = "A"
@@ -21,7 +21,7 @@ resource "cloudflare_dns_record" "aly_codes_a" {
 }
 
 resource "cloudflare_dns_record" "aly_codes_canalave_a" {
-  for_each = local.aly_codes_ingress_hosts
+  for_each = local.aly_codes_public_hosts
   zone_id  = local.zones.aly_codes
   name     = each.value
   type     = "A"
