@@ -1,9 +1,7 @@
 locals {
   aly_codes_public_hosts = toset([
     "aly.codes",
-    "status.aly.codes",
     "switchyard.aly.codes",
-    "vibes.aly.codes",
   ])
   aly_codes_fm_dkim = toset(["fm1", "fm2", "fm3"])
 }
