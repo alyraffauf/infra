@@ -1,6 +1,0 @@
-args:
-  - valkey-server
-  - --maxmemory
-  - 1gb
-  - --maxmemory-policy
-  - volatile-lru

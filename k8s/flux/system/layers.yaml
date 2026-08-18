@@ -133,14 +133,6 @@ spec:
       kind: HelmRelease
       name: pg-shared
       namespace: flux-system
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: valkey
-      namespace: flux-system
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: valkey-nextcloud
-      namespace: flux-system
   sourceRef:
     kind: GitRepository
     name: flux-system

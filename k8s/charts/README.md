@@ -100,16 +100,15 @@ Avoid these:
 
 Charts fall into three readability tiers:
 
-- **Configurable application charts** such as Valkey, Paperless, Nextcloud,
-  and Immich render meaningful values that affect the workload.
+- **Configurable application charts** such as Paperless, Nextcloud, and Immich
+  render meaningful values that affect the workload.
 - **Data-driven charts** render repeated resources from structured values:
   `forward-auth`, `external-routes`, `pg-shared`, and
   `cert-manager-issuers`.
 
 Do not move Helm charts into namespace-named directories. The HelmRelease is
-the deployment boundary, and a chart can be reused by multiple releases (for
-example, the two Valkey releases). Fixed hand-authored workloads belong in
-their Flux layer as raw manifests instead.
+the deployment boundary, and a chart can be reused by multiple releases. Fixed
+hand-authored workloads belong in their Flux layer as raw manifests instead.
 
 ## Data-Driven Exceptions
 
