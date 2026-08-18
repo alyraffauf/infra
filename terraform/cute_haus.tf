@@ -16,6 +16,7 @@ locals {
 
   cute_haus_johto_ingress = toset([
     "collabora.cute.haus",
+    "immich.cute.haus",
     "nextcloud.cute.haus",
     "paperless.cute.haus",
   ])
