@@ -13,7 +13,19 @@ resource "cloudflare_dns_record" "aly_codes_a" {
   zone_id  = local.zones.aly_codes
   name     = each.value
   type     = "A"
-  content  = local.hosts.pastoria
+  content  = local.hosts.sunnyshore
+  proxied  = true
+  ttl      = 1
+  tags     = []
+  settings = {}
+}
+
+resource "cloudflare_dns_record" "aly_codes_canalave_a" {
+  for_each = local.aly_codes_ingress_hosts
+  zone_id  = local.zones.aly_codes
+  name     = each.value
+  type     = "A"
+  content  = local.hosts.canalave
   proxied  = true
   ttl      = 1
   tags     = []

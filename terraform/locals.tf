@@ -1,7 +1,9 @@
 locals {
   hosts = {
-    pastoria  = "51.81.87.134"
-    snowpoint = "152.53.90.225"
+    canalave   = "40.160.83.153"
+    pastoria   = "51.81.87.134"
+    snowpoint  = "152.53.90.225"
+    sunnyshore = "40.160.83.152"
   }
 
   zones = {
