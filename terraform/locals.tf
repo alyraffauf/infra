@@ -1,6 +1,7 @@
 locals {
   hosts = {
     canalave   = "40.160.83.153"
+    olivine    = "51.81.32.154"
     pastoria   = "51.81.87.134"
     snowpoint  = "152.53.90.225"
     sunnyshore = "40.160.83.152"
