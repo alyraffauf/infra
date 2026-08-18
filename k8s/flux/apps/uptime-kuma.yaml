@@ -4,6 +4,7 @@ metadata:
   name: uptime-kuma
   namespace: flux-system
 spec:
+  suspend: true
   interval: 15m
   releaseName: uptime-kuma
   targetNamespace: default

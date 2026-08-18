@@ -11,7 +11,6 @@ locals {
     "photoprism.cute.haus"     = false
     "seerr.cute.haus"          = true
     "slingshot.cute.haus"      = true
-    "status.cute.haus"         = true
   }
 
   cute_haus_johto_ingress = toset([
@@ -19,6 +18,7 @@ locals {
     "immich.cute.haus",
     "nextcloud.cute.haus",
     "paperless.cute.haus",
+    "kuma.cute.haus",
   ])
 }
 
