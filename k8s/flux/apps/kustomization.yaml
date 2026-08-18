@@ -4,4 +4,3 @@ resources:
   - error-pages
   - forward-auth.yaml
   - navidrome.yaml
-  - watsup

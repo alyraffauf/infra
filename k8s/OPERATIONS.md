@@ -91,7 +91,6 @@ node-local or host-mounted data and must be recovered on its owning node.
 | tika         | NixOS        | jubilife    | internal                    | paperless                                 | none                                  | Git                         | rebuildable                             |
 | uptime-kuma  | uptime-kuma  | default     | https://kuma.cute.haus      | —                                         | Longhorn                              | Longhorn backup owner       | monitor history/config loss possible    |
 | vaultwarden  | vaultwarden  | default     | https://vault.cute.haus     | —                                         | Longhorn                              | Longhorn backup owner       | vault loss is critical                  |
-| watsup       | Kustomize    | websites    | https://cute.haus           | —                                         | ConfigMap                             | Git                         | rebuildable                             |
 
 ## Stateful recovery
 
