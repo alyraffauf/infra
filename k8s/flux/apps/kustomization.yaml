@@ -6,7 +6,6 @@ resources:
   - navidrome.yaml
   - ombi.yaml
   - pocket-id
-  - seerr.yaml
   - uptime-kuma.yaml
   - vaultwarden.yaml
   - watsup
