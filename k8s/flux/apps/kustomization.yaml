@@ -4,7 +4,5 @@ resources:
   - error-pages
   - forward-auth.yaml
   - navidrome.yaml
-  - pocket-id
   - uptime-kuma.yaml
-  - vaultwarden.yaml
   - watsup

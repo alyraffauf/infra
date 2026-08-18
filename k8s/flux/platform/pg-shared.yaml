@@ -30,8 +30,6 @@ spec:
     backup:
       enabled: true
     roles:
-      pocket-id:
-        database: pocket-id
       paperless:
         database: paperless
       nextcloud:
