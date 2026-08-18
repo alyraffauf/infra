@@ -15,13 +15,17 @@ locals {
     "seerr.cute.haus"          = true
     "slingshot.cute.haus"      = true
     "status.cute.haus"         = true
-    "vault.cute.haus"          = true
   }
 }
 
 moved {
   from = cloudflare_dns_record.cute_haus_a["id.cute.haus"]
   to   = cloudflare_dns_record.cute_haus_id
+}
+
+moved {
+  from = cloudflare_dns_record.cute_haus_a["vault.cute.haus"]
+  to   = cloudflare_dns_record.cute_haus_vault
 }
 
 resource "cloudflare_dns_record" "cute_haus_a" {
@@ -39,6 +43,17 @@ resource "cloudflare_dns_record" "cute_haus_a" {
 resource "cloudflare_dns_record" "cute_haus_id" {
   zone_id  = local.zones.cute_haus
   name     = "id.cute.haus"
+  type     = "A"
+  content  = local.hosts.sunnyshore
+  proxied  = true
+  ttl      = 1
+  tags     = []
+  settings = {}
+}
+
+resource "cloudflare_dns_record" "cute_haus_vault" {
+  zone_id  = local.zones.cute_haus
+  name     = "vault.cute.haus"
   type     = "A"
   content  = local.hosts.sunnyshore
   proxied  = true
