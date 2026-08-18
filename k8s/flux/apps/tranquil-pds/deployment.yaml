@@ -5,7 +5,7 @@ metadata:
   labels:
     app: tranquil-pds
 spec:
-  replicas: 2
+  replicas: 0
   selector:
     matchLabels:
       app: tranquil-pds
