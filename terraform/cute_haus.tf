@@ -3,7 +3,6 @@ locals {
     "auth-navidrome.cute.haus" = true
     "collabora.cute.haus"      = false
     "cute.haus"                = true
-    "id.cute.haus"             = true
     "immich.cute.haus"         = false
     "kuma.cute.haus"           = true
     "navidrome.cute.haus"      = true
@@ -27,6 +26,17 @@ resource "cloudflare_dns_record" "cute_haus_a" {
   type     = "A"
   content  = local.hosts.pastoria
   proxied  = each.value
+  ttl      = 1
+  tags     = []
+  settings = {}
+}
+
+resource "cloudflare_dns_record" "cute_haus_id" {
+  zone_id  = local.zones.cute_haus
+  name     = "id.cute.haus"
+  type     = "A"
+  content  = local.hosts.sunnyshore
+  proxied  = true
   ttl      = 1
   tags     = []
   settings = {}
