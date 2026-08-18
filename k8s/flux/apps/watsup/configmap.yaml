@@ -41,10 +41,6 @@ data:
     url = "https://atbbs.xyz/"
 
     [[sections.services]]
-    name = "morsels.blue"
-    url = "https://morsels.blue/"
-
-    [[sections.services]]
     name = "haunt.at"
     url = "https://haunt.at/"
 
@@ -66,14 +62,6 @@ data:
     type = "services"
     title = "Webpages"
     columns = 3
-
-    [[sections.services]]
-    name = "Aly Raffauf"
-    url = "https://aly.codes/"
-
-    [[sections.services]]
-    name = "Switchyard"
-    url = "https://switchyard.aly.codes/"
 
     [[sections.services]]
     name = "Morgan Tamayo"

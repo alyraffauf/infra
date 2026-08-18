@@ -73,31 +73,28 @@ the three moved services.
 This table is maintained with the Flux workload declarations. `local-path` means
 node-local or host-mounted data and must be recovered on its owning node.
 
-| Release          | Delivery     | Namespace   | URL                          | Dependencies                              | Persistence                                    | Backup / restore owner         | Data-loss expectation                   |
-| ---------------- | ------------ | ----------- | ---------------------------- | ----------------------------------------- | ---------------------------------------------- | ------------------------------ | --------------------------------------- |
-| aly-codes        | Kustomize    | websites    | https://aly.codes            | —                                         | none                                           | Git/site build                 | rebuildable                             |
-| collabora        | Docker       | Jubilife    | https://collabora.cute.haus  | nextcloud                                 | none                                           | configuration only             | rebuildable                             |
-| error-pages      | Kustomize    | default     | internal                     | traefik                                   | none                                           | Git                            | rebuildable                             |
-| forward-auth     | forward-auth | identity    | internal                     | Pocket ID                                 | SOPS secret                                    | SOPS / identity operator       | reconfigure clients                     |
-| gotenberg        | NixOS        | jubilife    | internal                     | paperless                                 | none                                           | Git                            | rebuildable                             |
-| immich           | immich       | default     | https://immich.cute.haus     | valkey                                    | local-path uploads/ML cache, Longhorn database | node owner / Immich export     | photo loss possible without node data   |
-| morsels          | morsels      | websites    | https://morsels.blue         | —                                         | Longhorn                                       | Longhorn backup owner          | restore from volume backup              |
-| navidrome        | navidrome    | default     | https://navidrome.cute.haus  | forward-auth                              | Longhorn config, host media                    | Longhorn / media host owner    | media is external; config may be lost   |
-| nextcloud        | nextcloud    | nextcloud   | https://nextcloud.cute.haus  | pg-shared, valkey-nextcloud               | local-path HTML, CNPG/Garage data              | node owner / CNPG backup owner | file loss possible without node data    |
-| ombi             | ombi         | default     | https://ombi.cute.haus       | —                                         | Longhorn                                       | Longhorn backup owner          | restore config/database                 |
-| paperless        | NixOS        | jubilife    | https://paperless.cute.haus  | local PostgreSQL, Valkey, Tika, Gotenberg | local host data                                | node owner                     | documents may be lost without node data |
-| pg-shared        | pg-shared    | cnpg-system | internal                     | CNPG                                      | Longhorn database volumes, B2 backups          | CNPG backup owner              | point-in-time limited to backups        |
-| plex             | NixOS        | jubilife    | https://plex.cute.haus       | media host                                | local-path config and media mounts             | node/media owner               | config or metadata loss possible        |
-| pocket-id        | Kustomize    | identity    | https://id.cute.haus         | pg-shared                                 | CNPG                                           | CNPG backup owner              | identity records depend on DB backup    |
-| seerr            | seerr        | default     | https://seerr.cute.haus      | pg-shared                                 | Longhorn config, CNPG                          | Longhorn / CNPG backup owner   | restore app config and DB               |
-| slingshot        | NixOS        | jubilife    | https://slingshot.cute.haus  | —                                         | ephemeral cache                                | Git                            | rebuildable                             |
-| switchyard       | Kustomize    | websites    | https://switchyard.aly.codes | —                                         | none                                           | Git/site build                 | rebuildable                             |
-| tika             | NixOS        | jubilife    | internal                     | paperless                                 | none                                           | Git                            | rebuildable                             |
-| uptime-kuma      | uptime-kuma  | default     | https://kuma.cute.haus       | —                                         | Longhorn                                       | Longhorn backup owner          | monitor history/config loss possible    |
-| vaultwarden      | vaultwarden  | default     | https://vault.cute.haus      | —                                         | Longhorn                                       | Longhorn backup owner          | vault loss is critical                  |
-| valkey           | valkey       | default     | internal                     | —                                         | Longhorn                                       | Longhorn backup owner          | cache/session loss tolerated            |
-| valkey-nextcloud | valkey       | nextcloud   | internal                     | —                                         | Longhorn                                       | Longhorn backup owner          | cache/session loss tolerated            |
-| watsup           | Kustomize    | websites    | https://cute.haus            | —                                         | ConfigMap                                      | Git                            | rebuildable                             |
+| Release          | Delivery     | Namespace   | URL                         | Dependencies                              | Persistence                                    | Backup / restore owner         | Data-loss expectation                   |
+| ---------------- | ------------ | ----------- | --------------------------- | ----------------------------------------- | ---------------------------------------------- | ------------------------------ | --------------------------------------- |
+| collabora        | Docker       | Jubilife    | https://collabora.cute.haus | nextcloud                                 | none                                           | configuration only             | rebuildable                             |
+| error-pages      | Kustomize    | default     | internal                    | traefik                                   | none                                           | Git                            | rebuildable                             |
+| forward-auth     | forward-auth | identity    | internal                    | Pocket ID                                 | SOPS secret                                    | SOPS / identity operator       | reconfigure clients                     |
+| gotenberg        | NixOS        | jubilife    | internal                    | paperless                                 | none                                           | Git                            | rebuildable                             |
+| immich           | immich       | default     | https://immich.cute.haus    | valkey                                    | local-path uploads/ML cache, Longhorn database | node owner / Immich export     | photo loss possible without node data   |
+| navidrome        | navidrome    | default     | https://navidrome.cute.haus | forward-auth                              | Longhorn config, host media                    | Longhorn / media host owner    | media is external; config may be lost   |
+| nextcloud        | nextcloud    | nextcloud   | https://nextcloud.cute.haus | pg-shared, valkey-nextcloud               | local-path HTML, CNPG/Garage data              | node owner / CNPG backup owner | file loss possible without node data    |
+| ombi             | ombi         | default     | https://ombi.cute.haus      | —                                         | Longhorn                                       | Longhorn backup owner          | restore config/database                 |
+| paperless        | NixOS        | jubilife    | https://paperless.cute.haus | local PostgreSQL, Valkey, Tika, Gotenberg | local host data                                | node owner                     | documents may be lost without node data |
+| pg-shared        | pg-shared    | cnpg-system | internal                    | CNPG                                      | Longhorn database volumes, B2 backups          | CNPG backup owner              | point-in-time limited to backups        |
+| plex             | NixOS        | jubilife    | https://plex.cute.haus      | media host                                | local-path config and media mounts             | node/media owner               | config or metadata loss possible        |
+| pocket-id        | Kustomize    | identity    | https://id.cute.haus        | pg-shared                                 | CNPG                                           | CNPG backup owner              | identity records depend on DB backup    |
+| seerr            | seerr        | default     | https://seerr.cute.haus     | pg-shared                                 | Longhorn config, CNPG                          | Longhorn / CNPG backup owner   | restore app config and DB               |
+| slingshot        | NixOS        | jubilife    | https://slingshot.cute.haus | —                                         | ephemeral cache                                | Git                            | rebuildable                             |
+| tika             | NixOS        | jubilife    | internal                    | paperless                                 | none                                           | Git                            | rebuildable                             |
+| uptime-kuma      | uptime-kuma  | default     | https://kuma.cute.haus      | —                                         | Longhorn                                       | Longhorn backup owner          | monitor history/config loss possible    |
+| vaultwarden      | vaultwarden  | default     | https://vault.cute.haus     | —                                         | Longhorn                                       | Longhorn backup owner          | vault loss is critical                  |
+| valkey           | valkey       | default     | internal                    | —                                         | Longhorn                                       | Longhorn backup owner          | cache/session loss tolerated            |
+| valkey-nextcloud | valkey       | nextcloud   | internal                    | —                                         | Longhorn                                       | Longhorn backup owner          | cache/session loss tolerated            |
+| watsup           | Kustomize    | websites    | https://cute.haus           | —                                         | ConfigMap                                      | Git                            | rebuildable                             |
 
 ## Stateful recovery
 
@@ -116,7 +113,7 @@ volumes,longhornbackups`; restore to a new volume/PVC, verify it, then point
 Kuma is configured in its UI; this checklist is the versioned source of
 monitoring intent. After every deployment, configure HTTPS monitors for every
 public URL in the inventory, including all `pds.cute.haus`, `aly.social`,
-`status.cute.haus`, `status.aly.codes`, and `status.aly.social` routes.
+`status.cute.haus` and `status.aly.social` routes.
 
 - Confirm each monitor runs externally, follows the intended HTTP success rule,
   and validates TLS expiry/certificate hostname.

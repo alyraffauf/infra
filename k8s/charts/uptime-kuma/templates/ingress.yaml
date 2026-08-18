@@ -14,9 +14,6 @@ spec:
         - "status.cute.haus"
       secretName: cute-haus-tls
     - hosts:
-        - "status.aly.codes"
-      secretName: aly-codes-tls
-    - hosts:
         - "status.aly.social"
       secretName: aly-social-tls
   rules:
@@ -31,16 +28,6 @@ spec:
                 port:
                   number: 80
     - host: "status.cute.haus"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: uptime-kuma
-                port:
-                  number: 80
-    - host: "status.aly.codes"
       http:
         paths:
           - path: /

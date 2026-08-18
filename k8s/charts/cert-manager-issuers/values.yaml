@@ -20,14 +20,6 @@ wildcards:
   - name: aly-social-tls
     namespace: default
     domain: aly.social
-  - name: aly-codes-tls
-    namespace: default
-    domain: aly.codes
-    replicateTo:
-      - websites
-  - name: morsels-blue-tls
-    namespace: websites
-    domain: morsels.blue
   - name: cute-haus-tls
     namespace: microcosm
     domain: cute.haus

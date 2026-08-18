@@ -28,7 +28,7 @@ inventory. See its README before promoting a draft to production.
 
 Use raw Kustomize manifests for fixed, hand-authored workloads. Their files
 live beside the Flux layer that applies them, for example
-`../flux/apps/aly-codes/` or `../flux/platform/tika/`. Each directory has a
+`../flux/apps/watsup/` or `../flux/platform/tika/`. Each directory has a
 small `kustomization.yaml` that sets its namespace and lists its resources.
 
 Use Helm only when release reuse or structured rendering is meaningful. The
