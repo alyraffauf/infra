@@ -19,6 +19,11 @@ locals {
   }
 }
 
+moved {
+  from = cloudflare_dns_record.cute_haus_a["id.cute.haus"]
+  to   = cloudflare_dns_record.cute_haus_id
+}
+
 resource "cloudflare_dns_record" "cute_haus_a" {
   for_each = local.cute_haus_ingress
   zone_id  = local.zones.cute_haus
