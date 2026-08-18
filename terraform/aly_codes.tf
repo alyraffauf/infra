@@ -18,18 +18,6 @@ resource "cloudflare_dns_record" "aly_codes_a" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "aly_codes_canalave_a" {
-  for_each = local.aly_codes_public_hosts
-  zone_id  = local.zones.aly_codes
-  name     = each.value
-  type     = "A"
-  content  = local.hosts.canalave
-  proxied  = true
-  ttl      = 1
-  tags     = []
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "aly_codes_fm_dkim_cname" {
   for_each = local.aly_codes_fm_dkim
   zone_id  = local.zones.aly_codes
