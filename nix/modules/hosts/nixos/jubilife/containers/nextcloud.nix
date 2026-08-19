@@ -95,7 +95,7 @@ _: {
       };
 
       nextcloud = {
-        image = "docker.io/library/nextcloud:34-apache@sha256:6eb64bc58acd8dd751415f15c470d397fe922cefbd154e48480f5fcd9ce3a8e5";
+        image = "docker.io/library/nextcloud:34-apache@sha256:368cd1c75bc4a32c2aee8a119cae31bcebff80c374782f404c440c3295726814";
         dependsOn = ["postgres" "nextcloud-valkey"];
         networks = ["nextcloud"];
         environment = {
@@ -138,7 +138,7 @@ _: {
       };
 
       nextcloud-cron = {
-        image = "docker.io/library/nextcloud:34-apache@sha256:6eb64bc58acd8dd751415f15c470d397fe922cefbd154e48480f5fcd9ce3a8e5";
+        image = "docker.io/library/nextcloud:34-apache@sha256:368cd1c75bc4a32c2aee8a119cae31bcebff80c374782f404c440c3295726814";
         dependsOn = ["nextcloud"];
         networks = ["nextcloud"];
         cmd = ["/bin/sh" "-c" "while true; do php -f /var/www/html/cron.php || true; sleep 60; done"];
