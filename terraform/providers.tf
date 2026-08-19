@@ -6,10 +6,6 @@ terraform {
       source  = "Backblaze/b2"
       version = "~> 0.13"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 5.0"
-    }
     tailscale = {
       source  = "tailscale/tailscale"
       version = "~> 0.29"
@@ -41,10 +37,6 @@ terraform {
     use_path_style              = true
     skip_s3_checksum            = true
   }
-}
-
-provider "cloudflare" {
-  # Reads CLOUDFLARE_API_TOKEN from the environment.
 }
 
 provider "b2" {
