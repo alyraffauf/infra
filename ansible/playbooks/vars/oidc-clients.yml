@@ -1,9 +1,9 @@
 oidc_clients:
   - slug: tranquil
     name: Tranquil
-    launchURL: https://pds.cute.haus/
+    launchURL: https://aly.social/
     callbackURLs:
-      - https://pds.cute.haus/oauth/sso/callback
+      - https://aly.social/oauth/sso/callback
     isPublic: false
     pkceEnabled: true
   # Slug must match the forward-auth-<app> Deployment name.
