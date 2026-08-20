@@ -49,7 +49,7 @@ _: {
 
     virtualisation.oci-containers.containers = {
       paperless-valkey = {
-        image = "valkey/valkey:9-alpine@sha256:ee91f7a174ac4d6a6b0685b3a60e321f0a9dbbb691f9b0e285be2ba1d1be8328";
+        image = "valkey/valkey:9-alpine@sha256:de31910896150d5e754a07d57d227cfdde4e258ddd0d1aa4607f2d2f95843715";
         networks = ["paperless"];
         cmd = ["valkey-server" "--maxmemory" "1gb" "--maxmemory-policy" "volatile-lru"];
         extraOptions = ["--tmpfs=/data:rw,noexec,nosuid,size=1g"];
