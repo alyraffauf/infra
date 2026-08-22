@@ -12,15 +12,11 @@ terraform {
     }
   }
 
-  # State in B2 alongside CNPG + Longhorn backups. Auth via AWS_ACCESS_KEY_ID /
-  # AWS_SECRET_ACCESS_KEY (B2 application key in secrets/b2.yaml). Bucket has
-  # versioning enabled, so state history is recoverable from B2 if a bad apply
-  # corrupts it.
+  # Store state in the versioned B2 `aly-backups` bucket. `.envrc` puts the B2
+  # application key from `secrets/b2.yaml` in the AWS variables.
   #
-  # No state locking: B2's S3 API at us-east-005 doesn't honor the
-  # If-None-Match conditional-PUT header that terraform's use_lockfile uses
-  # (501 NotImplemented). DynamoDB-based locking is overkill for single-user
-  # operation; the discipline is "don't run terraform from two places at once."
+  # B2's S3 API at `us-east-005` does not support conditional PUT. The backend
+  # cannot lock state, so run one apply at a time.
   backend "s3" {
     bucket = "aly-backups"
     key    = "cute.haus/terraform/terraform.tfstate"
@@ -44,6 +40,6 @@ provider "b2" {
 }
 
 provider "tailscale" {
-  # Reads TAILSCALE_API_KEY from the environment (API key in
-  # secrets/tailscale-api.yaml, decrypted by direnv).
+  # `.envrc` reads `TAILSCALE_API_KEY` from
+  # `secrets/tailscale-api.yaml`.
 }

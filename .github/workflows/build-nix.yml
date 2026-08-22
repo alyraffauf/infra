@@ -1,47 +1,28 @@
 concurrency:
   cancel-in-progress: true
   group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   build-devShell-default:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v7
-      with:
-        fetch-depth: 1
-    - uses: DeterminateSystems/nix-installer-action@main
-    - uses: cachix/cachix-action@master
-      with:
-        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-        name: cutehaus
-    - name: Build devShell default
-      env:
-        NIXPKGS_ALLOW_UNFREE: '1'
-      run: nix build --accept-flake-config --impure --print-out-paths .#devShells.x86_64-linux.default
-  build-package-gen-files:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v7
-      with:
-        fetch-depth: 1
-    - uses: DeterminateSystems/nix-installer-action@main
-    - uses: cachix/cachix-action@master
-      with:
-        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-        name: cutehaus
-    - name: Build package gen-files
-      run: nix build --accept-flake-config --print-out-paths .#packages.x86_64-linux.gen-files
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+      - uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
+      - name: Build devShell default
+        run: nix build --accept-flake-config --print-out-paths .#devShells.x86_64-linux.default
+
 name: build-nix
-'on':
+
+"on":
   pull_request:
-    paths:
-    - flake.lock
-    - flake.nix
-    - flake/
   push:
     branches:
-    - master
+      - master
     paths:
-    - flake.lock
-    - flake.nix
-    - flake/
+      - .github/**
+      - flake.lock
+      - flake.nix
+      - nix/devShells.nix
   workflow_dispatch: {}

@@ -1,5 +1,0 @@
-ingressClassName: traefik
-
-# Each route gets a Service + Endpoints + Ingress.
-# Service name == route name. TLS secrets must exist in the release namespace.
-routes: []

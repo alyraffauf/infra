@@ -1,36 +1,21 @@
-# ❄️ cute.haus
+# Shared infrastructure
 
-Welcome to **cute.haus**!
+`infra` holds the shared account-level configuration: Backblaze B2 buckets and
+the Tailscale tailnet ACL. It does not run a cluster.
 
-This repository contains NixOS, K8s, and Ansible configurations, along with whatever custom modules and packages required for [cute.haus](https://cute.haus), my production infrastructure running NixOS+Kubernetes.
+Sinnoh runs public services. Johto runs home services. Hoenn configures
+personal machines. Their NixOS hosts, Kubernetes manifests, application
+secrets, and deployment automation stay there.
 
----
+The Git history still has the former all-in-one configuration.
 
-![](./_img/glance.png)
+## Layout
 
----
+- `terraform/` contains the shared state and provider configuration.
+- `secrets/` contains the encrypted B2 and Tailscale credentials.
+- `docs/` contains runbooks.
 
-## 📂 Repository Structure
+## Runbooks
 
-```plaintext
-.
-├── flake.nix                # Flake entry point
-├── nix/                     # NixOS + flake modules
-│   └── modules/             # Dendritic flake, NixOS, Disko, and host modules
-├── k8s/                     # k3s: Flux + in-tree Helm charts
-│   ├── flux/                # GitOps release graph (Flux Kustomizations/HelmReleases)
-│   ├── charts/              # In-tree helm charts (see k8s/charts/README.md)
-│   └── values/              # Shared non-secret Helm values
-├── secrets/                 # SOPS-encrypted yaml (multi-recipient age)
-├── keys/                    # Per-host + per-user age recipients
-├── terraform/               # Cloudflare DNS, etc.
-└── ansible/                 # Server playbooks (deploy-offline, reboots)
-```
-
----
-
-## 📜 License
-
-This repository is licensed under the **[GNU General Public License](LICENSE.md)**.
-
----
+- [Change OpenTofu](docs/change-opentofu.md)
+- [Change SOPS recipients](docs/sops.md)

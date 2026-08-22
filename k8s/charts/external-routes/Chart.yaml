@@ -1,5 +1,0 @@
-apiVersion: v2
-name: external-routes
-description: Ingress routes for non-cluster services
-type: application
-version: 0.1.0

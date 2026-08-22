@@ -1,6 +1,0 @@
-- hosts: cutehaus
-  remote_user: root
-
-  tasks:
-    - name: Ping all hosts
-      ansible.builtin.ping:

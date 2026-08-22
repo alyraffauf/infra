@@ -1,5 +1,0 @@
-apiVersion: v2
-name: forgejo
-description: Forgejo (gitea fork) — git hosting
-type: application
-version: 0.1.0

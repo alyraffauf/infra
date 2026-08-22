@@ -1,6 +1,4 @@
-# Tailscale tailnet ACL policy for narwhal-snapper.ts.net.
-# Edit the `acl` field below and `tofu apply` to push changes.
-# Run `tofu plan` first to preview the diff.
+# Tailscale ACL policy for narwhal-snapper.ts.net.
 
 resource "tailscale_acl" "tailnet" {
   acl = <<-EOT
@@ -16,7 +14,11 @@ resource "tailscale_acl" "tailnet" {
       "nodeAttrs": [
         {
           "attr":   ["mullvad"],
-          "target": ["100.106.251.41"],
+          "target": ["100.127.147.60"],
+        },
+        {
+          "attr":   ["mullvad"],
+          "target": ["100.88.43.71"],
         },
         {
           "attr":   ["mullvad"],
@@ -24,27 +26,11 @@ resource "tailscale_acl" "tailnet" {
         },
         {
           "attr":   ["mullvad"],
-          "target": ["100.124.238.118"],
+          "target": ["100.106.251.41"],
         },
         {
           "attr":   ["mullvad"],
-          "target": ["100.115.185.117"],
-        },
-        {
-          "attr":   ["mullvad"],
-          "target": ["100.64.222.8"],
-        },
-        {
-          "attr":   ["mullvad"],
-          "target": ["100.87.104.118"],
-        },
-        {
-          "attr":   ["mullvad"],
-          "target": ["100.100.102.26"],
-        },
-        {
-          "attr":   ["funnel"],
-          "target": ["tag:safari-ingress"],
+          "target": ["100.90.233.55"],
         },
       ],
 
@@ -66,17 +52,9 @@ resource "tailscale_acl" "tailnet" {
 
       "autoApprovers": {
         "services": {
-          "tag:safari-service": ["tag:safari-ingress"],
+          "tag:k8s": ["tag:k8s"],
         },
       },
-
-      "grants": [
-        {
-          "src": ["*"],
-          "dst": ["tag:safari-service"],
-          "ip":  ["443"],
-        },
-      ],
     }
   EOT
 }

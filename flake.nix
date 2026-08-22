@@ -1,22 +1,10 @@
 {
-  description = "cute.haus infra";
+  description = "Shared cute.haus infrastructure";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    files.url = "github:alyraffauf/flake-files";
-    flake-parts.url = "github:hercules-ci/flake-parts";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     import-tree.url = "github:denful/import-tree";
-
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.1.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     blzrd = {
       url = "github:alyraffauf/blzrd";
@@ -25,30 +13,9 @@
       inputs.treefmt-nix.follows = "treefmt-nix";
     };
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Non-flake inputs
-    absolute = {
-      url = "github:ZeroQI/Absolute-Series-Scanner";
-      flake = false;
-    };
-
-    audnexus = {
-      url = "github:djdembeck/Audnexus.bundle";
-      flake = false;
-    };
-
-    hama = {
-      url = "github:ZeroQI/Hama.bundle";
-      flake = false;
     };
   };
 
@@ -56,12 +23,14 @@
     accept-flake-config = true;
 
     extra-substituters = [
-      "https://cutehaus.cachix.org"
+      "https://install.determinate.systems"
+      "https://alyraffauf.cachix.org"
       "https://nix-community.cachix.org"
     ];
 
     extra-trusted-public-keys = [
-      "cutehaus.cachix.org-1:KiifTsseQBitoaHH8rkDUDwzyz9akLeOM+K+e2eK8dA="
+      "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
+      "alyraffauf.cachix.org-1:GQVrRGfjTtkPGS8M6y7Ik0z4zLt77O0N25ynv2gWzDM="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
@@ -74,6 +43,8 @@
     sharedPackageSets = {
       aarch64-darwin = import nixpkgs {
         system = "aarch64-darwin";
+        config.allowUnfree = true;
+        overlays = [inputs.self.overlays.default];
       };
 
       x86_64-linux = import nixpkgs {
@@ -94,9 +65,7 @@
       };
 
       imports = [
-        (inputs.import-tree ./nix/modules)
-        inputs.files.flakeModules.default
-        inputs.flake-parts.flakeModules.modules
+        (inputs.import-tree ./nix)
         inputs.blzrd.flakeModule
         inputs.treefmt-nix.flakeModule
       ];

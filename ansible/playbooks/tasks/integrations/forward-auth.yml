@@ -1,8 +1,0 @@
----
-- ansible.builtin.include_tasks: _write-secret-and-restart.yml
-  vars:
-    secret_name: "{{ client_spec.slug }}-oidc-env"
-    secret_data:
-      PROVIDERS_OIDC_CLIENT_ID: "{{ oidc_client_credentials.client_id }}"
-      PROVIDERS_OIDC_CLIENT_SECRET: "{{ oidc_client_credentials.client_secret }}"
-    deployment_name: "{{ client_spec.slug }}"

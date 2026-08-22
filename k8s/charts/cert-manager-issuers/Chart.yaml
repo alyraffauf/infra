@@ -1,5 +1,0 @@
-apiVersion: v2
-name: cert-manager-issuers
-description: ClusterIssuers + wildcard Certificates for cluster TLS via Let's Encrypt + Cloudflare DNS-01
-type: application
-version: 0.1.0
