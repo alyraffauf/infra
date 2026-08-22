@@ -1,7 +1,7 @@
 _: {
   flake.nixosModules.jubilife = _: {
     virtualisation.oci-containers.containers.slingshot = {
-      image = "ghcr.io/alyraffauf/slingshot:latest@sha256:6b0fd7c81d2b955d9a8a620192c391a7f656cdc954f71bcfb03f208ae0a2236a";
+      image = "ghcr.io/alyraffauf/slingshot:latest@sha256:9c2e8b0c6c74b8cb802085b8a5b71c62bf8e23b555e429c9b874bd6b5eadd93c";
       environment = {
         SLINGSHOT_CACHE_DIR = "/cache";
         SLINGSHOT_IDENTITY_CACHE_DISK_DB = "2";
