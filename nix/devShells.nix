@@ -6,6 +6,7 @@ _: {
         pkgs.git
         pkgs.jq
         pkgs.just
+        pkgs.nixd
         pkgs.opentofu
         pkgs.sops
         pkgs.ssh-to-age
