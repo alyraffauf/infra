@@ -1,21 +1,18 @@
 # Shared infrastructure
 
-`infra` holds the shared account-level configuration: Backblaze B2 buckets and
-the Tailscale tailnet ACL. It does not run a cluster.
+`infra` is the home for the account-level configuration shared by the Pokeworld repositories, plus the runbooks that go with it. Terraform manages the Backblaze B2 buckets and the Tailscale ACL. The rest of the systems live in the repositories that deploy them.
 
-Sinnoh runs public services. Johto runs home services. Hoenn configures
-personal machines. Their NixOS hosts, Kubernetes manifests, application
-secrets, and deployment automation stay there.
+| Repository | What lives there                                        |
+| ---------- | ------------------------------------------------------- |
+| `infra`    | B2 buckets, the Tailscale ACL, and shared documentation |
+| `sinnoh`   | Production hosts and services                           |
+| `johto`    | Home-lab hosts and services                             |
+| `hoenn`    | Personal machines                                       |
 
-The Git history still has the former all-in-one configuration.
+## What's here
 
-## Layout
+`terraform/` contains the shared OpenTofu configuration. `secrets/` contains the encrypted credentials it needs, and `keys/` contains the SOPS recipients. The [docs](docs/) directory holds the operational guides, including host installation, K3s recovery, Secure Boot, OpenTofu, and SOPS.
 
-- `terraform/` contains the shared state and provider configuration.
-- `secrets/` contains the encrypted B2 and Tailscale credentials.
-- `docs/` contains runbooks.
+## Working locally
 
-## Runbooks
-
-- [Change OpenTofu](docs/change-opentofu.md)
-- [Change SOPS recipients](docs/sops.md)
+Run `nix develop` for the pinned tooling. Start with the relevant guide in [docs](docs/) when you need to change infrastructure or recover a system.
