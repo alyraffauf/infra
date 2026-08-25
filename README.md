@@ -11,8 +11,14 @@
 
 ## What's here
 
-`terraform/` contains the shared OpenTofu configuration. `secrets/` contains the encrypted credentials it needs, and `keys/` contains the SOPS recipients. The [docs](docs/) directory holds the operational guides, including host installation, K3s recovery, Secure Boot, OpenTofu, and SOPS.
+`terraform/` contains the shared OpenTofu configuration. `secrets/` contains the encrypted credentials it needs, and `keys/` contains the SOPS recipients. The [docs](docs/) directory holds the operational guides, including host installation, K3s recovery, Secure Boot, OpenTofu, and SOPS. `scripts/` contains shared repository maintenance utilities.
 
 ## Working locally
 
 Run `nix develop` for the pinned tooling. Start with the relevant guide in [docs](docs/) when you need to change infrastructure or recover a system.
+
+From Hoenn, Sinnoh, or Johto, refresh generated host hardware documentation:
+
+```sh
+nix run github:alyraffauf/infra#generate-host-readmes
+```
