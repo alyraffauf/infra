@@ -2,6 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", ":dependencyDashboard"],
   "timezone": "America/New_York",
+  "nix": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest"],
@@ -10,6 +17,12 @@
     {
       "matchUpdateTypes": ["major"],
       "automerge": false
+    },
+    {
+      "description": "Lock file maintenance updates FlakeHub inputs",
+      "matchManagers": ["nix"],
+      "matchPackageNames": ["/^https:\\/\\/flakehub\\.com\\/f\\//"],
+      "enabled": false
     }
   ]
 }
